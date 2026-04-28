@@ -22,12 +22,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/clientes/**").permitAll()
-                        .requestMatchers("/api/servicos/**").permitAll()
-                        .requestMatchers("/api/barbeiros/**").permitAll()
-                        .requestMatchers("/api/agendamentos/**").permitAll()
-                        .requestMatchers("/api/admin/**").authenticated()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }
