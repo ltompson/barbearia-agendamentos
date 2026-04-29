@@ -1,1 +1,50 @@
-<p>login works!</p>
+<!--
+  Tela de login da Alquimista Barbearia
+  Acessível apenas para o dono e barbeiros
+  Componente: Login
+-->
+<main class="container" role="main">
+
+  <div class="card">
+
+    <header class="header">
+      <div class="logo">A</div>
+      <h1>Alquimista Barbearia</h1>
+      <p class="subtitle">Acesso restrito — equipe</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="entrar()" aria-label="Formulário de login">
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Usuário</mat-label>
+        <input matInput
+               type="text"
+               formControlName="usuario"
+               placeholder="Ex: francisco"
+               autocomplete="username">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Senha</mat-label>
+        <input matInput
+               type="password"
+               formControlName="senha"
+               placeholder="••••••••"
+               autocomplete="current-password">
+      </mat-form-field>
+
+      <p *ngIf="erro" class="erro-msg">{{ erro }}</p>
+
+      <button mat-raised-button
+              color="primary"
+              class="full-width"
+              type="submit"
+              aria-label="Entrar no painel">
+        Entrar
+      </button>
+
+    </form>
+
+  </div>
+
+</main>
