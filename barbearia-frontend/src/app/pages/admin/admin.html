@@ -1,1 +1,95 @@
-<p>admin works!</p>
+<!--
+  Painel administrativo da Alquimista Barbearia
+  Acessível apenas para o dono e barbeiros autenticados
+  Componente: Admin
+-->
+<div class="admin-layout">
+
+  <!-- Sidebar lateral com menu de navegação -->
+  <aside class="sidebar" role="navigation" aria-label="Menu administrativo">
+
+    <header class="sidebar-header">
+      <div class="logo">A</div>
+      <div>
+        <h1 class="sidebar-title">Alquimista</h1>
+        <p class="sidebar-sub">Painel Admin</p>
+      </div>
+    </header>
+
+    <nav>
+      <ul class="menu-list">
+        <li class="menu-item" [class.active]="secaoAtiva === 'agendamentos'" (click)="secaoAtiva = 'agendamentos'">
+          📅 Agendamentos do dia
+        </li>
+        <li class="menu-item" [class.active]="secaoAtiva === 'profissionais'" (click)="secaoAtiva = 'profissionais'">
+          👥 Profissionais
+        </li>
+        <li class="menu-item" [class.active]="secaoAtiva === 'horarios'" (click)="secaoAtiva = 'horarios'">
+          ⏰ Horários de Funcionamento
+        </li>
+        <li class="menu-item" [class.active]="secaoAtiva === 'bloqueios'" (click)="secaoAtiva = 'bloqueios'">
+          🚫 Bloqueio de Datas
+        </li>
+      </ul>
+    </nav>
+
+  </aside>
+
+  <!-- Conteúdo principal -->
+  <main class="main-content" role="main">
+
+    <!-- Seção: Agendamentos do dia -->
+    <section *ngIf="secaoAtiva === 'agendamentos'" aria-label="Agendamentos do dia">
+      <h2>📅 Agendamentos do dia</h2>
+
+      <!-- Carregando -->
+      <p *ngIf="carregando" class="empty-msg">Carregando agendamentos...</p>
+
+      <!-- Nenhum agendamento -->
+      <p *ngIf="!carregando && agendamentos.length === 0" class="empty-msg">
+        Nenhum agendamento encontrado.
+      </p>
+
+      <!-- Lista de agendamentos -->
+      <div *ngIf="!carregando && agendamentos.length > 0" class="agendamentos-list">
+        <div *ngFor="let ag of agendamentos" class="agendamento-card">
+
+          <div class="ag-info">
+            <span class="ag-horario">{{ ag.dataHora | date:'HH:mm' }}</span>
+            <div>
+              <p class="ag-cliente">{{ ag.cliente?.nome }}</p>
+              <p class="ag-detalhe">{{ ag.servico?.nome }} · {{ ag.barbeiro?.nome }}</p>
+              <p class="ag-telefone">📞 {{ ag.cliente?.telefone }}</p>
+            </div>
+          </div>
+
+          <span class="ag-status" [class.cancelado]="ag.status === 'CANCELADO'">
+            {{ ag.status }}
+          </span>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Seção: Profissionais -->
+    <section *ngIf="secaoAtiva === 'profissionais'" aria-label="Profissionais">
+      <h2>👥 Profissionais</h2>
+      <p class="empty-msg">Francisco e Raniel Dias</p>
+    </section>
+
+    <!-- Seção: Horários de Funcionamento -->
+    <section *ngIf="secaoAtiva === 'horarios'" aria-label="Horários de funcionamento">
+      <h2>⏰ Horários de Funcionamento</h2>
+      <p class="empty-msg">Em breve.</p>
+    </section>
+
+    <!-- Seção: Bloqueio de Datas -->
+    <section *ngIf="secaoAtiva === 'bloqueios'" aria-label="Bloqueio de datas">
+      <h2>🚫 Bloqueio de Datas</h2>
+      <p class="empty-msg">Em breve.</p>
+    </section>
+
+  </main>
+
+</div>
