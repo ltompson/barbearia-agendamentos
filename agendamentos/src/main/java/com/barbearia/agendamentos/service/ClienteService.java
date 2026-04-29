@@ -24,4 +24,15 @@ public class ClienteService {
     public Cliente salvar(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
+
+    // Busca cliente pelo telefone ou cria um novo se não existir
+    public Cliente buscarOuCriarPorTelefone(String nome, String telefone) {
+        return clienteRepository.findByTelefone(telefone)
+                .orElseGet(() -> {
+                    Cliente novo = new Cliente();
+                    novo.setNome(nome);
+                    novo.setTelefone(telefone);
+                    return clienteRepository.save(novo);
+                });
+    }
 }

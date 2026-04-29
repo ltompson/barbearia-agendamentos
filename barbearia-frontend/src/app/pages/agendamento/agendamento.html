@@ -1,0 +1,132 @@
+<!--
+  Página pública de agendamento da Alquimista Barbearia
+  Acessível por qualquer cliente, sem necessidade de login
+  Componente: Agendamento
+-->
+<main class="container" role="main">
+
+  <!-- Cabeçalho com identidade da barbearia -->
+  <header class="header" role="banner">
+    <h1>✂️ Alquimista Barbearia</h1>
+    <p class="subtitle">Faça seu agendamento de forma rápida e fácil</p>
+  </header>
+
+  <!-- Formulário principal de agendamento -->
+  <form class="card" [formGroup]="form" (ngSubmit)="confirmar()" aria-label="Formulário de agendamento">
+    <h2>Novo Agendamento</h2>
+
+    <!-- Dados pessoais do cliente -->
+    <section aria-label="Dados pessoais">
+
+      <!-- Nome do cliente -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Seu nome</mat-label>
+        <input matInput
+               type="text"
+               formControlName="nomeCliente"
+               placeholder="Ex: João Silva"
+               autocomplete="name">
+      </mat-form-field>
+
+      <!-- Telefone para contato -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Seu telefone</mat-label>
+        <input matInput
+               type="tel"
+               formControlName="telefoneCliente"
+               placeholder="Ex: (84) 99999-9999"
+               autocomplete="tel">
+      </mat-form-field>
+
+    </section>
+
+    <!-- Detalhes do serviço -->
+    <section aria-label="Detalhes do serviço">
+
+      <!-- Seleção do barbeiro -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Barbeiro</mat-label>
+        <mat-select formControlName="barbeiroId">
+          <mat-option [value]="1">Francisco</mat-option>
+          <mat-option [value]="2">Raniel Dias</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Seleção do serviço com valor -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Serviço</mat-label>
+        <mat-select formControlName="servicoId">
+          <mat-option [value]="1">Corte social ou degradê — R$ 35,00</mat-option>
+          <mat-option [value]="2">Barba na máquina — R$ 25,00</mat-option>
+          <mat-option [value]="3">Barba completa — R$ 30,00</mat-option>
+          <mat-option [value]="4">Sobrancelha — R$ 10,00</mat-option>
+          <mat-option [value]="5">Corte + Barba (máquina) — R$ 50,00</mat-option>
+          <mat-option [value]="6">Corte + Barba (completa) — R$ 55,00</mat-option>
+          <mat-option [value]="7">Corte + Barba + Sobrancelha — R$ 60,00</mat-option>
+          <mat-option [value]="8">Botox — a partir de R$ 80,00</mat-option>
+          <mat-option [value]="9">Selagem — a partir de R$ 90,00</mat-option>
+          <mat-option [value]="10">Platinado — R$ 90,00</mat-option>
+          <mat-option [value]="11">Luzes — R$ 70,00</mat-option>
+          <mat-option [value]="12">Hidratação — R$ 20,00</mat-option>
+          <mat-option [value]="13">Limpeza facial com máscara Black — R$ 20,00</mat-option>
+          <mat-option [value]="14">Penteado — R$ 20,00</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </section>
+
+    <!-- Data e horário -->
+    <section aria-label="Data e horário">
+
+      <!-- Seletor de data -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Data</mat-label>
+        <input matInput
+               [matDatepicker]="picker"
+               formControlName="data">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Seleção do horário -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Horário</mat-label>
+        <mat-select formControlName="horario">
+          <mat-optgroup label="Manhã">
+            <mat-option value="09:00">09:00</mat-option>
+            <mat-option value="09:30">09:30</mat-option>
+            <mat-option value="10:00">10:00</mat-option>
+            <mat-option value="10:30">10:30</mat-option>
+            <mat-option value="11:00">11:00</mat-option>
+            <mat-option value="11:30">11:30</mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="Tarde">
+            <mat-option value="13:00">13:00</mat-option>
+            <mat-option value="13:30">13:30</mat-option>
+            <mat-option value="14:00">14:00</mat-option>
+            <mat-option value="14:30">14:30</mat-option>
+            <mat-option value="15:00">15:00</mat-option>
+            <mat-option value="15:30">15:30</mat-option>
+            <mat-option value="16:00">16:00</mat-option>
+            <mat-option value="16:30">16:30</mat-option>
+            <mat-option value="17:00">17:00</mat-option>
+            <mat-option value="17:30">17:30</mat-option>
+            <mat-option value="18:00">18:00</mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+
+    </section>
+
+    <!-- Botão de submissão -->
+    <button mat-raised-button
+            color="primary"
+            class="full-width"
+            type="submit"
+            aria-label="Confirmar agendamento">
+      Confirmar Agendamento
+    </button>
+
+  </form>
+
+</main>
