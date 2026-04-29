@@ -30,4 +30,9 @@ export class AgendamentoService {
   listar(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+
+  // Cancela um agendamento pelo ID
+  cancelar(id: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}/cancelar`, {});
+  }
 }

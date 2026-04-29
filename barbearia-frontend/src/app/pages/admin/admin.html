@@ -63,9 +63,17 @@
             </div>
           </div>
 
-          <span class="ag-status" [class.cancelado]="ag.status === 'CANCELADO'">
-            {{ ag.status }}
-          </span>
+          <div class="ag-acoes">
+            <span class="ag-status" [class.cancelado]="ag.status === 'CANCELADO'">
+              {{ ag.status }}
+            </span>
+            <button
+              *ngIf="ag.status !== 'CANCELADO'"
+              class="btn-cancelar"
+              (click)="cancelar(ag.id)">
+              Cancelar
+            </button>
+          </div>
 
         </div>
       </div>

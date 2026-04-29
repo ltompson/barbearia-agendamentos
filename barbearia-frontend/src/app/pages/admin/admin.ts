@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AgendamentoService } from '../../services/agendamento';
 
@@ -10,31 +10,40 @@ import { AgendamentoService } from '../../services/agendamento';
 })
 export class Admin implements OnInit {
 
-  // Controla qual seção está ativa no menu
   secaoAtiva = 'agendamentos';
-
-  // Lista de agendamentos carregados do backend
   agendamentos: any[] = [];
   carregando = true;
 
-  constructor(private agendamentoService: AgendamentoService) {}
+  constructor(
+    private agendamentoService: AgendamentoService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.carregarAgendamentos();
   }
 
-  // Busca todos os agendamentos no backend
   carregarAgendamentos() {
     this.carregando = true;
     this.agendamentoService.listar().subscribe({
       next: (dados) => {
         this.agendamentos = dados;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
         this.carregando = false;
+        this.cdr.detectChanges();
       }
+    });
+  }
+
+  cancelar(id: number) {
+    if (!confirm('Deseja cancelar este agendamento?')) return;
+    this.agendamentoService.cancelar(id).subscribe({
+      next: () => this.carregarAgendamentos(),
+      error: (err) => console.error(err)
     });
   }
 }
