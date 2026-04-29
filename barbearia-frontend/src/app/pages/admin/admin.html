@@ -40,19 +40,28 @@
 
     <!-- Seção: Agendamentos do dia -->
     <section *ngIf="secaoAtiva === 'agendamentos'" aria-label="Agendamentos do dia">
-      <h2>📅 Agendamentos do dia</h2>
+
+      <div class="secao-header">
+        <h2>📅 Agendamentos</h2>
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="dataSelecionada" (dateChange)="filtrarPorData()">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
 
       <!-- Carregando -->
       <p *ngIf="carregando" class="empty-msg">Carregando agendamentos...</p>
 
       <!-- Nenhum agendamento -->
-      <p *ngIf="!carregando && agendamentos.length === 0" class="empty-msg">
-        Nenhum agendamento encontrado.
+      <p *ngIf="!carregando && agendamentosFiltrados.length === 0" class="empty-msg">
+        Nenhum agendamento encontrado para esta data.
       </p>
 
       <!-- Lista de agendamentos -->
-      <div *ngIf="!carregando && agendamentos.length > 0" class="agendamentos-list">
-        <div *ngFor="let ag of agendamentos" class="agendamento-card">
+      <div *ngIf="!carregando && agendamentosFiltrados.length > 0" class="agendamentos-list">
+        <div *ngFor="let ag of agendamentosFiltrados" class="agendamento-card">
 
           <div class="ag-info">
             <span class="ag-horario">{{ ag.dataHora | date:'HH:mm' }}</span>
@@ -67,10 +76,7 @@
             <span class="ag-status" [class.cancelado]="ag.status === 'CANCELADO'">
               {{ ag.status }}
             </span>
-            <button
-              *ngIf="ag.status !== 'CANCELADO'"
-              class="btn-cancelar"
-              (click)="cancelar(ag.id)">
+            <button *ngIf="ag.status !== 'CANCELADO'" class="btn-cancelar" (click)="cancelar(ag.id)">
               Cancelar
             </button>
           </div>
