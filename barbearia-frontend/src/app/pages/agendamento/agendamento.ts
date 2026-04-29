@@ -8,6 +8,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AgendamentoService } from '../../services/agendamento';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   selector: 'app-agendamento',
@@ -22,7 +23,10 @@ import { AgendamentoService } from '../../services/agendamento';
     MatSnackBarModule
   ],
   templateUrl: './agendamento.html',
-  styleUrl: './agendamento.css'
+  styleUrl: './agendamento.css',
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+  ]
 })
 export class Agendamento {
 
@@ -36,12 +40,12 @@ export class Agendamento {
   ) {
     // Define os campos e suas validações
     this.form = this.fb.group({
-      nomeCliente:     ['', Validators.required],
+      nomeCliente: ['', Validators.required],
       telefoneCliente: ['', Validators.required],
-      barbeiroId:      ['', Validators.required],
-      servicoId:       ['', Validators.required],
-      data:            ['', Validators.required],
-      horario:         ['', Validators.required]
+      barbeiroId: ['', Validators.required],
+      servicoId: ['', Validators.required],
+      data: ['', Validators.required],
+      horario: ['', Validators.required]
     });
   }
 

@@ -1,11 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef, LOCALE_ID } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AgendamentoService } from '../../services/agendamento';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 @Component({
   selector: 'app-admin',
@@ -18,7 +21,11 @@ import { AgendamentoService } from '../../services/agendamento';
     MatNativeDateModule
   ],
   templateUrl: './admin.html',
-  styleUrl: './admin.css'
+  styleUrl: './admin.css',
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+  ]
 })
 export class Admin implements OnInit {
 
@@ -26,8 +33,6 @@ export class Admin implements OnInit {
   agendamentos: any[] = [];
   agendamentosFiltrados: any[] = [];
   carregando = true;
-
-  // Data selecionada no filtro — começa com hoje
   dataSelecionada: Date = new Date();
 
   constructor(
@@ -39,7 +44,6 @@ export class Admin implements OnInit {
     this.carregarAgendamentos();
   }
 
-  // Busca todos os agendamentos no backend
   carregarAgendamentos() {
     this.carregando = true;
     this.agendamentoService.listar().subscribe({
@@ -57,7 +61,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // Filtra agendamentos pela data selecionada
   filtrarPorData() {
     if (!this.dataSelecionada) {
       this.agendamentosFiltrados = this.agendamentos;
@@ -76,7 +79,6 @@ export class Admin implements OnInit {
     this.cdr.detectChanges();
   }
 
-  // Cancela um agendamento pelo ID
   cancelar(id: number) {
     if (!confirm('Deseja cancelar este agendamento?')) return;
     this.agendamentoService.cancelar(id).subscribe({
