@@ -21,7 +21,7 @@
 .sidebar-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between; /* 🔥 adiciona isso */
   padding: 0 24px 24px;
   border-bottom: 1px solid #2d2d2d;
   margin-bottom: 16px;
@@ -52,6 +52,20 @@
   font-size: 0.75rem;
   color: #888;
   margin: 0;
+}
+
+/* Agrupamento esquerdo (logo + texto) */
+.sidebar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Ações (tema + logout) */
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Lista de itens do menu */
@@ -195,5 +209,21 @@
 .btn-logout:hover {
   background: #c62828;
   border-color: #c62828;
+  color: white;
+}
+
+.btn-tema {
+  background: transparent;
+  border: 1px solid #444;
+  color: #aaa;
+  border-radius: 20px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.btn-tema:hover {
+  background: #2d2d2d;
   color: white;
 }

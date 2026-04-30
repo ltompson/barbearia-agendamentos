@@ -9,14 +9,25 @@
   <aside class="sidebar" role="navigation" aria-label="Menu administrativo">
 
     <header class="sidebar-header">
-      <div class="logo">A</div>
-      <div class="sidebar-info">
-        <h1 class="sidebar-title">Alquimista</h1>
-        <p class="sidebar-sub">Painel Admin</p>
+
+      <div class="sidebar-left">
+        <div class="logo">A</div>
+        <div class="sidebar-info">
+          <h1 class="sidebar-title">Alquimista</h1>
+          <p class="sidebar-sub">Painel Admin</p>
+        </div>
       </div>
-      <button class="btn-logout" (click)="logout()" aria-label="Sair do painel">
-        Sair
-      </button>
+
+      <div class="sidebar-actions">
+        <button class="btn-tema" (click)="toggleTema()">
+          {{ temaEscuro ? '☀️' : '🌙' }}
+        </button>
+
+        <button class="btn-logout" (click)="logout()">
+          Sair
+        </button>
+      </div>
+
     </header>
 
     <nav>

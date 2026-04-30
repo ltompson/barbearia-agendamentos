@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, LOCALE_ID } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, LOCALE_ID, inject } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AgendamentoService } from '../../services/agendamento';
 import localePt from '@angular/common/locales/pt';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../services/theme.service';
 
 registerLocaleData(localePt);
 
@@ -30,6 +31,8 @@ registerLocaleData(localePt);
 })
 export class Admin implements OnInit {
 
+  private themeService = inject(ThemeService);
+
   secaoAtiva = 'agendamentos';
   agendamentos: any[] = [];
   agendamentosFiltrados: any[] = [];
@@ -40,7 +43,15 @@ export class Admin implements OnInit {
     private agendamentoService: AgendamentoService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
+
+  get temaEscuro(): boolean {
+    return this.themeService.darkMode;
+  }
+
+  toggleTema() {
+    this.themeService.toggle();
+  }
 
   ngOnInit() {
     this.carregarAgendamentos();
@@ -74,8 +85,8 @@ export class Admin implements OnInit {
     this.agendamentosFiltrados = this.agendamentos.filter(ag => {
       const dataAg = new Date(ag.dataHora);
       return dataAg.getFullYear() === dataSel.getFullYear() &&
-             dataAg.getMonth() === dataSel.getMonth() &&
-             dataAg.getDate() === dataSel.getDate();
+        dataAg.getMonth() === dataSel.getMonth() &&
+        dataAg.getDate() === dataSel.getDate();
     });
 
     this.cdr.detectChanges();
