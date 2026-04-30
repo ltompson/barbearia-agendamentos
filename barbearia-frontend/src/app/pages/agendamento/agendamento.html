@@ -9,6 +9,12 @@
   <header class="header" role="banner">
     <h1>✂️ Alquimista Barbearia</h1>
     <p class="subtitle">Faça seu agendamento de forma rápida e fácil</p>
+
+    <!-- Botão de alternar tema -->
+    <button class="btn-tema" (click)="toggleTema()">
+      {{ temaEscuro ? '☀️ Tema Claro' : '🌙 Tema Escuro' }}
+    </button>
+
   </header>
 
   <!-- Formulário principal de agendamento -->
@@ -21,21 +27,14 @@
       <!-- Nome do cliente -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Seu nome</mat-label>
-        <input matInput
-               type="text"
-               formControlName="nomeCliente"
-               placeholder="Ex: João Silva"
-               autocomplete="name">
+        <input matInput type="text" formControlName="nomeCliente" placeholder="Ex: João Silva" autocomplete="name">
       </mat-form-field>
 
       <!-- Telefone para contato -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Seu telefone</mat-label>
-        <input matInput
-               type="tel"
-               formControlName="telefoneCliente"
-               placeholder="Ex: (84) 99999-9999"
-               autocomplete="tel">
+        <input matInput type="tel" formControlName="telefoneCliente" placeholder="Ex: (84) 99999-9999"
+          autocomplete="tel">
       </mat-form-field>
 
     </section>
@@ -81,9 +80,7 @@
       <!-- Seletor de data -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Data</mat-label>
-        <input matInput
-               [matDatepicker]="picker"
-               formControlName="data">
+        <input matInput [matDatepicker]="picker" formControlName="data">
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -119,11 +116,7 @@
     </section>
 
     <!-- Botão de submissão -->
-    <button mat-raised-button
-            color="primary"
-            class="full-width"
-            type="submit"
-            aria-label="Confirmar agendamento">
+    <button mat-raised-button color="primary" class="full-width" type="submit" aria-label="Confirmar agendamento">
       Confirmar Agendamento
     </button>
 
