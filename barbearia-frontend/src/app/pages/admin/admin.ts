@@ -7,6 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AgendamentoService } from '../../services/agendamento';
 import localePt from '@angular/common/locales/pt';
+import { Router } from '@angular/router';
 
 registerLocaleData(localePt);
 
@@ -37,7 +38,8 @@ export class Admin implements OnInit {
 
   constructor(
     private agendamentoService: AgendamentoService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -85,5 +87,11 @@ export class Admin implements OnInit {
       next: () => this.carregarAgendamentos(),
       error: (err) => console.error(err)
     });
+  }
+
+  // Encerra a sessao e redireciona para o login
+  logout() {
+    sessionStorage.removeItem('admin');
+    this.router.navigate(['/admin/login']);
   }
 }

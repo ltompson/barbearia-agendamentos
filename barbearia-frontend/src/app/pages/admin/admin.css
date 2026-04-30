@@ -173,3 +173,27 @@
   background: #ffebee;
   color: #c62828;
 }
+
+/* Informações da sidebar */
+.sidebar-info {
+  flex: 1;
+}
+
+/* Botão de logout */
+.btn-logout {
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #444;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-logout:hover {
+  background: #c62828;
+  border-color: #c62828;
+  color: white;
+}
