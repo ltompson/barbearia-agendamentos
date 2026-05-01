@@ -9,9 +9,11 @@ import java.util.List;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
-    List<Agendamento> findByBarbeiroIdAndDataHoraBetween(
+    // Usado na verificação de conflito ao agendar
+    List<Agendamento> findByBarbeiroIdAndDataHoraBetweenAndStatusNot(
             Long barbeiroId,
             LocalDateTime inicio,
-            LocalDateTime fim
+            LocalDateTime fim,
+            String status
     );
 }

@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AgendamentoService } from '../../services/agendamento';
 import { ThemeService } from '../../services/theme.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-agendamento',
@@ -20,7 +21,9 @@ import { ThemeService } from '../../services/theme.service';
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    CommonModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './agendamento.html',
   styleUrl: './agendamento.css',
@@ -31,7 +34,9 @@ import { ThemeService } from '../../services/theme.service';
 export class Agendamento {
 
   form: FormGroup;
+  horariosDisponiveis: string[] = [];
   private themeService = inject(ThemeService);
+
 
   constructor(
     private fb: FormBuilder,
@@ -46,6 +51,9 @@ export class Agendamento {
       data: ['', Validators.required],
       horario: ['', Validators.required]
     });
+
+    this.form.get('data')?.valueChanges.subscribe(() => this.onDataOuBarbeiroChange());
+    this.form.get('barbeiroId')?.valueChanges.subscribe(() => this.onDataOuBarbeiroChange());
   }
 
   get temaEscuro(): boolean {
@@ -54,6 +62,21 @@ export class Agendamento {
 
   toggleTema() {
     this.themeService.toggle();
+  }
+
+  onDataOuBarbeiroChange() {
+    const { data, barbeiroId } = this.form.value;
+    if (!data || !barbeiroId) return;
+
+    this.agendamentoService.getHorariosDisponiveis(data, barbeiroId).subscribe({
+      next: (horarios) => {
+        this.horariosDisponiveis = horarios;
+        this.form.patchValue({ horario: '' }); // limpa horário anterior
+      },
+      error: () => {
+        this.snackBar.open('Erro ao buscar horários.', 'Fechar', { duration: 3000 });
+      }
+    });
   }
 
   confirmar() {

@@ -19,7 +19,7 @@ export class AgendamentoService {
   // URL base do backend Spring Boot
   private apiUrl = 'http://localhost:8080/api/agendamentos';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Envia um novo agendamento para o backend
   criar(agendamento: AgendamentoRequest): Observable<any> {
@@ -35,4 +35,12 @@ export class AgendamentoService {
   cancelar(id: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/cancelar`, {});
   }
+
+  getHorariosDisponiveis(data: Date, barbeiroId: number): Observable<string[]> {
+    const dataISO = data.toISOString().split('T')[0]; // converte para YYYY-MM-DD
+    return this.http.get<string[]>(`${this.apiUrl}/disponiveis`, {
+      params: { data: dataISO, barbeiroId: barbeiroId.toString() }
+    });
+  }
+
 }

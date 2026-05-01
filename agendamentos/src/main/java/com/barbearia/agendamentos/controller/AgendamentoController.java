@@ -7,6 +7,8 @@ import com.barbearia.agendamentos.entity.Cliente;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +33,15 @@ public class AgendamentoController {
     public ResponseEntity<List<Agendamento>> listarPorBarbeiro(
             @PathVariable Long barbeiroId) {
         return ResponseEntity.ok(agendamentoService.listarPorBarbeiro(barbeiroId));
+    }
+
+    @GetMapping("/disponiveis")
+    public ResponseEntity<List<LocalTime>> getHorariosDisponiveis(
+            @RequestParam String data,
+            @RequestParam Long barbeiroId) {
+        LocalDate localDate = LocalDate.parse(data);
+        List<LocalTime> horarios = agendamentoService.getHorariosDisponiveis(localDate, barbeiroId);
+        return ResponseEntity.ok(horarios);
     }
 
     // Cria um novo agendamento recebendo os dados do cliente diretamente

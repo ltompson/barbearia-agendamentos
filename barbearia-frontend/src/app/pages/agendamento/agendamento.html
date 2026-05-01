@@ -88,29 +88,17 @@
       <!-- Seleção do horário -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Horário</mat-label>
-        <mat-select formControlName="horario">
-          <mat-optgroup label="Manhã">
-            <mat-option value="09:00">09:00</mat-option>
-            <mat-option value="09:30">09:30</mat-option>
-            <mat-option value="10:00">10:00</mat-option>
-            <mat-option value="10:30">10:30</mat-option>
-            <mat-option value="11:00">11:00</mat-option>
-            <mat-option value="11:30">11:30</mat-option>
-          </mat-optgroup>
-          <mat-optgroup label="Tarde">
-            <mat-option value="13:00">13:00</mat-option>
-            <mat-option value="13:30">13:30</mat-option>
-            <mat-option value="14:00">14:00</mat-option>
-            <mat-option value="14:30">14:30</mat-option>
-            <mat-option value="15:00">15:00</mat-option>
-            <mat-option value="15:30">15:30</mat-option>
-            <mat-option value="16:00">16:00</mat-option>
-            <mat-option value="16:30">16:30</mat-option>
-            <mat-option value="17:00">17:00</mat-option>
-            <mat-option value="17:30">17:30</mat-option>
-            <mat-option value="18:00">18:00</mat-option>
-          </mat-optgroup>
-        </mat-select>
+        <!-- Seleção do horário -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Horário</mat-label>
+          <!-- ✅ NOVO -->
+          <mat-select formControlName="horario" [disabled]="horariosDisponiveis.length === 0">
+            <mat-option *ngFor="let h of horariosDisponiveis" [value]="h">{{ h }}</mat-option>
+          </mat-select>
+          <mat-hint *ngIf="horariosDisponiveis.length === 0">
+            Selecione barbeiro e data para ver os horários
+          </mat-hint>
+        </mat-form-field>
       </mat-form-field>
 
     </section>
