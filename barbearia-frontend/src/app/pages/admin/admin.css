@@ -21,7 +21,8 @@
 .sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 🔥 adiciona isso */
+  justify-content: space-between;
+  /* 🔥 adiciona isso */
   padding: 0 24px 24px;
   border-bottom: 1px solid #2d2d2d;
   margin-bottom: 16px;
@@ -226,4 +227,158 @@
 .btn-tema:hover {
   background: #2d2d2d;
   color: white;
+}
+
+/* ─── RESPONSIVIDADE MOBILE ADMIN ──────────────────────────────────────── */
+
+/* Esconde botão hamburguer no desktop */
+.btn-hamburger {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 0;
+    flex-direction: column;
+    z-index: 200;
+    overflow: visible;
+  }
+
+  .sidebar-header {
+    padding: 12px 16px;
+  }
+
+  .sidebar-title {
+    font-size: 0.9rem;
+  }
+
+  /* Botão hamburguer aparece só no mobile */
+  .btn-hamburger {
+    display: flex;
+    background: transparent;
+    border: 1px solid #444;
+    color: #aaa;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  /* Menu dropdown */
+  nav {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: #1a1a1a;
+    z-index: 300;
+    border-bottom: 1px solid #2d2d2d;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    animation: slideDown 0.2s ease-out;
+  }
+
+  .menu-list {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    gap: 0;
+  }
+
+  .menu-item {
+    padding: 14px 20px;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+    border-bottom: none;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .menu-item.active {
+    border-left: 3px solid #c9a84c;
+    border-bottom: none;
+    background: #2d2d2d;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px 16px;
+    min-height: calc(100vh - 120px);
+  }
+
+  .main-content h2 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+  }
+
+  .agendamento-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .ag-acoes {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .ag-horario {
+    font-size: 1.2rem;
+  }
+
+  .filtro-data {
+    width: 100% !important;
+  }
+
+  .secao-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 380px) {
+
+  .sidebar-header {
+    padding: 10px 12px;
+  }
+
+  .logo {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .main-content {
+    padding: 16px 12px;
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+.menu-aberto {
+  animation: slideDown 0.18s ease-out forwards;
+}
+
+.menu-fechando {
+  animation: slideUp 0.18s ease-in forwards;
 }

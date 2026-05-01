@@ -166,6 +166,27 @@ export class Admin implements OnInit {
     return `${ano}-${mes}-${dia}`;
   }
 
+  menuAberto = false;
+  menuFechando = false;
+
+  toggleMenu() {
+    if (this.menuAberto) {
+      this.menuFechando = true;
+      this.menuAberto = false;
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.menuFechando = false;
+        this.cdr.detectChanges();
+      }, 180);
+    } else {
+      this.menuAberto = true;
+      this.menuFechando = false;
+    }
+  }
+  isMobile(): boolean {
+    return window.innerWidth <= 768;
+  }
+
   // Encerra a sessao e redireciona para o login
   logout() {
     sessionStorage.removeItem('admin');

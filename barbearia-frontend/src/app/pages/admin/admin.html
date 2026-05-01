@@ -11,6 +11,7 @@
     <header class="sidebar-header">
 
       <div class="sidebar-left">
+        <button class="btn-hamburger" (click)="toggleMenu()">☰</button>
         <div class="logo">A</div>
         <div class="sidebar-info">
           <h1 class="sidebar-title">Alquimista</h1>
@@ -22,26 +23,27 @@
         <button class="btn-tema" (click)="toggleTema()">
           {{ temaEscuro ? '☀️' : '🌙' }}
         </button>
-
-        <button class="btn-logout" (click)="logout()">
-          Sair
-        </button>
+        <button class="btn-logout" (click)="logout()">Sair</button>
       </div>
 
     </header>
 
-    <nav>
+    <nav [class.menu-fechando]="menuFechando" [class.menu-aberto]="menuAberto" *ngIf="menuAberto || menuFechando">
       <ul class="menu-list">
-        <li class="menu-item" [class.active]="secaoAtiva === 'agendamentos'" (click)="secaoAtiva = 'agendamentos'">
+        <li class="menu-item" [class.active]="secaoAtiva === 'agendamentos'"
+          (click)="secaoAtiva = 'agendamentos'; toggleMenu()">
           📅 Agendamentos do dia
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'profissionais'" (click)="secaoAtiva = 'profissionais'">
+        <li class="menu-item" [class.active]="secaoAtiva === 'profissionais'"
+          (click)="secaoAtiva = 'profissionais'; toggleMenu()">
           👥 Profissionais
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'horarios'" (click)="secaoAtiva = 'horarios'">
+        <li class="menu-item" [class.active]="secaoAtiva === 'horarios'"
+          (click)="secaoAtiva = 'horarios'; toggleMenu()">
           ⏰ Horários de Funcionamento
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'bloqueios'" (click)="secaoAtiva = 'bloqueios'">
+        <li class="menu-item" [class.active]="secaoAtiva === 'bloqueios'"
+          (click)="secaoAtiva = 'bloqueios'; toggleMenu()">
           🚫 Bloqueio de Datas
         </li>
       </ul>
