@@ -1,13 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-// Guard que protege rotas do painel admin
-// Redireciona para login se o usuário não estiver autenticado
 export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const admin = sessionStorage.getItem('admin');
+  const authService = inject(AuthService);
 
-  if (admin) {
+  if (authService.isLogado()) {
     return true;
   }
 

@@ -11,6 +11,7 @@ import { AgendamentoService } from '../../services/agendamento';
 import localePt from '@angular/common/locales/pt';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
+import { AuthService } from '../../services/auth.service';
 
 registerLocaleData(localePt);
 
@@ -45,6 +46,7 @@ export class Admin implements OnInit {
   constructor(
     private agendamentoService: AgendamentoService,
     private bloqueioService: BloqueioService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) { }
@@ -189,7 +191,7 @@ export class Admin implements OnInit {
 
   // Encerra a sessao e redireciona para o login
   logout() {
-    sessionStorage.removeItem('admin');
+    this.authService.logout();
     this.router.navigate(['/admin/login']);
   }
 }

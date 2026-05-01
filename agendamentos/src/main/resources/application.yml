@@ -24,3 +24,8 @@ server:
       include-message: always
       include-binding-errors: always
       include-stacktrace: always
+
+jwt:
+  secret: alquimista-barbearia-secret-key-2026-super-segura
+  expiration: 86400000 # 24 horas em ms
+
