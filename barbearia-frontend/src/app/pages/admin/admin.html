@@ -114,8 +114,68 @@
 
     <!-- Seção: Bloqueio de Datas -->
     <section *ngIf="secaoAtiva === 'bloqueios'" aria-label="Bloqueio de datas">
-      <h2>🚫 Bloqueio de Datas</h2>
-      <p class="empty-msg">Em breve.</p>
+
+      <div class="secao-header">
+        <h2>🚫 Bloqueio de Horários</h2>
+      </div>
+
+      <!-- Formulário de bloqueio -->
+      <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Barbeiro</mat-label>
+          <mat-select [(ngModel)]="bloqueioForm.barbeiroId">
+            <mat-option [value]="1">Francisco</mat-option>
+            <mat-option [value]="2">Raniel Dias</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="pickerBloqueio" [(ngModel)]="bloqueioForm.data"
+            (dateChange)="carregarBloqueios()">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerBloqueio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerBloqueio></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Horário</mat-label>
+          <mat-select [(ngModel)]="bloqueioForm.horario">
+            <mat-option *ngFor="let h of horariosBloqueio" [value]="h">{{ h }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Motivo (opcional)</mat-label>
+          <input matInput [(ngModel)]="bloqueioForm.motivo" placeholder="Ex: Almoço, Folga...">
+        </mat-form-field>
+
+        <button class="btn-cancelar" style="background: #e53935;" (click)="criarBloqueio()">
+          🚫 Bloquear Horário
+        </button>
+
+      </div>
+
+      <!-- Lista de bloqueios do dia -->
+      <div *ngIf="bloqueios.length > 0" class="agendamentos-list" style="margin-top: 24px;">
+        <div *ngFor="let b of bloqueios" class="agendamento-card">
+          <div class="ag-info">
+            <span class="ag-horario">{{ b.horario.substring(0, 5) }}</span>
+            <div>
+              <p class="ag-cliente">{{ b.barbeiro?.nome }}</p>
+              <p class="ag-detalhe">{{ b.motivo || 'Sem motivo' }}</p>
+            </div>
+          </div>
+          <div class="ag-acoes">
+            <button class="btn-cancelar" (click)="deletarBloqueio(b.id)">Remover</button>
+          </div>
+        </div>
+      </div>
+
+      <p *ngIf="bloqueios.length === 0 && bloqueioForm.data" class="empty-msg">
+        Nenhum bloqueio para esta data.
+      </p>
+
     </section>
 
   </main>

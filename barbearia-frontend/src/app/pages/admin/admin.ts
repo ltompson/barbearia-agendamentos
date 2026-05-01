@@ -1,3 +1,5 @@
+import { BloqueioService, Bloqueio } from '../../services/bloqueio';
+import { MatSelectModule } from '@angular/material/select';
 import { Component, OnInit, ChangeDetectorRef, LOCALE_ID, inject } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +22,8 @@ registerLocaleData(localePt);
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSelectModule
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
@@ -41,6 +44,7 @@ export class Admin implements OnInit {
 
   constructor(
     private agendamentoService: AgendamentoService,
+    private bloqueioService: BloqueioService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) { }
@@ -92,12 +96,74 @@ export class Admin implements OnInit {
     this.cdr.detectChanges();
   }
 
+  // Bloqueios
+  bloqueios: any[] = [];
+  bloqueioForm = {
+    barbeiroId: null as number | null,
+    data: null as Date | null,
+    horario: '',
+    motivo: ''
+  };
+  horariosBloqueio = [
+    '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
+    '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
+    '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+    '17:00', '17:30'
+  ];
+
   cancelar(id: number) {
     if (!confirm('Deseja cancelar este agendamento?')) return;
     this.agendamentoService.cancelar(id).subscribe({
       next: () => this.carregarAgendamentos(),
       error: (err) => console.error(err)
     });
+  }
+
+  carregarBloqueios() {
+    if (!this.bloqueioForm.data) return;
+    const data = this.formatarData(this.bloqueioForm.data);
+    this.bloqueioService.listarPorData(data).subscribe({
+      next: (dados) => { this.bloqueios = dados; this.cdr.detectChanges(); },
+      error: (err) => console.error(err)
+    });
+  }
+
+  criarBloqueio() {
+    const { barbeiroId, data, horario, motivo } = this.bloqueioForm;
+    if (!barbeiroId || !data || !horario) {
+      alert('Preencha barbeiro, data e horário.');
+      return;
+    }
+    const bloqueio: Bloqueio = {
+      barbeiroId,
+      data: this.formatarData(data),
+      horario: horario + ':00',
+      motivo
+    };
+    this.bloqueioService.criar(bloqueio).subscribe({
+      next: () => {
+        this.bloqueioForm.horario = '';
+        this.bloqueioForm.motivo = '';
+        this.carregarBloqueios();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  deletarBloqueio(id: number) {
+    if (!confirm('Remover este bloqueio?')) return;
+    this.bloqueioService.deletar(id).subscribe({
+      next: () => this.carregarBloqueios(),
+      error: (err) => console.error(err)
+    });
+  }
+
+  private formatarData(data: Date): string {
+    const d = new Date(data);
+    const ano = d.getFullYear();
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
   }
 
   // Encerra a sessao e redireciona para o login
