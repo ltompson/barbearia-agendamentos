@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import com.barbearia.agendamentos.service.DiaDisponivelService;
 
 @RestController
 @RequestMapping("/api/agendamentos")
@@ -21,6 +21,7 @@ public class AgendamentoController {
 
     private final AgendamentoService agendamentoService;
     private final ClienteService clienteService;
+    private final DiaDisponivelService diaDisponivelService;
 
     // Retorna todos os agendamentos (painel admin)
     @GetMapping
@@ -42,6 +43,15 @@ public class AgendamentoController {
         LocalDate localDate = LocalDate.parse(data);
         List<LocalTime> horarios = agendamentoService.getHorariosDisponiveis(localDate, barbeiroId);
         return ResponseEntity.ok(horarios);
+    }
+
+    @GetMapping("/dia-disponivel")
+    public ResponseEntity<Boolean> isDiaDisponivel(
+            @RequestParam String data,
+            @RequestParam Long barbeiroId) {
+        LocalDate localDate = LocalDate.parse(data);
+        boolean disponivel = diaDisponivelService.isDisponivelParaBarbeiro(localDate, barbeiroId);
+        return ResponseEntity.ok(disponivel);
     }
 
     // Cria um novo agendamento recebendo os dados do cliente diretamente

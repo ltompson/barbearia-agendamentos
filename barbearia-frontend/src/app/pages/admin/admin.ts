@@ -12,6 +12,7 @@ import localePt from '@angular/common/locales/pt';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { AuthService } from '../../services/auth.service';
+import { DiaDisponivelService } from '../../services/dia-disponivel.service';
 
 registerLocaleData(localePt);
 
@@ -48,6 +49,7 @@ export class Admin implements OnInit {
     private bloqueioService: BloqueioService,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
+    private diaDisponivelService: DiaDisponivelService,
     private router: Router
   ) { }
 
@@ -189,6 +191,54 @@ export class Admin implements OnInit {
     return window.innerWidth <= 768;
   }
 
+  carregarDiasDisponiveis() {
+    if (!this.diaDisponivelForm.data) return;
+    const data = this.formatarData(this.diaDisponivelForm.data);
+    this.diaDisponivelService.listarPorData(data).subscribe({
+      next: (dados) => { this.diasDisponiveis = dados; this.cdr.detectChanges(); },
+      error: (err) => console.error(err)
+    });
+  }
+
+  diasDisponiveis: any[] = [];
+  diaDisponivelForm = {
+    barbeiroId: null as number | null,
+    data: null as Date | null,
+    motivo: ''
+  };
+
+  filtroFimDeSemana = (data: Date | null): boolean => {
+    if (!data) return false;
+    const dia = data.getDay();
+    return dia === 0 || dia === 6;
+  };
+
+  criarDiaDisponivel() {
+    const { barbeiroId, data, motivo } = this.diaDisponivelForm;
+    if (!barbeiroId || !data) {
+      alert('Preencha barbeiro e data.');
+      return;
+    }
+    this.diaDisponivelService.criar({
+      barbeiroId,
+      data: this.formatarData(data),
+      motivo
+    }).subscribe({
+      next: () => {
+        this.diaDisponivelForm.motivo = '';
+        this.carregarDiasDisponiveis();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  deletarDiaDisponivel(id: number) {
+    if (!confirm('Remover este dia liberado?')) return;
+    this.diaDisponivelService.deletar(id).subscribe({
+      next: () => this.carregarDiasDisponiveis(),
+      error: (err) => console.error(err)
+    });
+  }
   // Encerra a sessao e redireciona para o login
   logout() {
     this.authService.logout();

@@ -81,7 +81,7 @@
       <mat-form-field appearance="outline" class="full-width" style="cursor: pointer;">
         <mat-label>Data</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="data" (click)="picker.open()" readonly
-          style="cursor: pointer;">
+          style="cursor: pointer;" [matDatepickerFilter]="filtroData">
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -89,17 +89,20 @@
       <!-- Seleção do horário -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Horário</mat-label>
-        <!-- Seleção do horário -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Horário</mat-label>
-          <!-- ✅ NOVO -->
-          <mat-select formControlName="horario" [disabled]="horariosDisponiveis.length === 0">
-            <mat-option *ngFor="let h of horariosDisponiveis" [value]="h">{{ h }}</mat-option>
-          </mat-select>
-          <mat-hint *ngIf="horariosDisponiveis.length === 0">
-            Selecione barbeiro e data para ver os horários
-          </mat-hint>
-        </mat-form-field>
+        <mat-select formControlName="horario">
+          <mat-optgroup label="——— MANHÃ ———" *ngIf="horariosManha().length > 0">
+            <mat-option *ngFor="let h of horariosManha()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="——— TARDE ———" *ngIf="horariosTarde().length > 0">
+            <mat-option *ngFor="let h of horariosTarde()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="——— NOITE ———" *ngIf="horariosNoite().length > 0">
+            <mat-option *ngFor="let h of horariosNoite()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
+          </mat-optgroup>
+        </mat-select>
+        <mat-hint *ngIf="horariosDisponiveis.length === 0">
+          Selecione barbeiro e data para ver os horários
+        </mat-hint>
       </mat-form-field>
 
     </section>

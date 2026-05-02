@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
 // Define o formato dos dados que serão enviados para o backend
 export interface AgendamentoRequest {
   nomeCliente: string;

@@ -28,7 +28,7 @@ public class AgendamentoService {
 
     // ─── Configuração dos slots do dia ──────────────────────────────────────────
     private static final LocalTime INICIO_EXPEDIENTE = LocalTime.of(8, 0);
-    private static final LocalTime FIM_EXPEDIENTE    = LocalTime.of(18, 0);
+    private static final LocalTime FIM_EXPEDIENTE    = LocalTime.of(19, 0);
     private static final int INTERVALO_MINUTOS       = 30;
 
     // ─── Horários disponíveis ────────────────────────────────────────────────────

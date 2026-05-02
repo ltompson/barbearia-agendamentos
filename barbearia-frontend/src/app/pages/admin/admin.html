@@ -28,7 +28,7 @@
 
     </header>
 
-    <nav [class.menu-fechando]="menuFechando" [class.menu-aberto]="menuAberto" *ngIf="menuAberto || menuFechando">
+    <nav *ngIf="menuAberto || menuFechando || !isMobile()">
       <ul class="menu-list">
         <li class="menu-item" [class.active]="secaoAtiva === 'agendamentos'"
           (click)="secaoAtiva = 'agendamentos'; toggleMenu()">
@@ -156,6 +156,56 @@
           🚫 Bloquear Horário
         </button>
 
+      </div>
+
+      <!-- Dias especiais disponíveis -->
+      <div class="secao-header" style="margin-top: 32px;">
+        <h3>📅 Liberar Fim de Semana</h3>
+      </div>
+
+      <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Barbeiro</mat-label>
+          <mat-select [(ngModel)]="diaDisponivelForm.barbeiroId">
+            <mat-option [value]="1">Francisco</mat-option>
+            <mat-option [value]="2">Raniel Dias</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Data (sábado ou domingo)</mat-label>
+          <input matInput [matDatepicker]="pickerDiaDisponivel" [(ngModel)]="diaDisponivelForm.data"
+            [matDatepickerFilter]="filtroFimDeSemana" (dateChange)="carregarDiasDisponiveis()">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerDiaDisponivel"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDiaDisponivel></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Motivo (opcional)</mat-label>
+          <input matInput [(ngModel)]="diaDisponivelForm.motivo" placeholder="Ex: Plantão, Evento...">
+        </mat-form-field>
+
+        <button class="btn-cancelar" style="background: #2e7d32;" (click)="criarDiaDisponivel()">
+          ✅ Liberar Dia
+        </button>
+
+      </div>
+
+      <!-- Lista de dias liberados -->
+      <div *ngIf="diasDisponiveis.length > 0" class="agendamentos-list" style="margin-top: 16px;">
+        <div *ngFor="let d of diasDisponiveis" class="agendamento-card">
+          <div class="ag-info">
+            <span class="ag-horario">{{ d.data | date:'dd/MM' }}</span>
+            <div>
+              <p class="ag-cliente">{{ d.barbeiroId === 1 ? 'Francisco' : 'Raniel Dias' }}</p>
+              <p class="ag-detalhe">{{ d.motivo || 'Sem motivo' }}</p>
+            </div>
+          </div>
+          <div class="ag-acoes">
+            <button class="btn-cancelar" (click)="deletarDiaDisponivel(d.id)">Remover</button>
+          </div>
+        </div>
       </div>
 
       <!-- Lista de bloqueios do dia -->

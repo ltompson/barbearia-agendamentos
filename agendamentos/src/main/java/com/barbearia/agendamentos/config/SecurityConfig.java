@@ -37,6 +37,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/agendamentos/dia-disponivel").permitAll()
                         .requestMatchers("/api/agendamentos/disponiveis").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos").permitAll()
@@ -58,3 +59,4 @@ public class SecurityConfig {
         return source;
     }
 }
+
