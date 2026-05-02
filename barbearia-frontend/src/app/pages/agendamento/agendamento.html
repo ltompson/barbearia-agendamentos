@@ -81,7 +81,7 @@
       <mat-form-field appearance="outline" class="full-width" style="cursor: pointer;">
         <mat-label>Data</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="data" (click)="picker.open()" readonly
-          style="cursor: pointer;" [matDatepickerFilter]="filtroData">
+          style="cursor: pointer;" [matDatepickerFilter]="filtroDataFn" (dateChange)="onDataOuBarbeiroChange()">
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>

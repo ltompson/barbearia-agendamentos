@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +24,6 @@ import { DiaDisponivelService } from '../../services/dia-disponivel.service';
     MatButtonModule,
     MatSnackBarModule,
     CommonModule,
-    ReactiveFormsModule,
   ],
   templateUrl: './agendamento.html',
   styleUrl: './agendamento.css',
@@ -36,15 +35,19 @@ export class Agendamento {
 
   form: FormGroup;
   horariosDisponiveis: string[] = [];
+  diasExcecao: Set<string> = new Set();
+  filtroDataFn: (data: Date | null) => boolean = () => true;
   private themeService = inject(ThemeService);
-
 
   constructor(
     private fb: FormBuilder,
     private agendamentoService: AgendamentoService,
     private diaDisponivelService: DiaDisponivelService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) {
+    this.atualizarFiltroData();
+
     this.form = this.fb.group({
       nomeCliente: ['', Validators.required],
       telefoneCliente: ['', Validators.required],
@@ -55,7 +58,19 @@ export class Agendamento {
     });
 
     this.form.get('data')?.valueChanges.subscribe(() => this.onDataOuBarbeiroChange());
-    this.form.get('barbeiroId')?.valueChanges.subscribe(() => this.onDataOuBarbeiroChange());
+    this.form.get('barbeiroId')?.valueChanges.subscribe((barbeiroId) => {
+      if (barbeiroId) {
+        this.diasExcecao.clear();
+        this.diaDisponivelService.listarPorBarbeiro(barbeiroId).subscribe({
+          next: (dias) => {
+            dias.forEach(d => this.diasExcecao.add(d.data));
+            this.atualizarFiltroData();
+            this.cdr.detectChanges();
+          }
+        });
+      }
+      this.onDataOuBarbeiroChange();
+    });
   }
 
   get temaEscuro(): boolean {
@@ -66,23 +81,34 @@ export class Agendamento {
     this.themeService.toggle();
   }
 
+  private atualizarFiltroData() {
+    this.filtroDataFn = (data: Date | null): boolean => {
+      if (!data) return false;
+      const dia = data.getDay();
+      const dataISO = this.formatarData(data);
+      if (dia === 0 || dia === 6) {
+        return this.diasExcecao.has(dataISO);
+      }
+      return true;
+    };
+  }
+
   onDataOuBarbeiroChange() {
     const { data, barbeiroId } = this.form.value;
-    if (!data || !barbeiroId) return;
+    if (!barbeiroId || !data) return;
 
     const dataISO = this.formatarData(data);
     const diaDaSemana = new Date(data).getDay();
 
-    // Se for fim de semana, verifica se tem exceção
     if (diaDaSemana === 0 || diaDaSemana === 6) {
+      // Verifica no backend se esse dia específico está liberado
       this.diaDisponivelService.isDiaDisponivel(dataISO, barbeiroId).subscribe({
         next: (disponivel) => {
-          if (!disponivel) {
+          if (disponivel) {
+            this.buscarHorarios(data, barbeiroId);
+          } else {
             this.horariosDisponiveis = [];
-            return;
           }
-          this.diasExcecao.add(dataISO);
-          this.buscarHorarios(data, barbeiroId);
         }
       });
     } else {
@@ -103,10 +129,7 @@ export class Agendamento {
   }
 
   horariosManha(): string[] {
-    return this.horariosDisponiveis.filter(h => {
-      const hora = parseInt(h.split(':')[0]);
-      return hora >= 8 && hora < 12;
-    });
+    return this.horariosDisponiveis.filter(h => parseInt(h.split(':')[0]) < 12);
   }
 
   horariosTarde(): string[] {
@@ -117,23 +140,8 @@ export class Agendamento {
   }
 
   horariosNoite(): string[] {
-    return this.horariosDisponiveis.filter(h => {
-      const hora = parseInt(h.split(':')[0]);
-      return hora >= 18;
-    });
+    return this.horariosDisponiveis.filter(h => parseInt(h.split(':')[0]) >= 18);
   }
-
-  diasExcecao: Set<string> = new Set();
-
-  filtroData = (data: Date | null): boolean => {
-    if (!data) return false;
-    const dia = data.getDay();
-    const dataISO = data.toISOString().split('T')[0];
-    if (dia === 0 || dia === 6) {
-      return this.diasExcecao.has(dataISO);
-    }
-    return true;
-  };
 
   confirmar() {
     if (this.form.invalid) {
@@ -149,6 +157,7 @@ export class Agendamento {
       next: () => {
         this.snackBar.open('Agendamento realizado com sucesso! ✅', 'Fechar', { duration: 4000 });
         this.form.reset();
+        this.horariosDisponiveis = [];
       },
       error: (err) => {
         console.error(err);

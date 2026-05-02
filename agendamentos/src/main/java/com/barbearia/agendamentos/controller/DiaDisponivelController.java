@@ -29,4 +29,9 @@ public class DiaDisponivelController {
     public void deletar(@PathVariable Long id) {
         service.deletar(id);
     }
+
+    @GetMapping("/barbeiro/{barbeiroId}")
+    public List<DiaDisponivel> listarPorBarbeiro(@PathVariable Long barbeiroId) {
+        return service.listarPorBarbeiro(barbeiroId);
+    }
 }

@@ -28,4 +28,8 @@ public class DiaDisponivelService {
     public void deletar(Long id) {
         repository.deleteById(id);
     }
+
+    public List<DiaDisponivel> listarPorBarbeiro(Long barbeiroId) {
+        return repository.findByBarbeiroId(barbeiroId);
+    }
 }

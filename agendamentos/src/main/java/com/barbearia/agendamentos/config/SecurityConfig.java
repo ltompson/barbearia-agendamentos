@@ -39,10 +39,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/agendamentos/dia-disponivel").permitAll()
                         .requestMatchers("/api/agendamentos/disponiveis").permitAll()
+                        .requestMatchers("/api/dias-disponiveis/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

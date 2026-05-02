@@ -8,4 +8,5 @@ import java.util.List;
 public interface DiaDisponivelRepository extends JpaRepository<DiaDisponivel, Long> {
     List<DiaDisponivel> findByData(LocalDate data);
     boolean existsByDataAndBarbeiroId(LocalDate data, Long barbeiroId);
+    List<DiaDisponivel> findByBarbeiroId(Long barbeiroId);
 }
