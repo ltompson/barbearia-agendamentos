@@ -150,7 +150,7 @@ export class Agendamento {
     }
 
     const { nomeCliente, telefoneCliente, barbeiroId, servicoId, data, horario } = this.form.value;
-    const dataHora = `${this.formatarData(data)}T${horario}:00`;
+    const dataHora = `${this.formatarData(data)}T${horario.substring(0, 5)}:00`;
     const payload = { nomeCliente, telefoneCliente, barbeiroId, servicoId, dataHora };
 
     this.agendamentoService.criar(payload).subscribe({
