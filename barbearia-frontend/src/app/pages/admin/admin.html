@@ -67,15 +67,12 @@
         </mat-form-field>
       </div>
 
-      <!-- Carregando -->
       <p *ngIf="carregando" class="empty-msg">Carregando agendamentos...</p>
 
-      <!-- Nenhum agendamento -->
       <p *ngIf="!carregando && agendamentosFiltrados.length === 0" class="empty-msg">
         Nenhum agendamento encontrado para esta data.
       </p>
 
-      <!-- Lista de agendamentos -->
       <div *ngIf="!carregando && agendamentosFiltrados.length > 0" class="agendamentos-list">
         <div *ngFor="let ag of agendamentosFiltrados" class="agendamento-card">
 
@@ -117,11 +114,11 @@
     <!-- Seção: Bloqueio de Datas -->
     <section *ngIf="secaoAtiva === 'bloqueios'" aria-label="Bloqueio de datas">
 
+      <!-- Bloco 1: Bloquear horário -->
       <div class="secao-header">
         <h2>🚫 Bloqueio de Horários</h2>
       </div>
 
-      <!-- Formulário de bloqueio -->
       <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
 
         <mat-form-field appearance="outline" class="filtro-data">
@@ -158,9 +155,33 @@
 
       </div>
 
-      <!-- Dias especiais disponíveis -->
-      <div class="secao-header" style="margin-top: 32px;">
-        <h3>📅 Liberar Fim de Semana</h3>
+      <!-- Lista de horários bloqueados -->
+      <div *ngIf="bloqueios.length > 0" class="agendamentos-list" style="margin-top: 16px;">
+        <h3 style="margin-bottom: 12px; color: #c62828; font-size: 0.9rem;">🚫 Horários bloqueados nesta data</h3>
+        <div *ngFor="let b of bloqueios" class="agendamento-card">
+          <div class="ag-info">
+            <span class="ag-horario">{{ b.horario.substring(0, 5) }}</span>
+            <div>
+              <p class="ag-cliente">{{ b.barbeiro?.nome }}</p>
+              <p class="ag-detalhe">{{ b.motivo || 'Sem motivo' }}</p>
+            </div>
+          </div>
+          <div class="ag-acoes">
+            <button class="btn-cancelar" (click)="deletarBloqueio(b.id)">Remover</button>
+          </div>
+        </div>
+      </div>
+
+      <p *ngIf="bloqueios.length === 0 && bloqueioForm.data" class="empty-msg">
+        Nenhum bloqueio para esta data.
+      </p>
+
+      <!-- Separador -->
+      <hr style="margin: 32px 0; border: none; border-top: 1px solid #eee;">
+
+      <!-- Bloco 2: Liberar fim de semana -->
+      <div class="secao-header">
+        <h2>📅 Liberar Fim de Semana</h2>
       </div>
 
       <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
@@ -194,6 +215,7 @@
 
       <!-- Lista de dias liberados -->
       <div *ngIf="diasDisponiveis.length > 0" class="agendamentos-list" style="margin-top: 16px;">
+        <h3 style="margin-bottom: 12px; color: #2e7d32; font-size: 0.9rem;">✅ Dias liberados</h3>
         <div *ngFor="let d of diasDisponiveis" class="agendamento-card">
           <div class="ag-info">
             <span class="ag-horario">{{ d.data | date:'dd/MM' }}</span>
@@ -208,24 +230,8 @@
         </div>
       </div>
 
-      <!-- Lista de bloqueios do dia -->
-      <div *ngIf="bloqueios.length > 0" class="agendamentos-list" style="margin-top: 24px;">
-        <div *ngFor="let b of bloqueios" class="agendamento-card">
-          <div class="ag-info">
-            <span class="ag-horario">{{ b.horario.substring(0, 5) }}</span>
-            <div>
-              <p class="ag-cliente">{{ b.barbeiro?.nome }}</p>
-              <p class="ag-detalhe">{{ b.motivo || 'Sem motivo' }}</p>
-            </div>
-          </div>
-          <div class="ag-acoes">
-            <button class="btn-cancelar" (click)="deletarBloqueio(b.id)">Remover</button>
-          </div>
-        </div>
-      </div>
-
-      <p *ngIf="bloqueios.length === 0 && bloqueioForm.data" class="empty-msg">
-        Nenhum bloqueio para esta data.
+      <p *ngIf="diasDisponiveis.length === 0 && diaDisponivelForm.data" class="empty-msg">
+        Nenhum dia liberado para esta data.
       </p>
 
     </section>
