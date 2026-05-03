@@ -44,7 +44,11 @@
         </li>
         <li class="menu-item" [class.active]="secaoAtiva === 'bloqueios'"
           (click)="secaoAtiva = 'bloqueios'; toggleMenu()">
-          🚫 Bloqueio de Datas
+          🚫 Bloquear Dias e Horários
+        </li>
+        <li class="menu-item" [class.active]="secaoAtiva === 'liberacao'"
+          (click)="secaoAtiva = 'liberacao'; toggleMenu()">
+          ✅ Liberar Dias e Horários
         </li>
       </ul>
     </nav>
