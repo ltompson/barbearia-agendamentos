@@ -254,7 +254,7 @@ CREATE DATABASE barbearia_db;
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/alquimista-barbearia.git
+git clone https://github.com/ltompson/alquimista-barbearia.git
 cd alquimista-barbearia/backend
 
 # Configure o application.yml (veja seção abaixo)
@@ -319,7 +319,7 @@ server:
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **[Lucas Tompson]**
+Desenvolvido por **Lucas Tompson**
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lucastompson/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ltompson)
