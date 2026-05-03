@@ -2,7 +2,7 @@
 
 # 💈 Alquimista Barbearia
 
-**Sistema completo de agendamentos para barbearia**  
+**Sistema completo de agendamentos para barbearia**
 Aplicação full-stack com autenticação JWT, painel administrativo e integração WhatsApp
 
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
@@ -19,7 +19,6 @@ Aplicação full-stack com autenticação JWT, painel administrativo e integraç
 - [Funcionalidades](#-funcionalidades)
 - [Tecnologias](#-tecnologias)
 - [Arquitetura](#-arquitetura)
-- [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Banco de Dados](#-banco-de-dados)
 - [API REST](#-api-rest)
 - [Como Executar](#-como-executar)
@@ -85,108 +84,43 @@ O projeto nasceu como solução prática para um problema real e evoluiu para um
 | CSS3 | Estilização e responsividade |
 
 ## 🏗 Arquitetura
-┌─────────────────────────────────────────────────────┐
-│                  CLIENTE (Browser)                   │
-│              Angular 21 — porta 4200                 │
-│   Guards │ Interceptors │ Services │ Components      │
-└────────────────────────┬────────────────────────────┘
-│ HTTP + Bearer JWT
-▼
-┌─────────────────────────────────────────────────────┐
-│              BACKEND — Spring Boot                   │
-│                    porta 8080                        │
-│  Controllers → Services → Repositories → Entities   │
-│         Spring Security + JWT Filter                 │
-└────────────────────────┬────────────────────────────┘
-│ JPA / Hibernate
-▼
-┌─────────────────────────────────────────────────────┐
-│              PostgreSQL — barbearia_db               │
-│  clientes │ barbeiros │ servicos │ agendamentos      │
-│  bloqueios │ dias_disponiveis │ admins               │
-└─────────────────────────────────────────────────────┘
+
+A aplicação segue uma arquitetura em três camadas:
+
+**Frontend (Angular 21 — porta 4200)**
+Guards, Interceptors, Services e Components se comunicam com o backend via HTTP + Bearer JWT.
+
+**Backend (Spring Boot — porta 8080)**
+Controllers → Services → Repositories → Entities, protegidos pelo Spring Security com filtro JWT a cada requisição.
+
+**Banco de Dados (PostgreSQL — barbearia_db)**
+Persistência via Hibernate/JPA com as tabelas: clientes, barbeiros, servicos, agendamentos, bloqueios, dias_disponiveis e admins.
 
 **Fluxo de autenticação:**
-Login (POST /api/auth/login)
-→ Valida credenciais → Gera JWT
-→ Frontend armazena token
-→ Interceptor injeta Bearer em todas as requisições protegidas
-→ JwtFilter valida token a cada request
-
----
-
-## 📁 Estrutura do Projeto
-alquimista-barbearia/
-│
-├── backend/
-│   └── src/main/java/com/barbearia/agendamentos/
-│       ├── controller/          # Endpoints REST
-│       │   ├── AgendamentoController.java
-│       │   ├── AuthController.java
-│       │   ├── BloqueioController.java
-│       │   └── DiaDisponivelController.java
-│       ├── service/             # Regras de negócio
-│       │   ├── AgendamentoService.java
-│       │   ├── BloqueioService.java
-│       │   └── DiaDisponivelService.java
-│       ├── repository/          # Acesso ao banco (Spring Data JPA)
-│       ├── entity/              # Entidades JPA
-│       ├── config/
-│       │   ├── SecurityConfig.java   # Rotas públicas e protegidas
-│       │   ├── JwtService.java       # Geração e validação do JWT
-│       │   └── JwtFilter.java        # Interceptor de requisições
-│       └── resources/
-│           └── application.yml
-│
-└── frontend/
-└── src/app/
-├── agendamento/         # Tela pública de agendamento
-├── admin/               # Painel administrativo
-├── login/               # Autenticação
-├── services/            # Comunicação com a API
-│   ├── agendamento.service.ts
-│   ├── auth.service.ts
-│   ├── bloqueio.service.ts
-│   ├── dia-disponivel.service.ts
-│   └── theme.service.ts
-├── guards/
-│   └── auth.guard.ts    # Proteção de rotas admin
-└── interceptors/
-└── auth.interceptor.ts  # Injeção de JWT
-
----
+1. Cliente faz `POST /api/auth/login`
+2. Backend valida credenciais e gera JWT
+3. Frontend armazena o token
+4. Interceptor injeta `Bearer token` em todas as requisições protegidas
+5. JwtFilter valida o token a cada request
 
 ## 🗄 Banco de Dados
 
-```sql
--- Principais tabelas e relacionamentos
+| Tabela | Principais colunas |
+|---|---|
+| clientes | id, nome, telefone |
+| barbeiros | id, nome |
+| servicos | id, nome, duracao_minutos, preco |
+| agendamentos | id, cliente_id, barbeiro_id, servico_id, data_hora, status |
+| bloqueios | id, barbeiro_id, data, hora_inicio, hora_fim |
+| dias_disponiveis | id, barbeiro_id, data, horario, motivo |
+| admins | id, username, password |
 
-clientes        (id, nome, telefone)
-barbeiros       (id, nome)
-servicos        (id, nome, duracao_minutos, preco)
-
-agendamentos    (id, cliente_id, barbeiro_id, servico_id,
-                 data_hora, status)
-                 -- status: 'AGENDADO' | 'CANCELADO'
-
-bloqueios       (id, barbeiro_id, data, hora_inicio, hora_fim)
-                 -- bloqueia horários específicos por barbeiro
-
-dias_disponiveis (id, barbeiro_id, data, horario, motivo)
-                 -- libera dias e horários específicos
-                 -- horario null = dia inteiro liberado
-
-admins          (id, username, password)
-                 -- senha armazenada com BCrypt
-```
-
-**Regras de negócio do agendamento:**
+**Regras de negócio:**
 - Expediente: **08:00 às 18:30**, slots de **30 em 30 minutos**
-- Fins de semana bloqueados por padrão (liberáveis individualmente por dia ou horário)
-- Horários ocupados ou bloqueados são excluídos automaticamente da listagem
+- Fins de semana bloqueados por padrão (liberáveis individualmente)
+- Horários ocupados ou bloqueados são excluídos automaticamente
+- `horario null` em dias_disponiveis = dia inteiro liberado
 - Reagendamento cancela o horário anterior e cria um novo atomicamente
-
----
 
 ## 🔌 API REST
 
@@ -216,8 +150,6 @@ admins          (id, username, password)
 | GET | `/api/dias-disponiveis/barbeiro/{id}` | Admin | Lista dias liberados por barbeiro |
 | DELETE | `/api/dias-disponiveis/{id}` | Admin | Remove liberação |
 
----
-
 ## 🚀 Como Executar
 
 ### Pré-requisitos
@@ -228,67 +160,46 @@ admins          (id, username, password)
 
 ### 1. Banco de Dados
 
-```sql
-CREATE DATABASE barbearia_db;
-```
+Crie o banco no PostgreSQL:
 
-> As tabelas são criadas automaticamente pelo Hibernate na primeira execução (`spring.jpa.hibernate.ddl-auto=update`).
+    CREATE DATABASE barbearia_db;
+
+As tabelas são criadas automaticamente pelo Hibernate na primeira execução.
 
 ### 2. Backend
 
-```bash
-# Clone o repositório
-git clone https://github.com/ltompson/barbearia-agendamentos.git
-cd barbearia-agendamentos/backend
+    git clone https://github.com/ltompson/barbearia-agendamentos.git
+    cd barbearia-agendamentos/backend
+    mvn spring-boot:run
 
-# Configure o application.yml (veja seção abaixo)
-
-# Execute
-mvn spring-boot:run
-```
-
-O backend estará disponível em `http://localhost:8080`.
+Backend disponível em `http://localhost:8080`
 
 ### 3. Frontend
 
-```bash
-cd ../frontend
+    cd ../frontend
+    npm install
+    ng serve
 
-# Instale as dependências
-npm install
-
-# Execute
-ng serve
-```
-
-O frontend estará disponível em `http://localhost:4200`.
-
----
+Frontend disponível em `http://localhost:4200`
 
 ## ⚙️ Variáveis de Ambiente
 
-Configure o `application.yml` com suas credenciais:
+Configure o `application.yml` com suas credenciais locais:
 
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/barbearia_db
-    username: seu_usuario
-    password: sua_senha
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-
-jwt:
-  secret: SUA_CHAVE_SECRETA_AQUI   # mín. 32 caracteres
-  expiration: 86400000              # 24 horas em ms
-
-server:
-  port: 8080
-```
-
----
+    spring:
+      datasource:
+        url: jdbc:postgresql://localhost:5432/barbearia_db
+        username: seu_usuario
+        password: sua_senha
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: false
+    jwt:
+      secret: SUA_CHAVE_SECRETA_AQUI
+      expiration: 86400000
+    server:
+      port: 8080
 
 ## 🗺 Próximos Passos
 
@@ -299,8 +210,6 @@ server:
 - [ ] Testes unitários e de integração (JUnit 5 + Mockito)
 - [ ] Histórico de agendamentos por cliente
 
----
-
 ## 👨‍💻 Autor
 
 Desenvolvido por **Lucas Tompson**
@@ -308,8 +217,6 @@ Desenvolvido por **Lucas Tompson**
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lucastompson/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ltompson)
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](https://mail.google.com/mail/?view=cm&to=lucastompson99@gmail.com)
-
----
 
 <div align="center">
 
