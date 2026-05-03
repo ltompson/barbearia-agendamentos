@@ -2,6 +2,7 @@ package com.barbearia.agendamentos.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "dias_disponiveis")
@@ -12,6 +13,10 @@ public class DiaDisponivel {
     private Long id;
 
     private LocalDate data;
+    private LocalTime horario;
+
+    public LocalTime getHorario() { return horario; }
+    public void setHorario(LocalTime horario) { this.horario = horario; }
 
     @Column(name = "barbeiro_id")
     private Long barbeiroId;

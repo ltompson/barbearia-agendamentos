@@ -204,7 +204,8 @@ export class Admin implements OnInit {
   diaDisponivelForm = {
     barbeiroId: null as number | null,
     data: null as Date | null,
-    motivo: ''
+    motivo: '',
+    horario: null as string | null
   };
 
   filtroFimDeSemana = (data: Date | null): boolean => {
@@ -214,7 +215,7 @@ export class Admin implements OnInit {
   };
 
   criarDiaDisponivel() {
-    const { barbeiroId, data, motivo } = this.diaDisponivelForm;
+    const { barbeiroId, data, motivo, horario } = this.diaDisponivelForm;
     if (!barbeiroId || !data) {
       alert('Preencha barbeiro e data.');
       return;
@@ -222,10 +223,12 @@ export class Admin implements OnInit {
     this.diaDisponivelService.criar({
       barbeiroId,
       data: this.formatarData(data),
-      motivo
+      motivo,
+      horario: horario ?? undefined
     }).subscribe({
       next: () => {
         this.diaDisponivelForm.motivo = '';
+        this.diaDisponivelForm.horario = null;
         this.carregarDiasDisponiveis();
       },
       error: (err) => console.error(err)

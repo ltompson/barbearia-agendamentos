@@ -7,6 +7,7 @@ export interface DiaDisponivel {
   data: string;
   barbeiroId: number;
   motivo?: string;
+  horario?: string;
 }
 
 @Injectable({ providedIn: 'root' })

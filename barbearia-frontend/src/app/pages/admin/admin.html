@@ -5,11 +5,9 @@
 -->
 <div class="admin-layout">
 
-  <!-- Sidebar lateral com menu de navegação -->
   <aside class="sidebar" role="navigation" aria-label="Menu administrativo">
 
     <header class="sidebar-header">
-
       <div class="sidebar-left">
         <button class="btn-hamburger" (click)="toggleMenu()">☰</button>
         <div class="logo">A</div>
@@ -18,14 +16,12 @@
           <p class="sidebar-sub">Painel Admin</p>
         </div>
       </div>
-
       <div class="sidebar-actions">
         <button class="btn-tema" (click)="toggleTema()">
           {{ temaEscuro ? '☀️' : '🌙' }}
         </button>
         <button class="btn-logout" (click)="logout()">Sair</button>
       </div>
-
     </header>
 
     <nav *ngIf="menuAberto || menuFechando || !isMobile()">
@@ -55,12 +51,10 @@
 
   </aside>
 
-  <!-- Conteúdo principal -->
   <main class="main-content" role="main">
 
     <!-- Seção: Agendamentos do dia -->
     <section *ngIf="secaoAtiva === 'agendamentos'" aria-label="Agendamentos do dia">
-
       <div class="secao-header">
         <h2>📅 Agendamentos</h2>
         <mat-form-field appearance="outline" class="filtro-data">
@@ -72,14 +66,12 @@
       </div>
 
       <p *ngIf="carregando" class="empty-msg">Carregando agendamentos...</p>
-
       <p *ngIf="!carregando && agendamentosFiltrados.length === 0" class="empty-msg">
         Nenhum agendamento encontrado para esta data.
       </p>
 
       <div *ngIf="!carregando && agendamentosFiltrados.length > 0" class="agendamentos-list">
         <div *ngFor="let ag of agendamentosFiltrados" class="agendamento-card">
-
           <div class="ag-info">
             <span class="ag-horario">{{ ag.dataHora | date:'HH:mm' }}</span>
             <div>
@@ -88,7 +80,6 @@
               <p class="ag-telefone">📞 {{ ag.cliente?.telefone }}</p>
             </div>
           </div>
-
           <div class="ag-acoes">
             <span class="ag-status" [class.cancelado]="ag.status === 'CANCELADO'">
               {{ ag.status }}
@@ -97,10 +88,8 @@
               Cancelar
             </button>
           </div>
-
         </div>
       </div>
-
     </section>
 
     <!-- Seção: Profissionais -->
@@ -115,16 +104,14 @@
       <p class="empty-msg">Em breve.</p>
     </section>
 
-    <!-- Seção: Bloqueio de Datas -->
-    <section *ngIf="secaoAtiva === 'bloqueios'" aria-label="Bloqueio de datas">
+    <!-- Seção: Bloquear Dias e Horários -->
+    <section *ngIf="secaoAtiva === 'bloqueios'" aria-label="Bloquear dias e horários">
 
-      <!-- Bloco 1: Bloquear horário -->
       <div class="secao-header">
-        <h2>🚫 Bloqueio de Horários</h2>
+        <h2>🚫 Bloquear Dias e Horários</h2>
       </div>
 
       <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
-
         <mat-form-field appearance="outline" class="filtro-data">
           <mat-label>Barbeiro</mat-label>
           <mat-select [(ngModel)]="bloqueioForm.barbeiroId">
@@ -156,10 +143,8 @@
         <button class="btn-cancelar" style="background: #e53935;" (click)="criarBloqueio()">
           🚫 Bloquear Horário
         </button>
-
       </div>
 
-      <!-- Lista de horários bloqueados -->
       <div *ngIf="bloqueios.length > 0" class="agendamentos-list" style="margin-top: 16px;">
         <h3 style="margin-bottom: 12px; color: #c62828; font-size: 0.9rem;">🚫 Horários bloqueados nesta data</h3>
         <div *ngFor="let b of bloqueios" class="agendamento-card">
@@ -180,16 +165,16 @@
         Nenhum bloqueio para esta data.
       </p>
 
-      <!-- Separador -->
-      <hr style="margin: 32px 0; border: none; border-top: 1px solid #eee;">
+    </section>
 
-      <!-- Bloco 2: Liberar fim de semana -->
+    <!-- Seção: Liberar Dias e Horários -->
+    <section *ngIf="secaoAtiva === 'liberacao'" aria-label="Liberar dias e horários">
+
       <div class="secao-header">
-        <h2>📅 Liberar Fim de Semana</h2>
+        <h2>✅ Liberar Dias e Horários</h2>
       </div>
 
       <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
-
         <mat-form-field appearance="outline" class="filtro-data">
           <mat-label>Barbeiro</mat-label>
           <mat-select [(ngModel)]="diaDisponivelForm.barbeiroId">
@@ -199,11 +184,19 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="filtro-data">
-          <mat-label>Data (sábado ou domingo)</mat-label>
+          <mat-label>Data</mat-label>
           <input matInput [matDatepicker]="pickerDiaDisponivel" [(ngModel)]="diaDisponivelForm.data"
-            [matDatepickerFilter]="filtroFimDeSemana" (dateChange)="carregarDiasDisponiveis()">
+            (dateChange)="carregarDiasDisponiveis()">
           <mat-datepicker-toggle matIconSuffix [for]="pickerDiaDisponivel"></mat-datepicker-toggle>
           <mat-datepicker #pickerDiaDisponivel></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-data">
+          <mat-label>Horário</mat-label>
+          <mat-select [(ngModel)]="diaDisponivelForm.horario">
+            <mat-option [value]="null">Dia inteiro</mat-option>
+            <mat-option *ngFor="let h of horariosBloqueio" [value]="h">{{ h }}</mat-option>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="filtro-data">
@@ -214,15 +207,14 @@
         <button class="btn-cancelar" style="background: #2e7d32;" (click)="criarDiaDisponivel()">
           ✅ Liberar Dia
         </button>
-
       </div>
 
-      <!-- Lista de dias liberados -->
       <div *ngIf="diasDisponiveis.length > 0" class="agendamentos-list" style="margin-top: 16px;">
         <h3 style="margin-bottom: 12px; color: #2e7d32; font-size: 0.9rem;">✅ Dias liberados</h3>
         <div *ngFor="let d of diasDisponiveis" class="agendamento-card">
           <div class="ag-info">
-            <span class="ag-horario">{{ d.data | date:'dd/MM' }}</span>
+            <span class="ag-horario">{{ d.data | date:'dd/MM' }}{{ d.horario ? ' · ' + d.horario.substring(0,5) : ''
+              }}</span>
             <div>
               <p class="ag-cliente">{{ d.barbeiroId === 1 ? 'Francisco' : 'Raniel Dias' }}</p>
               <p class="ag-detalhe">{{ d.motivo || 'Sem motivo' }}</p>
