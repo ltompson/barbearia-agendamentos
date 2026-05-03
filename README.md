@@ -1,10 +1,6 @@
----
-
 ## 🗄 Banco de Dados
 
 ```sql
--- Principais tabelas e relacionamentos
-
 clientes        (id, nome, telefone)
 barbeiros       (id, nome)
 servicos        (id, nome, duracao_minutos, preco)
@@ -14,23 +10,19 @@ agendamentos    (id, cliente_id, barbeiro_id, servico_id,
                  -- status: 'AGENDADO' | 'CANCELADO'
 
 bloqueios       (id, barbeiro_id, data, hora_inicio, hora_fim)
-                 -- bloqueia horários específicos por barbeiro
 
 dias_disponiveis (id, barbeiro_id, data, horario, motivo)
-                 -- libera dias e horários específicos
                  -- horario null = dia inteiro liberado
 
 admins          (id, username, password)
                  -- senha armazenada com BCrypt
 ```
 
-**Regras de negócio do agendamento:**
+**Regras de negócio:**
 - Expediente: **08:00 às 18:30**, slots de **30 em 30 minutos**
-- Fins de semana bloqueados por padrão (liberáveis individualmente por dia ou horário)
-- Horários ocupados ou bloqueados são excluídos automaticamente da listagem
+- Fins de semana bloqueados por padrão (liberáveis individualmente)
+- Horários ocupados ou bloqueados são excluídos automaticamente
 - Reagendamento cancela o horário anterior e cria um novo atomicamente
-
----
 
 ## 🔌 API REST
 
@@ -60,8 +52,6 @@ admins          (id, username, password)
 | GET | `/api/dias-disponiveis/barbeiro/{id}` | Admin | Lista dias liberados por barbeiro |
 | DELETE | `/api/dias-disponiveis/{id}` | Admin | Remove liberação |
 
----
-
 ## 🚀 Como Executar
 
 ### Pré-requisitos
@@ -76,18 +66,13 @@ admins          (id, username, password)
 CREATE DATABASE barbearia_db;
 ```
 
-> As tabelas são criadas automaticamente pelo Hibernate na primeira execução (`spring.jpa.hibernate.ddl-auto=update`).
+> As tabelas são criadas automaticamente pelo Hibernate na primeira execução.
 
 ### 2. Backend
 
 ```bash
-# Clone o repositório
 git clone https://github.com/ltompson/barbearia-agendamentos.git
 cd barbearia-agendamentos/backend
-
-# Configure o application.yml (veja seção abaixo)
-
-# Execute
 mvn spring-boot:run
 ```
 
@@ -97,21 +82,13 @@ O backend estará disponível em `http://localhost:8080`.
 
 ```bash
 cd ../frontend
-
-# Instale as dependências
 npm install
-
-# Execute
 ng serve
 ```
 
 O frontend estará disponível em `http://localhost:4200`.
 
----
-
 ## ⚙️ Variáveis de Ambiente
-
-Configure o `application.yml` com suas credenciais:
 
 ```yaml
 spring:
@@ -125,14 +102,12 @@ spring:
     show-sql: false
 
 jwt:
-  secret: SUA_CHAVE_SECRETA_AQUI   # mín. 32 caracteres
-  expiration: 86400000              # 24 horas em ms
+  secret: SUA_CHAVE_SECRETA_AQUI
+  expiration: 86400000
 
 server:
   port: 8080
 ```
-
----
 
 ## 🗺 Próximos Passos
 
@@ -143,8 +118,6 @@ server:
 - [ ] Testes unitários e de integração (JUnit 5 + Mockito)
 - [ ] Histórico de agendamentos por cliente
 
----
-
 ## 👨‍💻 Autor
 
 Desenvolvido por **Lucas Tompson**
@@ -152,8 +125,6 @@ Desenvolvido por **Lucas Tompson**
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lucastompson/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ltompson)
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](https://mail.google.com/mail/?view=cm&to=lucastompson99@gmail.com)
-
----
 
 <div align="center">
 
