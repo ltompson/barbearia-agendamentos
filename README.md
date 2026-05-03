@@ -85,16 +85,15 @@ O projeto nasceu como solução prática para um problema real e evoluiu para um
 
 ## 🏗 Arquitetura
 
-A aplicação segue uma arquitetura em três camadas:
-
-**Frontend (Angular 21 — porta 4200)**
-Guards, Interceptors, Services e Components se comunicam com o backend via HTTP + Bearer JWT.
-
-**Backend (Spring Boot — porta 8080)**
-Controllers → Services → Repositories → Entities, protegidos pelo Spring Security com filtro JWT a cada requisição.
-
-**Banco de Dados (PostgreSQL — barbearia_db)**
-Persistência via Hibernate/JPA com as tabelas: clientes, barbeiros, servicos, agendamentos, bloqueios, dias_disponiveis e admins.
+```mermaid
+graph TD
+    A[🌐 Frontend - Angular 21<br/>porta 4200] -->|HTTP + Bearer JWT| B[⚙️ Backend - Spring Boot<br/>porta 8080]
+    B --> C[🔐 Spring Security + JWT Filter]
+    C --> D[📦 Controllers]
+    D --> E[🧠 Services]
+    E --> F[🗃️ Repositories]
+    F --> G[(🐘 PostgreSQL<br/>barbearia_db)]
+```
 
 **Fluxo de autenticação:**
 1. Cliente faz `POST /api/auth/login`
@@ -105,15 +104,52 @@ Persistência via Hibernate/JPA com as tabelas: clientes, barbeiros, servicos, a
 
 ## 🗄 Banco de Dados
 
-| Tabela | Principais colunas |
-|---|---|
-| clientes | id, nome, telefone |
-| barbeiros | id, nome |
-| servicos | id, nome, duracao_minutos, preco |
-| agendamentos | id, cliente_id, barbeiro_id, servico_id, data_hora, status |
-| bloqueios | id, barbeiro_id, data, hora_inicio, hora_fim |
-| dias_disponiveis | id, barbeiro_id, data, horario, motivo |
-| admins | id, username, password |
+```mermaid
+erDiagram
+    clientes {
+        Long id
+        String nome
+        String telefone
+    }
+    barbeiros {
+        Long id
+        String nome
+    }
+    servicos {
+        Long id
+        String nome
+        Integer duracao_minutos
+        Double preco
+    }
+    agendamentos {
+        Long id
+        String data_hora
+        String status
+    }
+    bloqueios {
+        Long id
+        String data
+        String hora_inicio
+        String hora_fim
+    }
+    dias_disponiveis {
+        Long id
+        String data
+        String horario
+        String motivo
+    }
+    admins {
+        Long id
+        String username
+        String password
+    }
+
+    clientes ||--o{ agendamentos : "faz"
+    barbeiros ||--o{ agendamentos : "atende"
+    servicos ||--o{ agendamentos : "inclui"
+    barbeiros ||--o{ bloqueios : "tem"
+    barbeiros ||--o{ dias_disponiveis : "tem"
+```
 
 **Regras de negócio:**
 - Expediente: **08:00 às 18:30**, slots de **30 em 30 minutos**
