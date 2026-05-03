@@ -42,9 +42,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/dias-disponiveis/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos").permitAll()
-                        .anyRequest().authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos/*").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos/*/reagendar").permitAll()
+                        .anyRequest().authenticated() // nota para mim mesmo: deixar o authenticated sempre por último
                 )
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
