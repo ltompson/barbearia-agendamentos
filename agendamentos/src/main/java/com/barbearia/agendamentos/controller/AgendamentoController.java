@@ -54,6 +54,28 @@ public class AgendamentoController {
         return ResponseEntity.ok(disponivel);
     }
 
+    // Busca agendamento por ID (usado no reagendamento)
+    @GetMapping("/{id}")
+    public ResponseEntity<Agendamento> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(agendamentoService.buscarPorId(id));
+    }
+
+    // Reagenda — cancela o antigo e cria novo
+    @PostMapping("/{id}/reagendar")
+    public ResponseEntity<Agendamento> reagendar(
+            @PathVariable Long id,
+            @RequestBody AgendamentoRequest request) {
+
+        return ResponseEntity.ok(
+                agendamentoService.reagendar(
+                        id,
+                        request.barbeiroId(),
+                        request.servicoId(),
+                        request.dataHora()
+                )
+        );
+    }
+
     // Cria um novo agendamento recebendo os dados do cliente diretamente
     @PostMapping
     public ResponseEntity<Agendamento> agendar(@RequestBody AgendamentoRequest request) {

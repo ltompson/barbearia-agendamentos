@@ -43,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos").permitAll()
                         .anyRequest().authenticated()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos/*").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos/*/reagendar").permitAll()
                 )
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

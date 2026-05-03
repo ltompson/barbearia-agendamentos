@@ -123,6 +123,30 @@ public class AgendamentoService {
         return agendamentoRepository.findAll();
     }
 
+    // ─── Buscar por ID ───────────────────────────────────────────────────────────
+    public Agendamento buscarPorId(Long id) {
+        return agendamentoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+    }
+
+    // ─── Reagendar ───────────────────────────────────────────────────────────────
+    public Agendamento reagendar(Long idAntigo, Long barbeiroId,
+                                 Long servicoId, LocalDateTime novaDataHora) {
+        Agendamento antigo = buscarPorId(idAntigo);
+
+        // Cancela o antigo
+        antigo.setStatus("CANCELADO");
+        agendamentoRepository.save(antigo);
+
+        // Cria o novo com os mesmos dados do cliente
+        return agendar(
+                antigo.getCliente().getId(),
+                barbeiroId,
+                servicoId,
+                novaDataHora
+        );
+    }
+
     public Agendamento cancelar(Long id) {
         Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
