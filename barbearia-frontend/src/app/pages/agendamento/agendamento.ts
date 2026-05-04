@@ -7,6 +7,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { AgendamentoService } from '../../services/agendamento';
 import { ThemeService } from '../../services/theme.service';
 import { CommonModule } from '@angular/common';
@@ -23,6 +26,9 @@ import { DiaDisponivelService } from '../../services/dia-disponivel.service';
     MatNativeDateModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatTabsModule,
+    MatIconModule,
+    MatDividerModule,
     CommonModule,
   ],
   templateUrl: './agendamento.html',
@@ -37,7 +43,35 @@ export class Agendamento {
   horariosDisponiveis: string[] = [];
   diasExcecao: Set<string> = new Set();
   filtroDataFn: (data: Date | null) => boolean = () => true;
+  activeTab: number = 0;
   private themeService = inject(ThemeService);
+
+  reviews = [
+    {
+      iniciais: 'MO',
+      nome: 'Marcos Oliveira',
+      tempo: 'há 1 semana',
+      texto: 'Melhor barbearia de Teresina! O Francisco faz um trabalho impecável no corte e na barba. Atendimento de primeira, ambiente agradável. Recomendo muito!'
+    },
+    {
+      iniciais: 'RF',
+      nome: 'Rodrigo Ferreira',
+      tempo: 'há 2 semanas',
+      texto: 'Fui pela primeira vez indicado por um amigo e não me arrependi. O Raniel é muito habilidoso, entendeu exatamente o que eu queria. Já virei cliente fixo!'
+    },
+    {
+      iniciais: 'CA',
+      nome: 'Carlos Almeida',
+      tempo: 'há 3 semanas',
+      texto: 'Ambiente excelente, profissionais muito competentes. O sistema de agendamento online é muito prático. Facilita muito a vida!'
+    },
+    {
+      iniciais: 'JS',
+      nome: 'João Silva',
+      tempo: 'há 1 mês',
+      texto: 'Serviço de alta qualidade. Corte e barba perfeitos. Lugar limpo e bem organizado. Com certeza voltarei sempre!'
+    }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -101,7 +135,6 @@ export class Agendamento {
     const diaDaSemana = new Date(data).getDay();
 
     if (diaDaSemana === 0 || diaDaSemana === 6) {
-      // Verifica no backend se esse dia específico está liberado
       this.diaDisponivelService.isDiaDisponivel(dataISO, barbeiroId).subscribe({
         next: (disponivel) => {
           if (disponivel) {

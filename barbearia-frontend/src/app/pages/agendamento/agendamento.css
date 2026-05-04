@@ -1,170 +1,619 @@
+/* ═══════════════════════════════════════════════════════════════
+   ALQUIMISTA BARBEARIA — agendamento.css
+   Tema dark luxury dourado com suporte a tema claro
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. VARIÁVEIS ───────────────────────────────────────────── */
+:root {
+  --dourado: #C9A84C;
+  --dourado-escuro: #a07830;
+  --dourado-claro: #e8c97a;
+  --fundo-card: #1e1e1e;
+  --fundo-campo: #252525;
+  --borda: rgba(201, 168, 76, 0.25);
+  --texto: #e0e0e0;
+  --texto-sec: #888;
+}
+
+/* ── 2. LAYOUT GERAL ────────────────────────────────────────── */
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: linear-gradient(160deg, #0f0f0f 0%, #1a1a1a 50%, #0f0c06 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 16px;
-  transition: background 0.3s;
+  padding: 0 16px 32px;
 }
 
+/* ── 3. CABEÇALHO ───────────────────────────────────────────── */
 .header {
   text-align: center;
-  margin-bottom: 32px;
+  width: 100%;
+  margin-bottom: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  padding: 40px 20px 32px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%),
+    url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&q=80') center/cover no-repeat;
 }
 
+.header-icon {
+  color: var(--dourado) !important;
+  font-size: 2.5rem !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  margin-bottom: 4px;
+}
 .header h1 {
   font-size: 2.2rem;
-  font-weight: 700;
+  font-weight: 900;
   color: #ffffff;
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: 6px;
+  font-family: 'Georgia', serif;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+.header-separador {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--dourado), transparent);
+  margin: 4px 0;
 }
 
 .header .subtitle {
-  color: #aaaaaa;
-  font-size: 1rem;
+  color: var(--dourado);
+  font-size: 0.72rem;
   margin: 0;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 1;
 }
 
 .btn-tema {
-  margin-top: 4px;
-  font-size: 0.8rem;
-  padding: 6px 16px;
+  margin-top: 10px;
+  font-size: 0.78rem;
+  padding: 7px 20px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  border: 1px solid rgba(201, 168, 76, 0.5);
+  background: rgba(201, 168, 76, 0.1);
+  color: var(--dourado);
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: 'Georgia', serif;
 }
 
 .btn-tema:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(201, 168, 76, 0.22);
+  border-color: var(--dourado);
 }
 
+/* ── 4. CARD PRINCIPAL ──────────────────────────────────────── */
 .card {
-  background: #1e1e1e;
+  background: var(--fundo-card);
   border-radius: 16px;
-  padding: 36px;
+  padding: 28px 28px 24px;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background 0.3s;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--borda);
+  border: 1px solid var(--borda);
 }
 
-.card h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #e0e0e0;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* ── 5. TÍTULO DO CARD ──────────────────────────────────────── */
+.card-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
+.card-titulo h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dourado);
+  margin: 0;
+  white-space: nowrap;
+  letter-spacing: 3px;
+  font-family: 'Georgia', serif;
+}
+
+.linha-decorativa {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--dourado), transparent);
+  opacity: 0.5;
+}
+
+/* ── 6. ABAS ────────────────────────────────────────────────── */
+.barbearia-tabs ::ng-deep .mat-mdc-tab-header {
+  background: transparent;
+  border-bottom: 1px solid var(--borda);
+  margin-bottom: 0;
+  --mat-tab-header-pagination-icon-color: transparent;
+}
+
+.barbearia-tabs ::ng-deep .mat-mdc-tab-header-pagination {
+  display: none !important;
+}
+
+.barbearia-tabs ::ng-deep .mat-mdc-tab {
+  min-width: 0;
+  flex: 1;
+  opacity: 0.75;
+  transition: opacity 0.3s;
+}
+
+.barbearia-tabs ::ng-deep .mat-mdc-tab.mdc-tab--active {
+  opacity: 1;
+}
+
+.barbearia-tabs ::ng-deep .mdc-tab__content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--dourado) !important;
+}
+
+.barbearia-tabs ::ng-deep .mdc-tab__text-label {
+  color: var(--dourado) !important;
+}
+
+.barbearia-tabs ::ng-deep .mat-mdc-tab .mat-icon {
+  color: var(--dourado);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.barbearia-tabs ::ng-deep .mdc-tab-indicator__content--underline {
+  border-color: var(--dourado) !important;
+  border-width: 2px !important;
+}
+
+.barbearia-tabs ::ng-deep .mat-mdc-tab .mat-ripple-element {
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.barbearia-tabs ::ng-deep .mat-mdc-tab-body-content {
+  overflow: hidden !important;
+}
+
+.tab-label {
+  font-family: 'Georgia', serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+/* ── 7. CONTEÚDO DAS ABAS ───────────────────────────────────── */
+.tab-content {
+  padding: 20px 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── 8. CAMPOS DO FORMULÁRIO ────────────────────────────────── */
 .full-width {
   width: 100%;
+}
+
+.full-width ::ng-deep .mdc-notched-outline__leading,
+.full-width ::ng-deep .mdc-notched-outline__notch,
+.full-width ::ng-deep .mdc-notched-outline__trailing {
+  border-color: var(--borda) !important;
+}
+
+.full-width ::ng-deep .mat-mdc-form-field-flex {
+  background: var(--fundo-campo);
+}
+
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--dourado) !important;
+}
+
+.full-width ::ng-deep .mat-mdc-floating-label,
+.full-width ::ng-deep .mdc-floating-label {
+  color: var(--dourado) !important;
+}
+
+.full-width ::ng-deep input,
+.full-width ::ng-deep .mat-mdc-select-value {
+  color: var(--texto) !important;
+}
+
+.full-width ::ng-deep .mat-mdc-select-arrow {
+  color: var(--dourado) !important;
+}
+
+.full-width ::ng-deep .mat-mdc-form-field-hint {
+  color: var(--dourado);
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+
+/* ── 9. BOTÃO CONFIRMAR ─────────────────────────────────────── */
+.btn-confirmar {
+  width: 100%;
+  height: 50px !important;
+  background: linear-gradient(135deg, var(--dourado-escuro), var(--dourado), var(--dourado-claro)) !important;
+  color: #1a1100 !important;
+  font-family: 'Georgia', serif !important;
+  font-weight: 700 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 2px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  margin-top: 4px;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3) !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-decoration: none;
+}
+
+.btn-confirmar:hover {
+  box-shadow: 0 6px 30px rgba(201, 168, 76, 0.5) !important;
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn-confirmar mat-icon {
+  color: #1a1100 !important;
+}
+
+/* ── 10. ABA LOCALIZAÇÃO ────────────────────────────────────── */
+.loc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loc-icon-grande {
+  color: var(--dourado);
+  font-size: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.loc-titulo {
+  margin: 0;
+  color: var(--dourado);
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.loc-subtitulo {
+  margin: 2px 0 0;
+  color: var(--texto-sec);
+  font-size: 0.78rem;
+}
+
+.mapa-container {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--borda);
+}
+
+.endereco-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: var(--fundo-campo);
+  border-radius: 8px;
+  border: 1px solid var(--borda);
+}
+
+.endereco-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.endereco-info mat-icon {
+  color: var(--dourado);
+}
+
+.endereco-info strong {
+  display: block;
+  color: var(--texto);
+  font-size: 0.85rem;
+}
+
+.endereco-info p {
+  margin: 2px 0 0;
+  color: var(--texto-sec);
+  font-size: 0.75rem;
+}
+
+.btn-maps {
+  color: var(--dourado) !important;
+  border-color: var(--borda) !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 1px !important;
+  white-space: nowrap;
+  font-family: 'Georgia', serif !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  text-decoration: none;
+}
+
+.btn-maps:hover {
+  border-color: var(--dourado) !important;
+  background: rgba(201, 168, 76, 0.08) !important;
+}
+
+.divider-dourado {
+  border-color: var(--borda) !important;
+}
+
+.como-chegar {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.como-chegar mat-icon {
+  color: var(--dourado);
+  margin-top: 2px;
+}
+
+.como-chegar strong {
+  display: block;
+  color: var(--texto);
+  font-size: 0.85rem;
   margin-bottom: 4px;
 }
 
-button.full-width {
-  width: 100%;
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 700;
-  margin-top: 12px;
+.como-chegar p {
+  margin: 0;
+  color: var(--texto-sec);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+/* ── 11. ABA AVALIAÇÕES ─────────────────────────────────────── */
+.avaliacao-resumo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: var(--fundo-campo);
+  border-radius: 10px;
+  border: 1px solid var(--borda);
+}
+
+.nota-numero {
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: var(--dourado);
+  font-family: 'Georgia', serif;
+  line-height: 1;
+}
+
+.estrelas-resumo {
+  display: flex;
+  gap: 2px;
+  margin: 8px 0 4px;
+}
+
+.estrelas-resumo mat-icon {
+  color: var(--dourado);
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.nota-label {
+  margin: 0;
+  color: var(--texto-sec);
+  font-size: 0.75rem;
+}
+
+.reviews-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.reviews-lista::-webkit-scrollbar {
+  width: 4px;
+}
+
+.reviews-lista::-webkit-scrollbar-track {
+  background: var(--fundo-campo);
+}
+
+.reviews-lista::-webkit-scrollbar-thumb {
+  background: var(--borda);
+  border-radius: 2px;
+}
+
+.review-card {
+  background: var(--fundo-campo);
+  border: 1px solid var(--borda);
   border-radius: 8px;
-  letter-spacing: 0.5px;
+  padding: 14px;
+  transition: border-color 0.2s;
 }
 
-/* ─── RESPONSIVIDADE MOBILE ────────────────────────────────────────────── */
-
-@media (max-width: 600px) {
-
-  .container {
-    padding: 20px 12px;
-  }
-
-  .header h1 {
-    font-size: 1.6rem;
-  }
-
-  .header .subtitle {
-    font-size: 0.9rem;
-  }
-
-  .card {
-    padding: 24px 16px;
-    border-radius: 12px;
-    max-width: 100%;
-  }
-
-  .card h2 {
-    font-size: 1.2rem;
-    margin-bottom: 16px;
-  }
-
-  button.full-width {
-    padding: 16px;
-    font-size: 1rem;
-    /* Botão maior para toque no celular */
-  }
-
-  /* Campos do Material Design mais confortáveis no mobile */
-  .full-width .mat-mdc-form-field-infix {
-    min-height: 48px;
-  }
+.review-card:hover {
+  border-color: var(--dourado);
 }
 
-/* ─── RESPONSIVIDADE MOBILE ────────────────────────────────────────────── */
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
 
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--dourado-escuro), var(--dourado));
+  color: #1a1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+.review-info {
+  flex: 1;
+}
+
+.review-info strong {
+  display: block;
+  color: var(--texto);
+  font-size: 0.85rem;
+  margin-bottom: 3px;
+}
+
+.estrelas {
+  display: flex;
+  gap: 1px;
+}
+
+.estrelas mat-icon {
+  color: var(--dourado);
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.tempo {
+  color: var(--texto-sec);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.review-texto {
+  color: var(--texto-sec);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.btn-avaliar {
+  width: 100%;
+  height: 44px !important;
+  color: var(--dourado) !important;
+  border-color: var(--borda) !important;
+  font-family: 'Georgia', serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.5px !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  text-decoration: none;
+}
+
+.btn-avaliar:hover {
+  border-color: var(--dourado) !important;
+  background: rgba(201, 168, 76, 0.08) !important;
+}
+
+/* ── 12. RODAPÉ ─────────────────────────────────────────────── */
+.rodape {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--texto-sec);
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  opacity: 0.6;
+}
+
+/* ── 13. RESPONSIVIDADE MOBILE ──────────────────────────────── */
 @media (max-width: 600px) {
-
   .container {
     padding: 0;
-    min-height: 100vh;
     align-items: stretch;
   }
 
   .header {
-    padding: 20px 16px 16px;
+    padding: 28px 16px 24px;
+    margin-bottom: 0;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
   }
 
   .card {
     border-radius: 0;
-    min-height: 100vh;
+    min-height: calc(100vh - 180px);
     max-width: 100%;
-    padding: 24px 16px;
+    padding: 20px 14px 24px;
+    box-shadow: none;
   }
 
-  .header h1 {
-    font-size: 1.6rem;
+  .tab-label {
+    display: none;
   }
 
-  .header .subtitle {
-    font-size: 0.9rem;
+  .barbearia-tabs ::ng-deep .mat-mdc-tab .mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
   }
 
-  button.full-width {
+  .endereco-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-maps {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rodape {
     padding: 16px;
-    font-size: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
-/* Telas muito pequenas */
 @media (max-width: 380px) {
-
   .header h1 {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
   }
 
   .card {
-    padding: 20px 12px;
+    padding: 16px 12px 20px;
   }
+}
+
+/* Tesoura sempre dourada */
+app-agendamento .header-icon {
+  color: #C9A84C !important;
 }

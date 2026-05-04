@@ -1,117 +1,245 @@
 <!--
   Página pública de agendamento da Alquimista Barbearia
-  Acessível por qualquer cliente, sem necessidade de login
-  Componente: Agendamento
+  3 abas: Agendamento | Localização | Avaliações
 -->
 <main class="container" role="main">
 
-  <!-- Cabeçalho com identidade da barbearia -->
+  <!-- Cabeçalho -->
   <header class="header" role="banner">
-    <h1>✂️ Alquimista Barbearia</h1>
+    <mat-icon class="header-icon">content_cut</mat-icon>
+    <h1>ALQUIMISTA BARBEARIA</h1>
+    <div class="header-separador"></div>
     <p class="subtitle">Faça seu agendamento de forma rápida e fácil</p>
-
-    <!-- Botão de alternar tema -->
     <button class="btn-tema" (click)="toggleTema()">
-      {{ temaEscuro ? '☀️ Tema Claro' : '🌙 Tema Escuro' }}
+      <span>{{ temaEscuro ? '☀️' : '🌙' }}</span>
+      {{ temaEscuro ? 'Tema Claro' : 'Tema Escuro' }}
     </button>
-
   </header>
 
-  <!-- Formulário principal de agendamento -->
-  <form class="card" [formGroup]="form" (ngSubmit)="confirmar()" aria-label="Formulário de agendamento">
-    <h2>Novo Agendamento</h2>
+  <!-- Card principal -->
+  <div class="card">
 
-    <!-- Dados pessoais do cliente -->
-    <section aria-label="Dados pessoais">
+    <!-- Título do card -->
+    <div class="card-titulo">
+      <div class="linha-decorativa"></div>
+      <h2>NOVO AGENDAMENTO</h2>
+      <div class="linha-decorativa"></div>
+    </div>
 
-      <!-- Nome do cliente -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Seu nome</mat-label>
-        <input matInput type="text" formControlName="nomeCliente" placeholder="Ex: João Silva" autocomplete="name">
-      </mat-form-field>
+    <!-- ABAS -->
+    <mat-tab-group class="barbearia-tabs" animationDuration="300ms" [(selectedIndex)]="activeTab">
 
-      <!-- Telefone para contato -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Seu telefone</mat-label>
-        <input matInput type="tel" formControlName="telefoneCliente" placeholder="Ex: (84) 99999-9999"
-          autocomplete="tel">
-      </mat-form-field>
+      <!-- ══════════════════════════════════ -->
+      <!-- ABA 1: AGENDAMENTO                 -->
+      <!-- ══════════════════════════════════ -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>calendar_month</mat-icon>
+          <span class="tab-label">AGENDAMENTO</span>
+        </ng-template>
 
-    </section>
+        <form [formGroup]="form" (ngSubmit)="confirmar()" aria-label="Formulário de agendamento">
+          <div class="tab-content">
 
-    <!-- Detalhes do serviço -->
-    <section aria-label="Detalhes do serviço">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Seu nome</mat-label>
+              <input matInput type="text" formControlName="nomeCliente" placeholder="Ex: João Silva"
+                autocomplete="name">
+            </mat-form-field>
 
-      <!-- Seleção do barbeiro -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Barbeiro</mat-label>
-        <mat-select formControlName="barbeiroId">
-          <mat-option [value]="1">Francisco</mat-option>
-          <mat-option [value]="2">Raniel Dias</mat-option>
-        </mat-select>
-      </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Seu telefone</mat-label>
+              <input matInput type="tel" formControlName="telefoneCliente" placeholder="Ex: (86) 99999-9999"
+                autocomplete="tel">
+            </mat-form-field>
 
-      <!-- Seleção do serviço com valor -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Serviço</mat-label>
-        <mat-select formControlName="servicoId">
-          <mat-option [value]="1">Corte social ou degradê — R$ 35,00</mat-option>
-          <mat-option [value]="2">Barba na máquina — R$ 25,00</mat-option>
-          <mat-option [value]="3">Barba completa — R$ 30,00</mat-option>
-          <mat-option [value]="4">Sobrancelha — R$ 10,00</mat-option>
-          <mat-option [value]="5">Corte + Barba (máquina) — R$ 50,00</mat-option>
-          <mat-option [value]="6">Corte + Barba (completa) — R$ 55,00</mat-option>
-          <mat-option [value]="7">Corte + Barba + Sobrancelha — R$ 60,00</mat-option>
-          <mat-option [value]="8">Botox — a partir de R$ 80,00</mat-option>
-          <mat-option [value]="9">Selagem — a partir de R$ 90,00</mat-option>
-          <mat-option [value]="10">Platinado — R$ 90,00</mat-option>
-          <mat-option [value]="11">Luzes — R$ 70,00</mat-option>
-          <mat-option [value]="12">Hidratação — R$ 20,00</mat-option>
-          <mat-option [value]="13">Limpeza facial com máscara Black — R$ 20,00</mat-option>
-          <mat-option [value]="14">Penteado — R$ 20,00</mat-option>
-        </mat-select>
-      </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Barbeiro</mat-label>
+              <mat-select formControlName="barbeiroId">
+                <mat-option [value]="1">Francisco</mat-option>
+                <mat-option [value]="2">Raniel Dias</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-    </section>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Serviço</mat-label>
+              <mat-select formControlName="servicoId">
+                <mat-option [value]="1">Corte social ou degradê — R$ 35,00</mat-option>
+                <mat-option [value]="2">Barba na máquina — R$ 25,00</mat-option>
+                <mat-option [value]="3">Barba completa — R$ 30,00</mat-option>
+                <mat-option [value]="4">Sobrancelha — R$ 10,00</mat-option>
+                <mat-option [value]="5">Corte + Barba (máquina) — R$ 50,00</mat-option>
+                <mat-option [value]="6">Corte + Barba (completa) — R$ 55,00</mat-option>
+                <mat-option [value]="7">Corte + Barba + Sobrancelha — R$ 60,00</mat-option>
+                <mat-option [value]="8">Botox — a partir de R$ 80,00</mat-option>
+                <mat-option [value]="9">Selagem — a partir de R$ 90,00</mat-option>
+                <mat-option [value]="10">Platinado — R$ 90,00</mat-option>
+                <mat-option [value]="11">Luzes — R$ 70,00</mat-option>
+                <mat-option [value]="12">Hidratação — R$ 20,00</mat-option>
+                <mat-option [value]="13">Limpeza facial com máscara Black — R$ 20,00</mat-option>
+                <mat-option [value]="14">Penteado — R$ 20,00</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-    <!-- Data e horário -->
-    <section aria-label="Data e horário">
+            <mat-form-field appearance="outline" class="full-width" style="cursor:pointer">
+              <mat-label>Data</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="data" (click)="picker.open()" readonly
+                style="cursor:pointer" [matDatepickerFilter]="filtroDataFn" (dateChange)="onDataOuBarbeiroChange()">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
-      <!-- Seletor de data -->
-      <mat-form-field appearance="outline" class="full-width" style="cursor: pointer;">
-        <mat-label>Data</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="data" (click)="picker.open()" readonly
-          style="cursor: pointer;" [matDatepickerFilter]="filtroDataFn" (dateChange)="onDataOuBarbeiroChange()">
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Horário</mat-label>
+              <mat-select formControlName="horario">
+                <mat-optgroup label="——— MANHÃ ———" *ngIf="horariosManha().length > 0">
+                  <mat-option *ngFor="let h of horariosManha()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
+                </mat-optgroup>
+                <mat-optgroup label="——— TARDE ———" *ngIf="horariosTarde().length > 0">
+                  <mat-option *ngFor="let h of horariosTarde()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
+                </mat-optgroup>
+                <mat-optgroup label="——— NOITE ———" *ngIf="horariosNoite().length > 0">
+                  <mat-option *ngFor="let h of horariosNoite()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
+                </mat-optgroup>
+              </mat-select>
+              <mat-hint *ngIf="horariosDisponiveis.length === 0">
+                Selecione barbeiro e data para ver os horários
+              </mat-hint>
+            </mat-form-field>
 
-      <!-- Seleção do horário -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Horário</mat-label>
-        <mat-select formControlName="horario">
-          <mat-optgroup label="——— MANHÃ ———" *ngIf="horariosManha().length > 0">
-            <mat-option *ngFor="let h of horariosManha()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
-          </mat-optgroup>
-          <mat-optgroup label="——— TARDE ———" *ngIf="horariosTarde().length > 0">
-            <mat-option *ngFor="let h of horariosTarde()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
-          </mat-optgroup>
-          <mat-optgroup label="——— NOITE ———" *ngIf="horariosNoite().length > 0">
-            <mat-option *ngFor="let h of horariosNoite()" [value]="h">{{ h.substring(0, 5) }}</mat-option>
-          </mat-optgroup>
-        </mat-select>
-        <mat-hint *ngIf="horariosDisponiveis.length === 0">
-          Selecione barbeiro e data para ver os horários
-        </mat-hint>
-      </mat-form-field>
+            <button mat-raised-button class="btn-confirmar" type="submit" aria-label="Confirmar agendamento">
+              <mat-icon>event_available</mat-icon>
+              CONFIRMAR AGENDAMENTO
+            </button>
 
-    </section>
+          </div>
+        </form>
+      </mat-tab>
 
-    <!-- Botão de submissão -->
-    <button mat-raised-button color="primary" class="full-width" type="submit" aria-label="Confirmar agendamento">
-      Confirmar Agendamento
-    </button>
+      <!-- ══════════════════════════════════ -->
+      <!-- ABA 2: LOCALIZAÇÃO                 -->
+      <!-- ══════════════════════════════════ -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>location_on</mat-icon>
+          <span class="tab-label">LOCALIZAÇÃO</span>
+        </ng-template>
 
-  </form>
+        <div class="tab-content">
+
+          <div class="loc-header">
+            <mat-icon class="loc-icon-grande">location_on</mat-icon>
+            <div>
+              <h3 class="loc-titulo">Nossa Localização</h3>
+              <p class="loc-subtitulo">Encontre a Alquimista Barbearia</p>
+            </div>
+          </div>
+
+          <!-- Google Maps Embed sem API key -->
+          <div class="mapa-container">
+            <iframe width="100%" height="210" style="border:0; border-radius: 8px; display:block;" loading="lazy"
+              allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+              src="https://maps.google.com/maps?q=-5.0400459,-42.8133212&z=16&output=embed">
+            </iframe>
+          </div>
+
+          <!-- Endereço -->
+          <div class="endereco-box">
+            <div class="endereco-info">
+              <mat-icon>location_on</mat-icon>
+              <div>
+                <strong>Alquimista Barbearia</strong>
+                <p>Teresina - PI</p>
+              </div>
+            </div>
+            <a href="https://maps.app.goo.gl/WVFdbpQ8uDyhnGNj8" target="_blank" mat-stroked-button class="btn-maps">
+              <mat-icon>open_in_new</mat-icon>
+              VER NO MAPS
+            </a>
+          </div>
+
+          <mat-divider class="divider-dourado"></mat-divider>
+
+          <!-- Como chegar -->
+          <div class="como-chegar">
+            <mat-icon>directions_car</mat-icon>
+            <div>
+              <strong>Como chegar</strong>
+              <p>Estacionamento disponível próximo à barbearia.</p>
+              <p>Fácil acesso por transporte público.</p>
+            </div>
+          </div>
+
+          <!-- Botão voltar para agendamento -->
+          <button mat-raised-button class="btn-confirmar" (click)="activeTab = 0" type="button">
+            <mat-icon>calendar_month</mat-icon>
+            FAZER AGENDAMENTO
+          </button>
+
+        </div>
+      </mat-tab>
+
+      <!-- ══════════════════════════════════ -->
+      <!-- ABA 3: AVALIAÇÕES                  -->
+      <!-- ══════════════════════════════════ -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>star</mat-icon>
+          <span class="tab-label">AVALIAÇÕES</span>
+        </ng-template>
+
+        <div class="tab-content">
+
+          <!-- Nota geral -->
+          <div class="avaliacao-resumo">
+            <span class="nota-numero">5.0</span>
+            <div class="estrelas-resumo">
+              <mat-icon *ngFor="let s of [1,2,3,4,5]">star</mat-icon>
+            </div>
+            <p class="nota-label">Baseado no Google Reviews</p>
+          </div>
+
+          <!-- Lista de reviews -->
+          <div class="reviews-lista">
+            <div class="review-card" *ngFor="let review of reviews">
+              <div class="review-header">
+                <div class="avatar">{{ review.iniciais }}</div>
+                <div class="review-info">
+                  <strong>{{ review.nome }}</strong>
+                  <div class="estrelas">
+                    <mat-icon *ngFor="let s of [1,2,3,4,5]">star</mat-icon>
+                  </div>
+                </div>
+                <span class="tempo">{{ review.tempo }}</span>
+              </div>
+              <p class="review-texto">{{ review.texto }}</p>
+            </div>
+          </div>
+
+          <!-- Botões -->
+          <a href="https://maps.app.goo.gl/WVFdbpQ8uDyhnGNj8" target="_blank" mat-raised-button class="btn-confirmar">
+            <mat-icon>star_rate</mat-icon>
+            VER TODAS AS AVALIAÇÕES
+          </a>
+
+          <a href="https://maps.app.goo.gl/WVFdbpQ8uDyhnGNj8" target="_blank" mat-stroked-button class="btn-avaliar">
+            <mat-icon>rate_review</mat-icon>
+            DEIXE SUA AVALIAÇÃO
+          </a>
+
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="rodape">
+    <span>✂ · CUIDADO</span>
+    <span>✦</span>
+    <span>🪒 · ESTILO</span>
+    <span>✦</span>
+    <span>⭐ · CONFIANÇA</span>
+  </footer>
 
 </main>
