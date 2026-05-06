@@ -1,370 +1,601 @@
-/* Layout principal com sidebar + conteúdo */
+in · CSS
+Copiar
+
+/* ═══════════════════════════════════════════════════════════════
+   ALQUIMISTA BARBEARIA — admin.css
+   Painel administrativo — Dark luxury dourado
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. VARIÁVEIS ───────────────────────────────────────────── */
+:root {
+  --dourado: #C9A84C;
+  --dourado-escuro: #a07830;
+  --dourado-claro: #e8c97a;
+  --sidebar-bg: #111111;
+  --sidebar-borda: rgba(201, 168, 76, 0.15);
+  --main-bg: #161616;
+  --card-bg: #1e1e1e;
+  --card-borda: rgba(201, 168, 76, 0.2);
+  --campo-bg: #252525;
+  --texto: #e0e0e0;
+  --texto-sec: #888;
+  --vermelho: #e53935;
+  --verde: #2e7d32;
+}
+
+/* ── 2. LAYOUT GERAL ────────────────────────────────────────── */
 .admin-layout {
   display: flex;
   min-height: 100vh;
+  background: var(--main-bg);
 }
 
-/* Sidebar lateral */
+/* ── 3. SIDEBAR ─────────────────────────────────────────────── */
 .sidebar {
   width: 260px;
-  background: #1a1a1a;
-  color: white;
+  background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
-  padding: 24px 0;
   position: fixed;
   height: 100vh;
   overflow-y: auto;
+  border-right: 1px solid var(--sidebar-borda);
+  z-index: 100;
 }
 
-/* Cabeçalho da sidebar */
+/* ── 4. SIDEBAR HEADER ──────────────────────────────────────── */
 .sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--sidebar-borda);
+  background: linear-gradient(180deg, rgba(201, 168, 76, 0.05) 0%, transparent 100%);
+}
+
+.sidebar-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* 🔥 adiciona isso */
-  padding: 0 24px 24px;
-  border-bottom: 1px solid #2d2d2d;
-  margin-bottom: 16px;
+  width: 100%;
 }
 
-/* Logo circular */
-.logo {
-  width: 40px;
-  height: 40px;
-  background: #c9a84c;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-.sidebar-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
-  color: white;
-}
-
-.sidebar-sub {
-  font-size: 0.75rem;
-  color: #888;
-  margin: 0;
-}
-
-/* Agrupamento esquerdo (logo + texto) */
 .sidebar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Ações (tema + logout) */
-.sidebar-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Lista de itens do menu */
-.menu-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 2px;
 }
 
-/* Item do menu */
-.menu-item {
-  padding: 14px 24px;
-  cursor: pointer;
+.logo {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--dourado-escuro), var(--dourado));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #1a1100;
+  flex-shrink: 0;
+}
+
+.sidebar-info { flex: 1; }
+
+.sidebar-title {
   font-size: 0.9rem;
-  color: #ccc;
-  transition: background 0.2s, color 0.2s;
-  border-left: 3px solid transparent;
-}
-
-.menu-item:hover {
-  background: #2d2d2d;
-  color: white;
-}
-
-/* Item ativo */
-.menu-item.active {
-  background: #2d2d2d;
-  color: #c9a84c;
-  border-left: 3px solid #c9a84c;
-  font-weight: 500;
-}
-
-/* Conteúdo principal */
-.main-content {
-  margin-left: 260px;
-  flex: 1;
-  padding: 40px;
-  background: #f5f5f5;
-  min-height: 100vh;
-}
-
-.main-content h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 24px;
-}
-
-/* Mensagem de seção vazia */
-.empty-msg {
-  color: #888;
-  font-size: 0.95rem;
-}
-
-/* Lista de agendamentos */
-.agendamentos-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Card de cada agendamento */
-.agendamento-card {
-  background: white;
-  border-radius: 12px;
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid #eee;
-}
-
-/* Informações do agendamento */
-.ag-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-/* Horário em destaque */
-.ag-horario {
-  font-size: 1.4rem;
   font-weight: 700;
-  color: #1a1a1a;
-  min-width: 56px;
-}
-
-.ag-cliente {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0 0 2px;
-}
-
-.ag-detalhe {
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0 0 2px;
-}
-
-.ag-telefone {
-  font-size: 0.8rem;
-  color: #999;
   margin: 0;
+  color: #ffffff;
+  font-family: 'Georgia', serif;
+  letter-spacing: 1px;
 }
 
-/* Badge de status */
-.ag-status {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  background: #e8f5e9;
-  color: #2e7d32;
+.sidebar-sub {
+  font-size: 0.65rem;
+  color: var(--dourado);
+  margin: 0;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  opacity: 0.8;
 }
 
-.ag-status.cancelado {
-  background: #ffebee;
-  color: #c62828;
-}
-
-/* Informações da sidebar */
-.sidebar-info {
-  flex: 1;
-}
-
-/* Botão de logout */
-.btn-logout {
+.sidebar-boas-vindas {
   font-size: 0.75rem;
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid #444;
+  color: var(--dourado);
+  margin: 2px 0 0;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.btn-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
   background: transparent;
-  color: #aaa;
+  border: 1px solid var(--sidebar-borda);
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.btn-hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--dourado);
+  border-radius: 2px;
+}
+
+.btn-tema {
+  background: transparent;
+  border: 1px solid var(--sidebar-borda);
+  color: var(--dourado);
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.btn-tema:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--dourado);
+}
+
+.btn-logout {
+  font-size: 0.7rem;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(229, 57, 53, 0.4);
+  background: transparent;
+  color: #e57373;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
 .btn-logout:hover {
-  background: #c62828;
-  border-color: #c62828;
+  background: var(--vermelho);
+  border-color: var(--vermelho);
   color: white;
 }
 
-.btn-tema {
-  background: transparent;
-  border: 1px solid #444;
-  color: #aaa;
-  border-radius: 20px;
+/* ── 5. MENU ────────────────────────────────────────────────── */
+.menu-list {
+  list-style: none;
+  padding: 12px 0;
+  margin: 0;
+  flex: 1;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--texto-sec);
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+  background: rgba(201, 168, 76, 0.06);
+  color: var(--texto);
+}
+
+.menu-item.active {
+  background: rgba(201, 168, 76, 0.1);
+  color: var(--dourado);
+  border-left: 3px solid var(--dourado);
+  font-weight: 600;
+}
+
+.menu-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--sidebar-borda);
+  margin-top: auto;
+}
+
+.sidebar-footer p {
+  font-size: 0.6rem;
+  color: var(--texto-sec);
+  letter-spacing: 1.5px;
+  text-align: center;
+  opacity: 0.5;
+  margin: 0;
+}
+
+/* ── 6. CONTEÚDO PRINCIPAL ──────────────────────────────────── */
+.main-content {
+  margin-left: 260px;
+  flex: 1;
+  padding: 36px 40px;
+  background: var(--main-bg);
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 7. CABEÇALHO DAS SEÇÕES ────────────────────────────────── */
+.secao-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.secao-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.secao-titulo h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--dourado);
+  margin: 0;
+  white-space: nowrap;
+  letter-spacing: 3px;
+  font-family: 'Georgia', serif;
+}
+
+.linha-dec {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--dourado), transparent);
+  opacity: 0.4;
+  min-width: 20px;
+}
+
+/* ── 8. FILTRO DE DATA ──────────────────────────────────────── */
+.filtro-data { width: 220px; }
+
+.filtro-data ::ng-deep .mdc-notched-outline__leading,
+.filtro-data ::ng-deep .mdc-notched-outline__notch,
+.filtro-data ::ng-deep .mdc-notched-outline__trailing {
+  border-color: var(--card-borda) !important;
+}
+
+.filtro-data ::ng-deep .mat-mdc-form-field-flex { background: var(--campo-bg); }
+
+.filtro-data ::ng-deep .mat-mdc-floating-label,
+.filtro-data ::ng-deep .mdc-floating-label { color: var(--dourado) !important; }
+
+.filtro-data ::ng-deep input,
+.filtro-data ::ng-deep .mat-mdc-select-value { color: var(--texto) !important; }
+
+.filtro-data ::ng-deep .mat-mdc-select-arrow { color: var(--dourado) !important; }
+
+.filtro-data ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.filtro-data ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.filtro-data ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--dourado) !important;
+}
+
+/* ── 9. LISTA DE AGENDAMENTOS ───────────────────────────────── */
+.agendamentos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.agendamento-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--card-borda);
+  transition: border-color 0.2s;
+}
+
+.agendamento-card:hover { border-color: var(--dourado); }
+
+.ag-horario-badge {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dourado);
+  font-family: 'Georgia', serif;
+  min-width: 60px;
+  text-align: center;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--card-borda);
+  border-radius: 8px;
   padding: 6px 10px;
+}
+
+.ag-horario-badge.vermelho-badge {
+  color: #ef9a9a;
+  background: rgba(229, 57, 53, 0.08);
+  border-color: rgba(229, 57, 53, 0.2);
+}
+
+.ag-horario-badge.verde-badge {
+  color: #a5d6a7;
+  background: rgba(46, 125, 50, 0.08);
+  border-color: rgba(46, 125, 50, 0.2);
+}
+
+.ag-info { flex: 1; }
+
+.ag-cliente {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--texto);
+  margin: 0 0 3px;
+}
+
+.ag-detalhe {
+  font-size: 0.8rem;
+  color: var(--texto-sec);
+  margin: 0 0 3px;
+}
+
+.ag-telefone {
+  font-size: 0.75rem;
+  color: var(--texto-sec);
+  margin: 0;
+  opacity: 0.7;
+}
+
+.ag-acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.ag-status {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(46, 125, 50, 0.15);
+  color: #a5d6a7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.ag-status.cancelado {
+  background: rgba(229, 57, 53, 0.12);
+  color: #ef9a9a;
+  border-color: rgba(229, 57, 53, 0.3);
+}
+
+/* ── 10. BOTÕES DE AÇÃO ─────────────────────────────────────── */
+.btn-acao {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: none;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 14px;
+  letter-spacing: 0.5px;
 }
 
-.btn-tema:hover {
-  background: #2d2d2d;
+.btn-cancelar-ag {
+  background: rgba(229, 57, 53, 0.12);
+  color: #ef9a9a;
+  border: 1px solid rgba(229, 57, 53, 0.3);
+}
+
+.btn-cancelar-ag:hover {
+  background: var(--vermelho);
   color: white;
+  border-color: var(--vermelho);
 }
 
-/* ─── RESPONSIVIDADE MOBILE ADMIN ──────────────────────────────────────── */
-
-/* Esconde botão hamburguer no desktop */
-.btn-hamburger {
-  display: none;
+.btn-remover {
+  background: rgba(229, 57, 53, 0.12);
+  color: #ef9a9a;
+  border: 1px solid rgba(229, 57, 53, 0.3);
 }
 
-@media (max-width: 768px) {
-
-  .admin-layout {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    padding: 0;
-    flex-direction: column;
-    z-index: 200;
-    overflow: visible;
-  }
-
-  .sidebar-header {
-    padding: 12px 16px;
-  }
-
-  .sidebar-title {
-    font-size: 0.9rem;
-  }
-
-  /* Botão hamburguer aparece só no mobile */
-  .btn-hamburger {
-    display: flex;
-    background: transparent;
-    border: 1px solid #444;
-    color: #aaa;
-    border-radius: 8px;
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 18px;
-  }
-
-  /* Menu dropdown */
-  nav {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    background: #1a1a1a;
-    z-index: 300;
-    border-bottom: 1px solid #2d2d2d;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    animation: slideDown 0.2s ease-out;
-  }
-
-  .menu-list {
-    display: flex;
-    flex-direction: column;
-    padding: 8px 0;
-    gap: 0;
-  }
-
-  .menu-item {
-    padding: 14px 20px;
-    white-space: nowrap;
-    border-left: 3px solid transparent;
-    border-bottom: none;
-    font-size: 0.95rem;
-    flex-shrink: 0;
-  }
-
-  .menu-item.active {
-    border-left: 3px solid #c9a84c;
-    border-bottom: none;
-    background: #2d2d2d;
-  }
-
-  .main-content {
-    margin-left: 0;
-    padding: 20px 16px;
-    min-height: calc(100vh - 120px);
-  }
-
-  .main-content h2 {
-    font-size: 1.2rem;
-    margin-bottom: 16px;
-  }
-
-  .agendamento-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-  }
-
-  .ag-acoes {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .ag-horario {
-    font-size: 1.2rem;
-  }
-
-  .filtro-data {
-    width: 100% !important;
-  }
-
-  .secao-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
+.btn-remover:hover {
+  background: var(--vermelho);
+  color: white;
+  border-color: var(--vermelho);
 }
 
-/* Telas muito pequenas */
-@media (max-width: 380px) {
-
-  .sidebar-header {
-    padding: 10px 12px;
-  }
-
-  .logo {
-    width: 34px;
-    height: 34px;
-    font-size: 15px;
-  }
-
-  .main-content {
-    padding: 16px 12px;
-  }
+/* ── 11. FORMULÁRIO CARD ────────────────────────────────────── */
+.form-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-borda);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 520px;
+  margin-bottom: 24px;
 }
 
+.full-width { width: 100%; }
+
+.full-width ::ng-deep .mdc-notched-outline__leading,
+.full-width ::ng-deep .mdc-notched-outline__notch,
+.full-width ::ng-deep .mdc-notched-outline__trailing {
+  border-color: var(--card-borda) !important;
+}
+
+.full-width ::ng-deep .mat-mdc-form-field-flex { background: var(--campo-bg); }
+
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--dourado) !important;
+}
+
+.full-width ::ng-deep .mat-mdc-floating-label,
+.full-width ::ng-deep .mdc-floating-label { color: var(--dourado) !important; }
+
+.full-width ::ng-deep input,
+.full-width ::ng-deep .mat-mdc-select-value { color: var(--texto) !important; }
+
+.full-width ::ng-deep .mat-mdc-select-arrow { color: var(--dourado) !important; }
+
+/* ── 12. BOTÕES PRINCIPAIS ──────────────────────────────────── */
+.btn-admin {
+  width: 100%;
+  height: 48px;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.btn-bloquear {
+  background: linear-gradient(135deg, #7f0000, #e53935, #ef9a9a);
+  color: white;
+  box-shadow: 0 4px 20px rgba(229, 57, 53, 0.25);
+}
+
+.btn-bloquear:hover {
+  box-shadow: 0 6px 28px rgba(229, 57, 53, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-liberar {
+  background: linear-gradient(135deg, #1b5e20, #2e7d32, #a5d6a7);
+  color: white;
+  box-shadow: 0 4px 20px rgba(46, 125, 50, 0.25);
+}
+
+.btn-liberar:hover {
+  box-shadow: 0 6px 28px rgba(46, 125, 50, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ── 13. LISTA RESULTADO ────────────────────────────────────── */
+.lista-resultado { margin-top: 8px; }
+
+.lista-titulo {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.lista-titulo.vermelho { color: #ef9a9a; }
+.lista-titulo.verde    { color: #a5d6a7; }
+
+/* ── 14. MENSAGEM VAZIA ─────────────────────────────────────── */
+.empty-msg {
+  color: var(--texto-sec);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 40px 0;
+  opacity: 0.7;
+}
+
+/* ── 15. EM BREVE CARD ──────────────────────────────────────── */
+.em-breve-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-borda);
+  border-radius: 12px;
+  padding: 40px 28px;
+  text-align: center;
+  max-width: 480px;
+}
+
+.em-breve-icon { font-size: 3rem; margin-bottom: 12px; }
+
+.em-breve-card h3 {
+  color: var(--dourado);
+  font-family: 'Georgia', serif;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  margin: 0 0 8px;
+}
+
+.em-breve-card p {
+  color: var(--texto-sec);
+  font-size: 0.85rem;
+  margin: 0 0 24px;
+}
+
+.profissionais-preview {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.profissional-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--card-borda);
+  border-radius: 24px;
+  padding: 8px 16px;
+  color: var(--texto);
+  font-size: 0.85rem;
+}
+
+.prof-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--dourado-escuro), var(--dourado));
+  color: #1a1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.horario-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.horario-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(201, 168, 76, 0.06);
+  border: 1px solid var(--card-borda);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--texto-sec);
+}
+
+.horario-valor {
+  color: var(--dourado);
+  font-weight: 600;
+  font-family: 'Georgia', serif;
+}
+
+/* ── 16. ANIMAÇÕES ──────────────────────────────────────────── */
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -375,10 +606,270 @@
   to   { opacity: 0; transform: translateY(-8px); }
 }
 
-.menu-aberto {
-  animation: slideDown 0.18s ease-out forwards;
+.menu-aberto   { animation: slideDown 0.18s ease-out forwards; }
+.menu-fechando { animation: slideUp  0.18s ease-in  forwards; }
+
+/* ── 17. CALENDÁRIO ─────────────────────────────────────────── */
+.calendario-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: 12px;
+  padding: 16px;
+  width: 100%;
 }
 
-.menu-fechando {
-  animation: slideUp 0.18s ease-in forwards;
+.calendario-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cal-mes-ano {
+  font-family: 'Georgia', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--dourado);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.cal-nav {
+  background: transparent;
+  border: 1px solid var(--card-borda);
+  color: var(--dourado);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.cal-nav:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--dourado);
+}
+
+.calendario-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.calendario-dias-semana span {
+  text-align: center;
+  font-size: 0.6rem;
+  color: var(--texto-sec);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 3px 0;
+}
+
+.calendario-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-dia {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.68rem;
+  color: var(--texto);
+  position: relative;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.cal-dia:hover:not(.vazio) {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--card-borda);
+}
+
+.cal-dia.vazio { cursor: default; }
+
+.cal-dia.hoje {
+  border-color: var(--dourado);
+  color: var(--dourado);
+  font-weight: 700;
+}
+
+.cal-dia.selecionado {
+  background: linear-gradient(135deg, var(--dourado-escuro), var(--dourado));
+  color: #1a1100;
+  font-weight: 700;
+  border-color: transparent;
+}
+
+.cal-dia.tem-agendamento .cal-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--dourado);
+  position: absolute;
+  bottom: 2px;
+}
+
+.cal-dia.selecionado .cal-dot { background: #1a1100; }
+
+/* ── 18. LAYOUT AGENDAMENTOS ────────────────────────────────── */
+section { width: 100%; }
+
+.secao-agendamentos { width: 100%; }
+
+.agendamentos-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.col-calendario {
+  position: sticky;
+  top: 20px;
+}
+
+.col-lista { min-height: 400px; }
+
+.data-selecionada-label {
+  font-size: 0.72rem;
+  color: var(--dourado);
+  opacity: 0.7;
+  text-align: center;
+  margin: 10px 0 0;
+  letter-spacing: 0.5px;
+}
+
+.lista-vazia {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.lista-vazia span {
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+/* ── 19. OVERLAY (oculto por padrão no desktop) ─────────────── */
+.menu-overlay { display: none; }
+
+/* ══════════════════════════════════════════════════════════════
+   20. RESPONSIVIDADE MOBILE — único bloco @media
+   Hierarquia z-index:
+     .sidebar / .sidebar-header  → 500  (sempre visível)
+     nav (dropdown)              → 400  (acima do overlay)
+     .menu-overlay               → 300  (cobre main-content)
+     .main-content               → 1    (fundo)
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Layout geral */
+  .admin-layout { flex-direction: column; }
+
+  /* Sidebar vira barra no topo */
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    overflow: visible;
+    z-index: 500;
+  }
+
+  /* Header sempre acima de tudo */
+  .sidebar-header {
+    position: relative;
+    z-index: 500;
+  }
+
+  /* Hambúrguer aparece */
+  .btn-hamburger { display: flex; }
+
+  /* Overlay semitransparente cobre só o main */
+  .menu-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 300;
+  }
+
+  /* Nav dropdown cai abaixo do header */
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--sidebar-bg);
+    z-index: 400;
+    border-bottom: 1px solid var(--sidebar-borda);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  }
+
+  .menu-list      { padding: 8px 0; }
+  .sidebar-footer { display: none; }
+
+  /* Conteúdo principal fica abaixo do overlay */
+  .main-content {
+    margin-left: 0;
+    padding: 20px 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .secao-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filtro-data { width: 100% !important; }
+
+  /* Agendamentos empilhados verticalmente */
+  .agendamentos-layout { grid-template-columns: 1fr; }
+  .col-calendario      { position: static; }
+
+  /* Cards de agendamento */
+  .agendamento-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-borda);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .ag-info { flex: 1; min-width: 0; }
+
+  .ag-acoes {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Formulários */
+  .form-card     { max-width: 100%; }
+  .em-breve-card { max-width: 100%; padding: 28px 16px; }
+
+  .profissionais-preview {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .sidebar-title { font-size: 0.8rem; }
+  .main-content  { padding: 16px 12px; }
 }

@@ -7,7 +7,7 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8080/api/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(usuario: string, senha: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { usuario, senha })
@@ -34,6 +34,16 @@ export class AuthService {
       return payload.exp * 1000 > Date.now();
     } catch {
       return false;
+    }
+  }
+  getUsuario(): string {
+    const token = this.getToken();
+    if (!token) return '';
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub || '';
+    } catch {
+      return '';
     }
   }
 }

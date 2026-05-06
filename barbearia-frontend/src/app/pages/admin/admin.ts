@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { AuthService } from '../../services/auth.service';
 import { DiaDisponivelService } from '../../services/dia-disponivel.service';
+import { MatIconModule } from '@angular/material/icon';
 
 registerLocaleData(localePt);
 
@@ -25,7 +26,8 @@ registerLocaleData(localePt);
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
@@ -57,12 +59,71 @@ export class Admin implements OnInit {
     return this.themeService.darkMode;
   }
 
+  get usuarioLogado(): string {
+    return this.authService.getUsuario();
+  }
+
+  mesAtual: number = new Date().getMonth();
+  anoAtual: number = new Date().getFullYear();
+  diasCalendario: (number | null)[] = [];
+  nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  get nomeMes(): string {
+    return this.nomesMeses[this.mesAtual];
+  }
+
+  gerarCalendario() {
+    const primeiroDia = new Date(this.anoAtual, this.mesAtual, 1).getDay();
+    const totalDias = new Date(this.anoAtual, this.mesAtual + 1, 0).getDate();
+    this.diasCalendario = [];
+    for (let i = 0; i < primeiroDia; i++) this.diasCalendario.push(null);
+    for (let i = 1; i <= totalDias; i++) this.diasCalendario.push(i);
+  }
+
+  mesAnterior() {
+    if (this.mesAtual === 0) { this.mesAtual = 11; this.anoAtual--; }
+    else this.mesAtual--;
+    this.gerarCalendario();
+  }
+
+  proximoMes() {
+    if (this.mesAtual === 11) { this.mesAtual = 0; this.anoAtual++; }
+    else this.mesAtual++;
+    this.gerarCalendario();
+  }
+
+  isHoje(dia: number): boolean {
+    const hoje = new Date();
+    return dia === hoje.getDate() && this.mesAtual === hoje.getMonth() && this.anoAtual === hoje.getFullYear();
+  }
+
+  isSelecionado(dia: number): boolean {
+    if (!this.dataSelecionada) return false;
+    const d = new Date(this.dataSelecionada);
+    return dia === d.getDate() && this.mesAtual === d.getMonth() && this.anoAtual === d.getFullYear();
+  }
+
+  temAgendamento(dia: number): boolean {
+    return this.agendamentos.some(ag => {
+      const d = new Date(ag.dataHora);
+      return d.getDate() === dia && d.getMonth() === this.mesAtual && d.getFullYear() === this.anoAtual
+        && ag.status !== 'CANCELADO';
+    });
+  }
+
+  selecionarDia(dia: number) {
+    this.dataSelecionada = new Date(this.anoAtual, this.mesAtual, dia);
+    this.filtrarPorData();
+  }
+
   toggleTema() {
     this.themeService.toggle();
   }
 
   ngOnInit() {
     this.carregarAgendamentos();
+    this.gerarCalendario();
   }
 
   carregarAgendamentos() {

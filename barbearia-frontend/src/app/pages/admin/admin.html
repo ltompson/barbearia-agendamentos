@@ -1,235 +1,299 @@
 <!--
   Painel administrativo da Alquimista Barbearia
-  Acessível apenas para o dono e barbeiros autenticados
-  Componente: Admin
+  Estilo dark luxury dourado
 -->
 <div class="admin-layout">
+  <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <aside class="sidebar">
 
-  <aside class="sidebar" role="navigation" aria-label="Menu administrativo">
-
-    <header class="sidebar-header">
-      <div class="sidebar-left">
-        <button class="btn-hamburger" (click)="toggleMenu()">☰</button>
-        <div class="logo">A</div>
-        <div class="sidebar-info">
-          <h1 class="sidebar-title">Alquimista</h1>
-          <p class="sidebar-sub">Painel Admin</p>
+    <div class="sidebar-header">
+      <div class="sidebar-top">
+        <div class="sidebar-left">
+          <button class="btn-hamburger" (click)="toggleMenu()">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="logo"><span>✂</span></div>
+          <div class="sidebar-info">
+            <h1 class="sidebar-title">Alquimista</h1>
+            <p class="sidebar-sub">Painel Admin</p>
+            <p class="sidebar-boas-vindas">Olá, {{ usuarioLogado }}!</p>
+          </div>
+        </div>
+        <div class="sidebar-actions">
+          <button class="btn-tema" (click)="toggleTema()">
+            {{ temaEscuro ? '☀️' : '🌙' }}
+          </button>
+          <button class="btn-logout" (click)="logout()">Sair</button>
         </div>
       </div>
-      <div class="sidebar-actions">
-        <button class="btn-tema" (click)="toggleTema()">
-          {{ temaEscuro ? '☀️' : '🌙' }}
-        </button>
-        <button class="btn-logout" (click)="logout()">Sair</button>
-      </div>
-    </header>
+    </div>
 
-    <nav *ngIf="menuAberto || menuFechando || !isMobile()">
+    <nav [class.menu-aberto]="menuAberto" [class.menu-fechando]="menuFechando"
+      *ngIf="menuAberto || menuFechando || !isMobile()">
       <ul class="menu-list">
         <li class="menu-item" [class.active]="secaoAtiva === 'agendamentos'"
           (click)="secaoAtiva = 'agendamentos'; toggleMenu()">
-          📅 Agendamentos do dia
+          <span class="menu-icon">📅</span>
+          <span>Agendamentos</span>
         </li>
         <li class="menu-item" [class.active]="secaoAtiva === 'profissionais'"
           (click)="secaoAtiva = 'profissionais'; toggleMenu()">
-          👥 Profissionais
+          <span class="menu-icon">👥</span>
+          <span>Profissionais</span>
         </li>
         <li class="menu-item" [class.active]="secaoAtiva === 'horarios'"
           (click)="secaoAtiva = 'horarios'; toggleMenu()">
-          ⏰ Horários de Funcionamento
+          <span class="menu-icon">⏰</span>
+          <span>Funcionamento</span>
         </li>
         <li class="menu-item" [class.active]="secaoAtiva === 'bloqueios'"
           (click)="secaoAtiva = 'bloqueios'; toggleMenu()">
-          🚫 Bloquear Dias e Horários
+          <span class="menu-icon">🚫</span>
+          <span>Bloquear</span>
         </li>
         <li class="menu-item" [class.active]="secaoAtiva === 'liberacao'"
           (click)="secaoAtiva = 'liberacao'; toggleMenu()">
-          ✅ Liberar Dias e Horários
+          <span class="menu-icon">✅</span>
+          <span>Liberar</span>
         </li>
       </ul>
+
+      <div class="sidebar-footer">
+        <p>✂ · CUIDADO · ESTILO · CONFIANÇA</p>
+      </div>
     </nav>
 
   </aside>
 
-  <main class="main-content" role="main">
+  <!-- ── CONTEÚDO PRINCIPAL ──────────────────────────────── -->
+  <main class="main-content">
+    <!-- ══ SEÇÃO: AGENDAMENTOS ══ -->
+    <section *ngIf="secaoAtiva === 'agendamentos'" class="secao-agendamentos">
 
-    <!-- Seção: Agendamentos do dia -->
-    <section *ngIf="secaoAtiva === 'agendamentos'" aria-label="Agendamentos do dia">
-      <div class="secao-header">
-        <h2>📅 Agendamentos</h2>
-        <mat-form-field appearance="outline" class="filtro-data">
-          <mat-label>Data</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="dataSelecionada" (dateChange)="filtrarPorData()">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+      <div class="secao-titulo">
+        <h2>AGENDAMENTOS</h2>
+        <div class="linha-dec"></div>
       </div>
 
-      <p *ngIf="carregando" class="empty-msg">Carregando agendamentos...</p>
-      <p *ngIf="!carregando && agendamentosFiltrados.length === 0" class="empty-msg">
-        Nenhum agendamento encontrado para esta data.
-      </p>
+      <div class="agendamentos-layout">
 
-      <div *ngIf="!carregando && agendamentosFiltrados.length > 0" class="agendamentos-list">
-        <div *ngFor="let ag of agendamentosFiltrados" class="agendamento-card">
-          <div class="ag-info">
-            <span class="ag-horario">{{ ag.dataHora | date:'HH:mm' }}</span>
-            <div>
-              <p class="ag-cliente">{{ ag.cliente?.nome }}</p>
-              <p class="ag-detalhe">{{ ag.servico?.nome }} · {{ ag.barbeiro?.nome }}</p>
-              <p class="ag-telefone">📞 {{ ag.cliente?.telefone }}</p>
+        <!-- Coluna esquerda: calendário -->
+        <div class="col-calendario">
+          <div class="calendario-card">
+            <div class="calendario-header">
+              <button class="cal-nav" (click)="mesAnterior()">‹</button>
+              <span class="cal-mes-ano">{{ nomeMes }} {{ anoAtual }}</span>
+              <button class="cal-nav" (click)="proximoMes()">›</button>
+            </div>
+            <div class="calendario-dias-semana">
+              <span *ngFor="let d of ['D','S','T','Q','Q','S','S']">{{ d }}</span>
+            </div>
+            <div class="calendario-grid">
+              <div *ngFor="let dia of diasCalendario" class="cal-dia" [class.vazio]="!dia"
+                [class.hoje]="dia && isHoje(dia)" [class.selecionado]="dia && isSelecionado(dia)"
+                [class.tem-agendamento]="dia && temAgendamento(dia)" (click)="dia && selecionarDia(dia)">
+                <span *ngIf="dia">{{ dia }}</span>
+                <div *ngIf="dia && temAgendamento(dia)" class="cal-dot"></div>
+              </div>
             </div>
           </div>
-          <div class="ag-acoes">
-            <span class="ag-status" [class.cancelado]="ag.status === 'CANCELADO'">
-              {{ ag.status }}
-            </span>
-            <button *ngIf="ag.status !== 'CANCELADO'" class="btn-cancelar" (click)="cancelar(ag.id)">
-              Cancelar
-            </button>
+
+          <!-- Data selecionada -->
+          <p class="data-selecionada-label" *ngIf="dataSelecionada">
+            📅 {{ dataSelecionada | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+
+        <!-- Coluna direita: lista -->
+        <div class="col-lista">
+          <p *ngIf="carregando" class="empty-msg">⏳ Carregando...</p>
+          <p *ngIf="!carregando && agendamentosFiltrados.length === 0" class="empty-msg lista-vazia">
+            Nenhum agendamento<br><span>para esta data</span>
+          </p>
+
+          <div *ngIf="!carregando && agendamentosFiltrados.length > 0" class="agendamentos-list">
+            <div *ngFor="let ag of agendamentosFiltrados" class="agendamento-card">
+              <div class="ag-horario-badge">{{ ag.dataHora | date:'HH:mm' }}</div>
+              <div class="ag-info">
+                <p class="ag-cliente">{{ ag.cliente?.nome }}</p>
+                <p class="ag-detalhe">{{ ag.servico?.nome }} · {{ ag.barbeiro?.nome }}</p>
+                <p class="ag-telefone">📞 {{ ag.cliente?.telefone }}</p>
+              </div>
+              <div class="ag-acoes">
+                <span class="ag-status" [class.cancelado]="ag.status === 'CANCELADO'">
+                  {{ ag.status }}
+                </span>
+                <button *ngIf="ag.status !== 'CANCELADO'" class="btn-acao btn-cancelar-ag" (click)="cancelar(ag.id)">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ SEÇÃO: PROFISSIONAIS ══ -->
+    <section *ngIf="secaoAtiva === 'profissionais'">
+      <div class="secao-titulo">
+        <div class="linha-dec"></div>
+        <h2>PROFISSIONAIS</h2>
+        <div class="linha-dec"></div>
+      </div>
+      <div class="em-breve-card">
+        <div class="em-breve-icon">👥</div>
+        <h3>Em breve</h3>
+        <p>Gerenciamento de profissionais estará disponível em breve.</p>
+        <div class="profissionais-preview">
+          <div class="profissional-badge">
+            <span class="prof-avatar">F</span>
+            <span>Francisco</span>
+          </div>
+          <div class="profissional-badge">
+            <span class="prof-avatar">R</span>
+            <span>Raniel Dias</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Seção: Profissionais -->
-    <section *ngIf="secaoAtiva === 'profissionais'" aria-label="Profissionais">
-      <h2>👥 Profissionais</h2>
-      <p class="empty-msg">Francisco e Raniel Dias</p>
-    </section>
-
-    <!-- Seção: Horários de Funcionamento -->
-    <section *ngIf="secaoAtiva === 'horarios'" aria-label="Horários de funcionamento">
-      <h2>⏰ Horários de Funcionamento</h2>
-      <p class="empty-msg">Em breve.</p>
-    </section>
-
-    <!-- Seção: Bloquear Dias e Horários -->
-    <section *ngIf="secaoAtiva === 'bloqueios'" aria-label="Bloquear dias e horários">
-
-      <div class="secao-header">
-        <h2>🚫 Bloquear Dias e Horários</h2>
+    <!-- ══ SEÇÃO: HORÁRIOS DE FUNCIONAMENTO ══ -->
+    <section *ngIf="secaoAtiva === 'horarios'">
+      <div class="secao-titulo">
+        <div class="linha-dec"></div>
+        <h2>FUNCIONAMENTO</h2>
+        <div class="linha-dec"></div>
       </div>
+      <div class="em-breve-card">
+        <div class="em-breve-icon">⏰</div>
+        <h3>Em breve</h3>
+        <p>Configuração dos horários de funcionamento estará disponível em breve.</p>
+        <div class="horario-preview">
+          <div class="horario-item">
+            <span>Segunda a Sexta</span>
+            <span class="horario-valor">08:00 – 18:30</span>
+          </div>
+          <div class="horario-item">
+            <span>Sábado e Domingo</span>
+            <span class="horario-valor">Sob consulta</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
-        <mat-form-field appearance="outline" class="filtro-data">
+    <!-- ══ SEÇÃO: BLOQUEAR ══ -->
+    <section *ngIf="secaoAtiva === 'bloqueios'">
+      <div class="secao-titulo">
+        <div class="linha-dec"></div>
+        <h2>BLOQUEAR HORÁRIOS</h2>
+        <div class="linha-dec"></div>
+      </div>
+      <div class="form-card">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Barbeiro</mat-label>
           <mat-select [(ngModel)]="bloqueioForm.barbeiroId">
             <mat-option [value]="1">Francisco</mat-option>
             <mat-option [value]="2">Raniel Dias</mat-option>
           </mat-select>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="filtro-data">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data</mat-label>
           <input matInput [matDatepicker]="pickerBloqueio" [(ngModel)]="bloqueioForm.data"
             (dateChange)="carregarBloqueios()">
           <mat-datepicker-toggle matIconSuffix [for]="pickerBloqueio"></mat-datepicker-toggle>
           <mat-datepicker #pickerBloqueio></mat-datepicker>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="filtro-data">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Horário</mat-label>
           <mat-select [(ngModel)]="bloqueioForm.horario">
             <mat-option *ngFor="let h of horariosBloqueio" [value]="h">{{ h }}</mat-option>
           </mat-select>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="filtro-data">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Motivo (opcional)</mat-label>
           <input matInput [(ngModel)]="bloqueioForm.motivo" placeholder="Ex: Almoço, Folga...">
         </mat-form-field>
-
-        <button class="btn-cancelar" style="background: #e53935;" (click)="criarBloqueio()">
-          🚫 Bloquear Horário
+        <button class="btn-admin btn-bloquear" (click)="criarBloqueio()">
+          🚫 BLOQUEAR HORÁRIO
         </button>
       </div>
 
-      <div *ngIf="bloqueios.length > 0" class="agendamentos-list" style="margin-top: 16px;">
-        <h3 style="margin-bottom: 12px; color: #c62828; font-size: 0.9rem;">🚫 Horários bloqueados nesta data</h3>
+      <div *ngIf="bloqueios.length > 0" class="lista-resultado">
+        <h3 class="lista-titulo vermelho">🚫 Horários bloqueados nesta data</h3>
         <div *ngFor="let b of bloqueios" class="agendamento-card">
+          <div class="ag-horario-badge vermelho-badge">{{ b.horario.substring(0, 5) }}</div>
           <div class="ag-info">
-            <span class="ag-horario">{{ b.horario.substring(0, 5) }}</span>
-            <div>
-              <p class="ag-cliente">{{ b.barbeiro?.nome }}</p>
-              <p class="ag-detalhe">{{ b.motivo || 'Sem motivo' }}</p>
-            </div>
+            <p class="ag-cliente">{{ b.barbeiro?.nome }}</p>
+            <p class="ag-detalhe">{{ b.motivo || 'Sem motivo' }}</p>
           </div>
           <div class="ag-acoes">
-            <button class="btn-cancelar" (click)="deletarBloqueio(b.id)">Remover</button>
+            <button class="btn-acao btn-remover" (click)="deletarBloqueio(b.id)">Remover</button>
           </div>
         </div>
       </div>
-
       <p *ngIf="bloqueios.length === 0 && bloqueioForm.data" class="empty-msg">
         Nenhum bloqueio para esta data.
       </p>
-
     </section>
 
-    <!-- Seção: Liberar Dias e Horários -->
-    <section *ngIf="secaoAtiva === 'liberacao'" aria-label="Liberar dias e horários">
-
-      <div class="secao-header">
-        <h2>✅ Liberar Dias e Horários</h2>
+    <!-- ══ SEÇÃO: LIBERAR ══ -->
+    <section *ngIf="secaoAtiva === 'liberacao'">
+      <div class="secao-titulo">
+        <div class="linha-dec"></div>
+        <h2>LIBERAR DIAS</h2>
+        <div class="linha-dec"></div>
       </div>
-
-      <div class="agendamento-card" style="flex-direction: column; align-items: flex-start; gap: 16px;">
-        <mat-form-field appearance="outline" class="filtro-data">
+      <div class="form-card">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Barbeiro</mat-label>
           <mat-select [(ngModel)]="diaDisponivelForm.barbeiroId">
             <mat-option [value]="1">Francisco</mat-option>
             <mat-option [value]="2">Raniel Dias</mat-option>
           </mat-select>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="filtro-data">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data</mat-label>
           <input matInput [matDatepicker]="pickerDiaDisponivel" [(ngModel)]="diaDisponivelForm.data"
             (dateChange)="carregarDiasDisponiveis()">
           <mat-datepicker-toggle matIconSuffix [for]="pickerDiaDisponivel"></mat-datepicker-toggle>
           <mat-datepicker #pickerDiaDisponivel></mat-datepicker>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="filtro-data">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Horário</mat-label>
           <mat-select [(ngModel)]="diaDisponivelForm.horario">
             <mat-option [value]="null">Dia inteiro</mat-option>
             <mat-option *ngFor="let h of horariosBloqueio" [value]="h">{{ h }}</mat-option>
           </mat-select>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="filtro-data">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Motivo (opcional)</mat-label>
           <input matInput [(ngModel)]="diaDisponivelForm.motivo" placeholder="Ex: Plantão, Evento...">
         </mat-form-field>
-
-        <button class="btn-cancelar" style="background: #2e7d32;" (click)="criarDiaDisponivel()">
-          ✅ Liberar Dia
+        <button class="btn-admin btn-liberar" (click)="criarDiaDisponivel()">
+          ✅ LIBERAR DIA
         </button>
       </div>
 
-      <div *ngIf="diasDisponiveis.length > 0" class="agendamentos-list" style="margin-top: 16px;">
-        <h3 style="margin-bottom: 12px; color: #2e7d32; font-size: 0.9rem;">✅ Dias liberados</h3>
+      <div *ngIf="diasDisponiveis.length > 0" class="lista-resultado">
+        <h3 class="lista-titulo verde">✅ Dias liberados</h3>
         <div *ngFor="let d of diasDisponiveis" class="agendamento-card">
+          <div class="ag-horario-badge verde-badge">
+            {{ d.data | date:'dd/MM' }}{{ d.horario ? ' · ' + d.horario.substring(0,5) : '' }}
+          </div>
           <div class="ag-info">
-            <span class="ag-horario">{{ d.data | date:'dd/MM' }}{{ d.horario ? ' · ' + d.horario.substring(0,5) : ''
-              }}</span>
-            <div>
-              <p class="ag-cliente">{{ d.barbeiroId === 1 ? 'Francisco' : 'Raniel Dias' }}</p>
-              <p class="ag-detalhe">{{ d.motivo || 'Sem motivo' }}</p>
-            </div>
+            <p class="ag-cliente">{{ d.barbeiroId === 1 ? 'Francisco' : 'Raniel Dias' }}</p>
+            <p class="ag-detalhe">{{ d.motivo || 'Sem motivo' }}</p>
           </div>
           <div class="ag-acoes">
-            <button class="btn-cancelar" (click)="deletarDiaDisponivel(d.id)">Remover</button>
+            <button class="btn-acao btn-remover" (click)="deletarDiaDisponivel(d.id)">Remover</button>
           </div>
         </div>
       </div>
-
       <p *ngIf="diasDisponiveis.length === 0 && diaDisponivelForm.data" class="empty-msg">
         Nenhum dia liberado para esta data.
       </p>
-
     </section>
 
   </main>
