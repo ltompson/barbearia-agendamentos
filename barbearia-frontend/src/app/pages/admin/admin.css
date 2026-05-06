@@ -1,6 +1,3 @@
-in · CSS
-Copiar
-
 /* ═══════════════════════════════════════════════════════════════
    ALQUIMISTA BARBEARIA — admin.css
    Painel administrativo — Dark luxury dourado
@@ -11,6 +8,20 @@ Copiar
   --dourado: #C9A84C;
   --dourado-escuro: #a07830;
   --dourado-claro: #e8c97a;
+  --sidebar-bg: #1a1a1a;
+  --sidebar-borda: rgba(201, 168, 76, 0.2);
+  --main-bg: #f5f3ef;
+  --card-bg: #ffffff;
+  --card-borda: rgba(201, 168, 76, 0.25);
+  --campo-bg: #f9f7f4;
+  --texto: #1a1a1a;
+  --texto-sec: #666666;
+  --vermelho: #e53935;
+  --verde: #2e7d32;
+}
+
+/* ── TEMA ESCURO ────────────────────────────────────────────── */
+body.dark-theme {
   --sidebar-bg: #111111;
   --sidebar-borda: rgba(201, 168, 76, 0.15);
   --main-bg: #161616;
@@ -19,8 +30,6 @@ Copiar
   --campo-bg: #252525;
   --texto: #e0e0e0;
   --texto-sec: #888;
-  --vermelho: #e53935;
-  --verde: #2e7d32;
 }
 
 /* ── 2. LAYOUT GERAL ────────────────────────────────────────── */
@@ -44,6 +53,7 @@ Copiar
 }
 
 /* ── 4. SIDEBAR HEADER ──────────────────────────────────────── */
+/* DESKTOP: header normal dentro da sidebar */
 .sidebar-header {
   display: flex;
   flex-direction: column;
@@ -86,7 +96,9 @@ Copiar
   flex-shrink: 0;
 }
 
-.sidebar-info { flex: 1; }
+.sidebar-info {
+  flex: 1;
+}
 
 .sidebar-title {
   font-size: 0.9rem;
@@ -118,8 +130,8 @@ Copiar
   display: none;
   flex-direction: column;
   gap: 5px;
-  background: transparent;
-  border: 1px solid var(--sidebar-borda);
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.5);
   border-radius: 8px;
   padding: 8px 10px;
   cursor: pointer;
@@ -129,8 +141,9 @@ Copiar
   display: block;
   width: 18px;
   height: 2px;
-  background: var(--dourado);
+  background: #C9A84C;
   border-radius: 2px;
+  opacity: 1;
 }
 
 .btn-tema {
@@ -265,7 +278,9 @@ Copiar
 }
 
 /* ── 8. FILTRO DE DATA ──────────────────────────────────────── */
-.filtro-data { width: 220px; }
+.filtro-data {
+  width: 220px;
+}
 
 .filtro-data ::ng-deep .mdc-notched-outline__leading,
 .filtro-data ::ng-deep .mdc-notched-outline__notch,
@@ -273,15 +288,23 @@ Copiar
   border-color: var(--card-borda) !important;
 }
 
-.filtro-data ::ng-deep .mat-mdc-form-field-flex { background: var(--campo-bg); }
+.filtro-data ::ng-deep .mat-mdc-form-field-flex {
+  background: var(--campo-bg);
+}
 
 .filtro-data ::ng-deep .mat-mdc-floating-label,
-.filtro-data ::ng-deep .mdc-floating-label { color: var(--dourado) !important; }
+.filtro-data ::ng-deep .mdc-floating-label {
+  color: var(--dourado) !important;
+}
 
 .filtro-data ::ng-deep input,
-.filtro-data ::ng-deep .mat-mdc-select-value { color: var(--texto) !important; }
+.filtro-data ::ng-deep .mat-mdc-select-value {
+  color: var(--texto) !important;
+}
 
-.filtro-data ::ng-deep .mat-mdc-select-arrow { color: var(--dourado) !important; }
+.filtro-data ::ng-deep .mat-mdc-select-arrow {
+  color: var(--dourado) !important;
+}
 
 .filtro-data ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
 .filtro-data ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
@@ -307,7 +330,9 @@ Copiar
   transition: border-color 0.2s;
 }
 
-.agendamento-card:hover { border-color: var(--dourado); }
+.agendamento-card:hover {
+  border-color: var(--dourado);
+}
 
 .ag-horario-badge {
   font-size: 1.1rem;
@@ -334,7 +359,9 @@ Copiar
   border-color: rgba(46, 125, 50, 0.2);
 }
 
-.ag-info { flex: 1; }
+.ag-info {
+  flex: 1;
+}
 
 .ag-cliente {
   font-size: 0.95rem;
@@ -430,7 +457,9 @@ Copiar
   margin-bottom: 24px;
 }
 
-.full-width { width: 100%; }
+.full-width {
+  width: 100%;
+}
 
 .full-width ::ng-deep .mdc-notched-outline__leading,
 .full-width ::ng-deep .mdc-notched-outline__notch,
@@ -438,7 +467,9 @@ Copiar
   border-color: var(--card-borda) !important;
 }
 
-.full-width ::ng-deep .mat-mdc-form-field-flex { background: var(--campo-bg); }
+.full-width ::ng-deep .mat-mdc-form-field-flex {
+  background: var(--campo-bg);
+}
 
 .full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
 .full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
@@ -447,12 +478,18 @@ Copiar
 }
 
 .full-width ::ng-deep .mat-mdc-floating-label,
-.full-width ::ng-deep .mdc-floating-label { color: var(--dourado) !important; }
+.full-width ::ng-deep .mdc-floating-label {
+  color: var(--dourado) !important;
+}
 
 .full-width ::ng-deep input,
-.full-width ::ng-deep .mat-mdc-select-value { color: var(--texto) !important; }
+.full-width ::ng-deep .mat-mdc-select-value {
+  color: var(--texto) !important;
+}
 
-.full-width ::ng-deep .mat-mdc-select-arrow { color: var(--dourado) !important; }
+.full-width ::ng-deep .mat-mdc-select-arrow {
+  color: var(--dourado) !important;
+}
 
 /* ── 12. BOTÕES PRINCIPAIS ──────────────────────────────────── */
 .btn-admin {
@@ -492,7 +529,9 @@ Copiar
 }
 
 /* ── 13. LISTA RESULTADO ────────────────────────────────────── */
-.lista-resultado { margin-top: 8px; }
+.lista-resultado {
+  margin-top: 8px;
+}
 
 .lista-titulo {
   font-size: 0.82rem;
@@ -501,8 +540,13 @@ Copiar
   letter-spacing: 0.5px;
 }
 
-.lista-titulo.vermelho { color: #ef9a9a; }
-.lista-titulo.verde    { color: #a5d6a7; }
+.lista-titulo.vermelho {
+  color: #ef9a9a;
+}
+
+.lista-titulo.verde {
+  color: #a5d6a7;
+}
 
 /* ── 14. MENSAGEM VAZIA ─────────────────────────────────────── */
 .empty-msg {
@@ -523,7 +567,10 @@ Copiar
   max-width: 480px;
 }
 
-.em-breve-icon { font-size: 3rem; margin-bottom: 12px; }
+.em-breve-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
 
 .em-breve-card h3 {
   color: var(--dourado);
@@ -597,17 +644,36 @@ Copiar
 
 /* ── 16. ANIMAÇÕES ──────────────────────────────────────────── */
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(-8px); }
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
 }
 
-.menu-aberto   { animation: slideDown 0.18s ease-out forwards; }
-.menu-fechando { animation: slideUp  0.18s ease-in  forwards; }
+.menu-aberto {
+  animation: slideDown 0.18s ease-out forwards;
+}
+
+.menu-fechando {
+  animation: slideUp 0.18s ease-in forwards;
+}
 
 /* ── 17. CALENDÁRIO ─────────────────────────────────────────── */
 .calendario-card {
@@ -695,7 +761,9 @@ Copiar
   border-color: var(--card-borda);
 }
 
-.cal-dia.vazio { cursor: default; }
+.cal-dia.vazio {
+  cursor: default;
+}
 
 .cal-dia.hoje {
   border-color: var(--dourado);
@@ -719,12 +787,18 @@ Copiar
   bottom: 2px;
 }
 
-.cal-dia.selecionado .cal-dot { background: #1a1100; }
+.cal-dia.selecionado .cal-dot {
+  background: #1a1100;
+}
 
 /* ── 18. LAYOUT AGENDAMENTOS ────────────────────────────────── */
-section { width: 100%; }
+section {
+  width: 100%;
+}
 
-.secao-agendamentos { width: 100%; }
+.secao-agendamentos {
+  width: 100%;
+}
 
 .agendamentos-layout {
   display: grid;
@@ -738,7 +812,9 @@ section { width: 100%; }
   top: 20px;
 }
 
-.col-lista { min-height: 400px; }
+.col-lista {
+  min-height: 400px;
+}
 
 .data-selecionada-label {
   font-size: 0.72rem;
@@ -761,67 +837,92 @@ section { width: 100%; }
   opacity: 0.5;
 }
 
-/* ── 19. OVERLAY (oculto por padrão no desktop) ─────────────── */
-.menu-overlay { display: none; }
+/* ── 19. OVERLAY (oculto no desktop) ───────────────────────── */
+.menu-overlay {
+  display: none;
+}
 
 /* ══════════════════════════════════════════════════════════════
-   20. RESPONSIVIDADE MOBILE — único bloco @media
-   Hierarquia z-index:
-     .sidebar / .sidebar-header  → 500  (sempre visível)
-     nav (dropdown)              → 400  (acima do overlay)
-     .menu-overlay               → 300  (cobre main-content)
-     .main-content               → 1    (fundo)
+   20. RESPONSIVIDADE MOBILE
+   Z-index hierarchy:
+     .sidebar-header (fixed) → 1000  ← sempre visível no topo
+     nav             (fixed) → 999   ← menu dropdown
+     .menu-overlay   (fixed) → 998   ← escurece o fundo
+     .main-content           → 1     ← conteúdo
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Layout geral */
-  .admin-layout { flex-direction: column; }
+  .admin-layout {
+    flex-direction: column;
+  }
 
-  /* Sidebar vira barra no topo */
+  /* Sidebar: sem z-index para não criar stacking context próprio.
+     Isso permite que nav filho com position:fixed seja comparado
+     globalmente com o overlay. */
   .sidebar {
     width: 100%;
     height: auto;
     position: relative;
     overflow: visible;
-    z-index: 500;
+    z-index: auto;
   }
 
-  /* Header sempre acima de tudo */
+  /* Header fixo no topo — ACIMA DE TUDO */
   .sidebar-header {
-    position: relative;
-    z-index: 500;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #111111;
+    border-bottom: 1px solid var(--sidebar-borda);
+    padding: 12px 16px;
   }
 
-  /* Hambúrguer aparece */
-  .btn-hamburger { display: flex; }
+  /* Espaço para o header fixo */
+  .sidebar::after {
+    content: '';
+    display: block;
+    height: 80px;
+  }
 
-  /* Overlay semitransparente cobre só o main */
+  .btn-hamburger {
+    display: flex;
+  }
+
+  /* Overlay escurece tudo atrás do menu */
   .menu-overlay {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 300;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 998;
   }
 
-  /* Nav dropdown cai abaixo do header */
+  /* Nav dropdown fixo abaixo do header */
   nav {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 80px;
     left: 0;
     right: 0;
-    background: var(--sidebar-bg);
-    z-index: 400;
-    border-bottom: 1px solid var(--sidebar-borda);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    background: #111111;
+    z-index: 999;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
   }
 
-  .menu-list      { padding: 8px 0; }
-  .sidebar-footer { display: none; }
+  .menu-list {
+    padding: 8px 0;
+  }
 
-  /* Conteúdo principal fica abaixo do overlay */
+  .sidebar-footer {
+    display: none;
+  }
+
+  /* Conteúdo principal */
   .main-content {
     margin-left: 0;
+    margin-top: 80px;
     padding: 20px 16px;
     position: relative;
     z-index: 1;
@@ -832,13 +933,19 @@ section { width: 100%; }
     align-items: flex-start;
   }
 
-  .filtro-data { width: 100% !important; }
+  .filtro-data {
+    width: 100% !important;
+  }
 
-  /* Agendamentos empilhados verticalmente */
-  .agendamentos-layout { grid-template-columns: 1fr; }
-  .col-calendario      { position: static; }
+  /* Agendamentos empilhados */
+  .agendamentos-layout {
+    grid-template-columns: 1fr;
+  }
 
-  /* Cards de agendamento */
+  .col-calendario {
+    position: static;
+  }
+
   .agendamento-card {
     flex-direction: row;
     flex-wrap: wrap;
@@ -850,7 +957,10 @@ section { width: 100%; }
     padding: 14px 16px;
   }
 
-  .ag-info { flex: 1; min-width: 0; }
+  .ag-info {
+    flex: 1;
+    min-width: 0;
+  }
 
   .ag-acoes {
     width: 100%;
@@ -859,9 +969,14 @@ section { width: 100%; }
     align-items: center;
   }
 
-  /* Formulários */
-  .form-card     { max-width: 100%; }
-  .em-breve-card { max-width: 100%; padding: 28px 16px; }
+  .form-card {
+    max-width: 100%;
+  }
+
+  .em-breve-card {
+    max-width: 100%;
+    padding: 28px 16px;
+  }
 
   .profissionais-preview {
     flex-direction: column;
@@ -870,6 +985,11 @@ section { width: 100%; }
 }
 
 @media (max-width: 380px) {
-  .sidebar-title { font-size: 0.8rem; }
-  .main-content  { padding: 16px 12px; }
+  .sidebar-title {
+    font-size: 0.8rem;
+  }
+
+  .main-content {
+    padding: 16px 12px;
+  }
 }

@@ -234,6 +234,7 @@ export class Admin implements OnInit {
   menuAberto = false;
   menuFechando = false;
 
+
   toggleMenu() {
     if (this.menuAberto) {
       this.menuFechando = true;
@@ -248,8 +249,17 @@ export class Admin implements OnInit {
       this.menuFechando = false;
     }
   }
+
   isMobile(): boolean {
     return window.innerWidth <= 768;
+  }
+
+  navegarPara(secao: string): void {
+    this.secaoAtiva = secao;
+    if (this.isMobile()) {
+      this.toggleMenu();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   carregarDiasDisponiveis() {
