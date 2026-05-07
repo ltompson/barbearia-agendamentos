@@ -875,7 +875,7 @@ section {
   .sidebar::after {
     content: '';
     display: block;
-    height: 80px;
+    height: 35px;
   }
 
   .btn-hamburger {
@@ -914,8 +914,8 @@ section {
   /* Conteúdo principal */
   .main-content {
     margin-left: 0;
-    margin-top: 80px;
-    padding: 20px 16px;
+    margin-top: 70px;
+    padding: 0px 16px;
     position: relative;
     z-index: 1;
   }
@@ -975,6 +975,14 @@ section {
     align-items: center;
   }
 }
+  .secao-titulo {
+  margin-bottom: 12px;
+  margin-top: 4px;
+}
+
+section {
+  padding-top: 0;
+}
 
 @media (max-width: 380px) {
   .sidebar-title {
@@ -985,6 +993,8 @@ section {
     padding: 16px 12px;
   }
 }
+
+
 
 /* ── SERVIÇOS ───────────────────────────────────────────────── */
 .servico-inativo {

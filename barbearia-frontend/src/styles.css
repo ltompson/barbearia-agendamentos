@@ -98,6 +98,11 @@ body:not(.dark-theme) .mat-mdc-select-value {
   color: #333 !important;
 }
 
+body:not(.dark-theme) app-admin .main-content {
+  margin-top: 60px !important;
+  padding-top: 0px !important;
+}
+
 body:not(.dark-theme) .mat-mdc-select-arrow {
   color: #555 !important;
 }
