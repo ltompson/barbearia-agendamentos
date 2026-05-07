@@ -1070,3 +1070,18 @@ section {
   min-width: 80px;
   font-size: 0.85rem;
 }
+
+/* ── NOTIFICAÇÃO TOAST ──────────────────────────────────────── */
+.notificacao-toast {
+  background: linear-gradient(135deg, #1b5e20, #2e7d32);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(46, 125, 50, 0.5);
+  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.3);
+  animation: slideDown 0.2s ease-out;
+}

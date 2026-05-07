@@ -321,6 +321,7 @@ export class Admin implements OnInit {
   servicos: Servico[] = [];
   servicoEditando: Servico | null = null;
   servicoForm = { nome: '', preco: 0, duracaoMinutos: 30 };
+  notificacao: string = '';
 
   carregarServicos() {
     this.servicoService.listarTodos().subscribe({
@@ -342,15 +343,32 @@ export class Admin implements OnInit {
     };
     if (this.servicoEditando?.id) {
       this.servicoService.atualizar(this.servicoEditando.id, servico).subscribe({
-        next: () => { this.cancelarEdicao(); this.carregarServicos(); },
+        next: () => {
+          this.cancelarEdicao();
+          this.carregarServicos();
+          this.mostrarNotificacao('✅ Serviço atualizado com sucesso!');
+        },
         error: (err) => console.error(err)
       });
     } else {
       this.servicoService.criar(servico).subscribe({
-        next: () => { this.cancelarEdicao(); this.carregarServicos(); },
+        next: () => {
+          this.cancelarEdicao();
+          this.carregarServicos();
+          this.mostrarNotificacao('✅ Serviço criado com sucesso!');
+        },
         error: (err) => console.error(err)
       });
     }
+  }
+
+  mostrarNotificacao(msg: string) {
+    this.notificacao = msg;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.notificacao = '';
+      this.cdr.detectChanges();
+    }, 3000);
   }
 
   editarServico(s: Servico) {

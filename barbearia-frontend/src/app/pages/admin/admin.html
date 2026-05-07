@@ -301,6 +301,10 @@
         <div class="linha-dec"></div>
       </div>
 
+      <div class="notificacao-toast" *ngIf="notificacao">
+        {{ notificacao }}
+      </div>
+
       <!-- Formulário novo serviço -->
       <div class="form-card">
         <h3 class="form-titulo">{{ servicoEditando ? 'Editar Serviço' : 'Novo Serviço' }}</h3>
@@ -360,9 +364,6 @@
         Nenhum serviço cadastrado.
       </p>
     </section>
-
-
-
 
   </main>
 
