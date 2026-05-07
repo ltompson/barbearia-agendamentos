@@ -12,11 +12,17 @@ public class ServicoService {
 
     private final ServicoRepository servicoRepository;
 
+    // Apenas ativos — usado na tela pública de agendamento
     public List<Servico> listarAtivos() {
         return servicoRepository.findAll()
                 .stream()
                 .filter(s -> s.getAtivo())
                 .toList();
+    }
+
+    // Todos (ativos e inativos) — usado no painel admin
+    public List<Servico> listarTodos() {
+        return servicoRepository.findAll();
     }
 
     public Servico buscarPorId(Long id) {
@@ -35,5 +41,16 @@ public class ServicoService {
         existing.setDuracaoMinutos(servico.getDuracaoMinutos());
         existing.setAtivo(servico.getAtivo());
         return servicoRepository.save(existing);
+    }
+
+    // Liga/desliga ativo
+    public Servico toggleAtivo(Long id) {
+        Servico servico = buscarPorId(id);
+        servico.setAtivo(!servico.getAtivo());
+        return servicoRepository.save(servico);
+    }
+
+    public void deletar(Long id) {
+        servicoRepository.deleteById(id);
     }
 }
