@@ -1,3 +1,30 @@
+:root {
+  --dourado: #C9A84C;
+  --dourado-escuro: #a07830;
+  --dourado-claro: #e8c97a;
+  --sidebar-bg: #1a1a1a;
+  --sidebar-borda: rgba(201, 168, 76, 0.2);
+  --main-bg: #f5f3ef;
+  --card-bg: #ffffff;
+  --card-borda: rgba(201, 168, 76, 0.25);
+  --campo-bg: #f9f7f4;
+  --texto: #1a1a1a;
+  --texto-sec: #666666;
+  --vermelho: #e53935;
+  --verde: #2e7d32;
+}
+
+body.dark-theme {
+  --sidebar-bg: #111111;
+  --sidebar-borda: rgba(201, 168, 76, 0.15);
+  --main-bg: #161616;
+  --card-bg: #1e1e1e;
+  --card-borda: rgba(201, 168, 76, 0.2);
+  --campo-bg: #252525;
+  --texto: #e0e0e0;
+  --texto-sec: #888;
+}
+
 /* ===== TEMA ESCURO ===== */
 body.dark-theme {
   background-color: #121212 !important;
@@ -320,4 +347,85 @@ app-admin .filtro-data ::ng-deep input {
 app-admin .logo {
   background: linear-gradient(135deg, #a07830, #C9A84C) !important;
   color: #1a1100 !important;
+}
+
+/* ── PAINEL ADMIN — TEMA CLARO ──────────────────────────────── */
+
+/* Reduz espaço do topo */
+body:not(.dark-theme) app-admin .main-content {
+  margin-top: 60px !important;
+}
+
+/* Título com linha decorativa visível */
+body:not(.dark-theme) app-admin .secao-titulo h2 {
+  color: var(--dourado-escuro) !important;
+}
+
+body:not(.dark-theme) app-admin .linha-dec {
+  background: linear-gradient(to right, transparent, #a07830, transparent) !important;
+  opacity: 0.5 !important;
+}
+
+/* Campos com borda visível */
+body:not(.dark-theme) app-admin .mdc-notched-outline__leading,
+body:not(.dark-theme) app-admin .mdc-notched-outline__notch,
+body:not(.dark-theme) app-admin .mdc-notched-outline__trailing {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+body:not(.dark-theme) app-admin .mdc-floating-label,
+body:not(.dark-theme) app-admin .mat-mdc-floating-label {
+  color: #a07830 !important;
+}
+
+body:not(.dark-theme) app-admin input,
+body:not(.dark-theme) app-admin .mat-mdc-select-value {
+  color: #1a1a1a !important;
+}
+
+body:not(.dark-theme) app-admin .mat-mdc-select-arrow {
+  color: #a07830 !important;
+}
+
+/* Calendário com sombra */
+body:not(.dark-theme) app-admin .calendario-card {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+
+body:not(.dark-theme) app-admin .cal-dia {
+  color: #1a1a1a;
+}
+
+/* Cards com sombra */
+body:not(.dark-theme) app-admin .agendamento-card,
+body:not(.dark-theme) app-admin .form-card,
+body:not(.dark-theme) app-admin .em-breve-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+/* Botão bloquear — mais sólido no tema claro */
+body:not(.dark-theme) app-admin .btn-bloquear {
+  background: linear-gradient(135deg, #b71c1c, #e53935) !important;
+  box-shadow: 0 4px 16px rgba(229, 57, 53, 0.3) !important;
+}
+
+/* Mensagem vazia */
+body:not(.dark-theme) app-admin .empty-msg {
+  color: #999 !important;
+}
+
+/* Data selecionada */
+body:not(.dark-theme) app-admin .data-selecionada-label {
+  color: #a07830 !important;
+}
+
+body:not(.dark-theme) app-admin .cal-dia.hoje {
+  border-color: #a07830 !important;
+  color: #a07830 !important;
+  font-weight: 700 !important;
+}
+
+body:not(.dark-theme) app-admin .cal-dot {
+  background: #a07830 !important;
+  opacity: 1 !important;
 }
