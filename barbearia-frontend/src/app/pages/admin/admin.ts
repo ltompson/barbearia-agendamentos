@@ -365,6 +365,8 @@ export class Admin implements OnInit {
   }
 
   toggleServico(s: Servico) {
+    const acao = s.ativo ? 'desativar' : 'ativar';
+    if (!confirm(`Deseja ${acao} o serviço "${s.nome}"?`)) return;
     this.servicoService.toggleAtivo(s.id!).subscribe({
       next: () => this.carregarServicos(),
       error: (err) => console.error(err)

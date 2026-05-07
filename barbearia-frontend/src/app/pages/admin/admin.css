@@ -988,7 +988,8 @@ section {
 
 /* ── SERVIÇOS ───────────────────────────────────────────────── */
 .servico-inativo {
-  opacity: 0.55;
+  opacity: 0.6;
+  border-color: rgba(229, 57, 53, 0.25) !important;
 }
 
 .servico-botoes {
@@ -1045,8 +1046,27 @@ section {
 }
 
 .btn-cancelar-form {
-  background: rgba(255, 255, 255, 0.05);
+  background: transparent;
   color: var(--texto-sec);
   border: 1px solid var(--card-borda);
-  flex: 1;
+  height: 48px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  padding: 0 20px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-cancelar-form:hover {
+  border-color: var(--texto-sec);
+  color: var(--texto);
+}
+
+.col-lista .ag-horario-badge,
+.lista-resultado .ag-horario-badge {
+  min-width: 80px;
+  font-size: 0.85rem;
 }
