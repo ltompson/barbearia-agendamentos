@@ -985,3 +985,68 @@ section {
     padding: 16px 12px;
   }
 }
+
+/* ── SERVIÇOS ───────────────────────────────────────────────── */
+.servico-inativo {
+  opacity: 0.55;
+}
+
+.servico-botoes {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-editar {
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--dourado);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.btn-editar:hover {
+  background: rgba(201, 168, 76, 0.25);
+}
+
+.btn-desativar {
+  background: rgba(229, 57, 53, 0.12);
+  color: #ef9a9a;
+  border: 1px solid rgba(229, 57, 53, 0.3);
+}
+
+.btn-desativar:hover {
+  background: var(--vermelho);
+  color: white;
+  border-color: var(--vermelho);
+}
+
+.btn-ativar {
+  background: rgba(46, 125, 50, 0.12);
+  color: #a5d6a7;
+  border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.btn-ativar:hover {
+  background: var(--verde);
+  color: white;
+  border-color: var(--verde);
+}
+
+.form-titulo {
+  color: var(--dourado);
+  font-family: 'Georgia', serif;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  margin: 0 0 8px;
+}
+
+.form-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-cancelar-form {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--texto-sec);
+  border: 1px solid var(--card-borda);
+  flex: 1;
+}

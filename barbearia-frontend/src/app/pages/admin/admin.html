@@ -39,6 +39,10 @@
           <span class="menu-icon">📅</span>
           <span>Agendamentos</span>
         </li>
+        <li class="menu-item" [class.active]="secaoAtiva === 'servicos'" (click)="navegarPara('servicos')">
+          <span class="menu-icon">✂</span>
+          <span>Serviços</span>
+        </li>
         <li class="menu-item" [class.active]="secaoAtiva === 'profissionais'" (click)="navegarPara('profissionais')">
           <span class="menu-icon">👥</span>
           <span>Profissionais</span>
@@ -289,6 +293,76 @@
         Nenhum dia liberado para esta data.
       </p>
     </section>
+
+    <!-- ══ SEÇÃO: SERVIÇOS ══ -->
+    <section *ngIf="secaoAtiva === 'servicos'">
+      <div class="secao-titulo">
+        <h2>SERVIÇOS</h2>
+        <div class="linha-dec"></div>
+      </div>
+
+      <!-- Formulário novo serviço -->
+      <div class="form-card">
+        <h3 class="form-titulo">{{ servicoEditando ? 'Editar Serviço' : 'Novo Serviço' }}</h3>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome do serviço</mat-label>
+          <input matInput [(ngModel)]="servicoForm.nome" placeholder="Ex: Corte degradê">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Preço (R$)</mat-label>
+          <input matInput type="number" [(ngModel)]="servicoForm.preco" placeholder="Ex: 35.00" step="0.01">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Duração (minutos)</mat-label>
+          <input matInput type="number" [(ngModel)]="servicoForm.duracaoMinutos" placeholder="Ex: 30">
+        </mat-form-field>
+
+        <div class="form-acoes">
+          <button class="btn-admin btn-liberar" (click)="salvarServico()">
+            {{ servicoEditando ? '✏️ SALVAR ALTERAÇÕES' : '✅ ADICIONAR SERVIÇO' }}
+          </button>
+          <button *ngIf="servicoEditando" class="btn-admin btn-cancelar-form" (click)="cancelarEdicao()">
+            CANCELAR
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de serviços -->
+      <div class="lista-resultado" *ngIf="servicos.length > 0">
+        <h3 class="lista-titulo" style="color: var(--dourado)">✂ Serviços cadastrados</h3>
+        <div *ngFor="let s of servicos" class="agendamento-card" [class.servico-inativo]="!s.ativo">
+          <div class="ag-horario-badge" [class.vermelho-badge]="!s.ativo" [class.verde-badge]="s.ativo">
+            R$ {{ s.preco | number:'1.2-2' }}
+          </div>
+          <div class="ag-info">
+            <p class="ag-cliente">{{ s.nome }}</p>
+            <p class="ag-detalhe">⏱ {{ s.duracaoMinutos }} min</p>
+          </div>
+          <div class="ag-acoes">
+            <span class="ag-status" [class.cancelado]="!s.ativo">
+              {{ s.ativo ? 'ATIVO' : 'INATIVO' }}
+            </span>
+            <div class="servico-botoes">
+              <button class="btn-acao btn-editar" (click)="editarServico(s)">Editar</button>
+              <button class="btn-acao btn-toggle" [class.btn-ativar]="!s.ativo" [class.btn-desativar]="s.ativo"
+                (click)="toggleServico(s)">
+                {{ s.ativo ? 'Desativar' : 'Ativar' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p *ngIf="servicos.length === 0" class="empty-msg">
+        Nenhum serviço cadastrado.
+      </p>
+    </section>
+
+
+
 
   </main>
 

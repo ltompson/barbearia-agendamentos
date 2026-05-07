@@ -14,6 +14,7 @@ import { ThemeService } from '../../services/theme.service';
 import { AuthService } from '../../services/auth.service';
 import { DiaDisponivelService } from '../../services/dia-disponivel.service';
 import { MatIconModule } from '@angular/material/icon';
+import { ServicoService, Servico } from '../../services/servico.service';
 
 registerLocaleData(localePt);
 
@@ -52,7 +53,8 @@ export class Admin implements OnInit {
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private diaDisponivelService: DiaDisponivelService,
-    private router: Router
+    private router: Router,
+    private servicoService: ServicoService
   ) { }
 
   get temaEscuro(): boolean {
@@ -124,6 +126,7 @@ export class Admin implements OnInit {
   ngOnInit() {
     this.carregarAgendamentos();
     this.gerarCalendario();
+    this.carregarServicos();
   }
 
   carregarAgendamentos() {
@@ -310,6 +313,60 @@ export class Admin implements OnInit {
     if (!confirm('Remover este dia liberado?')) return;
     this.diaDisponivelService.deletar(id).subscribe({
       next: () => this.carregarDiasDisponiveis(),
+      error: (err) => console.error(err)
+    });
+  }
+
+  // Serviços
+  servicos: Servico[] = [];
+  servicoEditando: Servico | null = null;
+  servicoForm = { nome: '', preco: 0, duracaoMinutos: 30 };
+
+  carregarServicos() {
+    this.servicoService.listarTodos().subscribe({
+      next: (dados) => { this.servicos = dados; this.cdr.detectChanges(); },
+      error: (err) => console.error(err)
+    });
+  }
+
+  salvarServico() {
+    if (!this.servicoForm.nome || !this.servicoForm.preco) {
+      alert('Preencha nome e preço.');
+      return;
+    }
+    const servico: Servico = {
+      nome: this.servicoForm.nome,
+      preco: this.servicoForm.preco,
+      duracaoMinutos: this.servicoForm.duracaoMinutos,
+      ativo: true
+    };
+    if (this.servicoEditando?.id) {
+      this.servicoService.atualizar(this.servicoEditando.id, servico).subscribe({
+        next: () => { this.cancelarEdicao(); this.carregarServicos(); },
+        error: (err) => console.error(err)
+      });
+    } else {
+      this.servicoService.criar(servico).subscribe({
+        next: () => { this.cancelarEdicao(); this.carregarServicos(); },
+        error: (err) => console.error(err)
+      });
+    }
+  }
+
+  editarServico(s: Servico) {
+    this.servicoEditando = s;
+    this.servicoForm = { nome: s.nome, preco: s.preco, duracaoMinutos: s.duracaoMinutos };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelarEdicao() {
+    this.servicoEditando = null;
+    this.servicoForm = { nome: '', preco: 0, duracaoMinutos: 30 };
+  }
+
+  toggleServico(s: Servico) {
+    this.servicoService.toggleAtivo(s.id!).subscribe({
+      next: () => this.carregarServicos(),
       error: (err) => console.error(err)
     });
   }
