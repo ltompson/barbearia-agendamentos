@@ -14,6 +14,7 @@ import { AgendamentoService } from '../../services/agendamento';
 import { ThemeService } from '../../services/theme.service';
 import { CommonModule } from '@angular/common';
 import { DiaDisponivelService } from '../../services/dia-disponivel.service';
+import { ServicoService, Servico } from '../../services/servico.service';
 
 @Component({
   selector: 'app-agendamento',
@@ -43,6 +44,7 @@ export class Agendamento {
   horariosDisponiveis: string[] = [];
   diasExcecao: Set<string> = new Set();
   filtroDataFn: (data: Date | null) => boolean = () => true;
+  servicos: Servico[] = [];
   activeTab: number = 0;
   private themeService = inject(ThemeService);
 
@@ -77,9 +79,13 @@ export class Agendamento {
     private fb: FormBuilder,
     private agendamentoService: AgendamentoService,
     private diaDisponivelService: DiaDisponivelService,
+    private servicoService: ServicoService,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {
+    this.servicoService.listarAtivos().subscribe({  // ← ADICIONE
+      next: (dados) => { this.servicos = dados; this.cdr.detectChanges(); }
+    });
     this.atualizarFiltroData();
 
     this.form = this.fb.group({

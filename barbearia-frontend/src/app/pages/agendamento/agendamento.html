@@ -64,20 +64,9 @@
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Serviço</mat-label>
               <mat-select formControlName="servicoId">
-                <mat-option [value]="1">Corte social ou degradê — R$ 35,00</mat-option>
-                <mat-option [value]="2">Barba na máquina — R$ 25,00</mat-option>
-                <mat-option [value]="3">Barba completa — R$ 30,00</mat-option>
-                <mat-option [value]="4">Sobrancelha — R$ 10,00</mat-option>
-                <mat-option [value]="5">Corte + Barba (máquina) — R$ 50,00</mat-option>
-                <mat-option [value]="6">Corte + Barba (completa) — R$ 55,00</mat-option>
-                <mat-option [value]="7">Corte + Barba + Sobrancelha — R$ 60,00</mat-option>
-                <mat-option [value]="8">Botox — a partir de R$ 80,00</mat-option>
-                <mat-option [value]="9">Selagem — a partir de R$ 90,00</mat-option>
-                <mat-option [value]="10">Platinado — R$ 90,00</mat-option>
-                <mat-option [value]="11">Luzes — R$ 70,00</mat-option>
-                <mat-option [value]="12">Hidratação — R$ 20,00</mat-option>
-                <mat-option [value]="13">Limpeza facial com máscara Black — R$ 20,00</mat-option>
-                <mat-option [value]="14">Penteado — R$ 20,00</mat-option>
+                <mat-option *ngFor="let s of servicos" [value]="s.id">
+                  {{ s.nome }} — R$ {{ s.preco | number:'1.2-2' }}
+                </mat-option>
               </mat-select>
             </mat-form-field>
 
