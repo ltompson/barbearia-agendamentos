@@ -1085,3 +1085,15 @@ section {
   box-shadow: 0 4px 16px rgba(46, 125, 50, 0.3);
   animation: slideDown 0.2s ease-out;
 }
+
+.btn-reagendar {
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--dourado);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.btn-reagendar:hover {
+  background: var(--dourado);
+  color: #1a1100;
+  border-color: var(--dourado);
+}

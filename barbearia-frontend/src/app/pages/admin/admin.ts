@@ -390,6 +390,27 @@ export class Admin implements OnInit {
       error: (err) => console.error(err)
     });
   }
+
+  reagendar(ag: any) {
+    const telefone = ag.cliente?.telefone?.replace(/\D/g, '');
+    const nome = ag.cliente?.nome;
+    const servico = ag.servico?.nome;
+    const data = new Date(ag.dataHora).toLocaleDateString('pt-BR');
+    const hora = new Date(ag.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const linkAgendamento = 'http://localhost:4200';
+
+    const mensagem =
+      `Olá ${nome}!\n\n` +
+      `Infelizmente não será possível atendê-lo(a) no horário agendado:\n` +
+      `Data: *${data}* às *${hora}*\n` +
+      `Serviço: *${servico}*\n\n` +
+      `Pedimos desculpas pelo transtorno. Para reagendar, acesse:\n` +
+      `${linkAgendamento}\n\n` +
+      `Alquimista Barbearia`;
+
+    const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, '_blank');
+  }
   // Encerra a sessao e redireciona para o login
   logout() {
     this.authService.logout();

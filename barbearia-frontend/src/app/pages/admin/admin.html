@@ -129,6 +129,9 @@
                 <button *ngIf="ag.status !== 'CANCELADO'" class="btn-acao btn-cancelar-ag" (click)="cancelar(ag.id)">
                   Cancelar
                 </button>
+                <button *ngIf="ag.status !== 'CANCELADO'" class="btn-acao btn-reagendar" (click)="reagendar(ag)">
+                  Reagendar
+                </button>
               </div>
             </div>
           </div>
