@@ -16,6 +16,9 @@ public class Admin {
     @Column(nullable = false, length = 100)
     private String nome;
 
+    @Column(name = "barbeiro_id")
+    private Long barbeiroId;
+
     @Column(nullable = false, length = 50, unique = true)
     private String usuario;
 
@@ -24,6 +27,10 @@ public class Admin {
 
     @Column(nullable = false)
     private Boolean ativo = true;
+
+    // ADMIN = acesso total | FUNCIONARIO = só agendamentos
+    @Column(nullable = false, length = 20)
+    private String role = "FUNCIONARIO";
 
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;

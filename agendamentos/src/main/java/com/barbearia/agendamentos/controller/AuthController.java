@@ -28,7 +28,6 @@ public class AuthController {
         try {
             Admin admin = adminService.buscarPorUsuario(usuario);
 
-            // Verifica se o acesso está pausado
             if (!admin.getAtivo()) {
                 return ResponseEntity.status(403).body("Acesso suspenso. Entre em contato com o administrador.");
             }
@@ -37,8 +36,9 @@ public class AuthController {
                 return ResponseEntity.status(401).body("Senha incorreta");
             }
 
-            String token = jwtService.gerarToken(usuario);
-            return ResponseEntity.ok(Map.of("token", token));
+            // Inclui role no token
+            String token = jwtService.gerarToken(usuario, admin.getRole(), admin.getBarbeiroId());
+            return ResponseEntity.ok(Map.of("token", token, "role", admin.getRole(), "barbeiroId", admin.getBarbeiroId()));
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body("Usuário não encontrado");

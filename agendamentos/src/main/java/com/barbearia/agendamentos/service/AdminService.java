@@ -18,6 +18,7 @@ public class AdminService {
     public Admin salvar(Admin admin) {
         admin.setSenha(passwordEncoder.encode(admin.getSenha()));
         admin.setAtivo(true);
+        if (admin.getRole() == null) admin.setRole("FUNCIONARIO");
         return adminRepository.save(admin);
     }
 
@@ -49,6 +50,7 @@ public class AdminService {
         if (dados.getSenha() != null && !dados.getSenha().isBlank()) {
             admin.setSenha(passwordEncoder.encode(dados.getSenha()));
         }
+        if (dados.getRole() != null) admin.setRole(dados.getRole());
         return adminRepository.save(admin);
     }
 }

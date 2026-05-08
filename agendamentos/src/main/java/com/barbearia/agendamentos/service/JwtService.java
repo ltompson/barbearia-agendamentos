@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 @Service
 public class JwtService {
@@ -21,9 +22,11 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String gerarToken(String usuario) {
+    // Gera token com role incluído no payload
+    public String gerarToken(String usuario, String role, Long barbeiroId) {
         return Jwts.builder()
                 .setSubject(usuario)
+                .addClaims(Map.of("role", role, "barbeiroId", barbeiroId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
@@ -31,12 +34,19 @@ public class JwtService {
     }
 
     public String extrairUsuario(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    public String extrairRole(String token) {
+        return (String) getClaims(token).get("role");
+    }
+
+    private Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
     }
 
     public boolean validarToken(String token) {
