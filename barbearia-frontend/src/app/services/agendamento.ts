@@ -32,6 +32,10 @@ export class AgendamentoService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
+  listarPorBarbeiro(barbeiroId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/barbeiro/${barbeiroId}`);
+  }
+
   // Cancela um agendamento pelo ID
   cancelar(id: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/cancelar`, {});

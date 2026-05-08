@@ -137,7 +137,13 @@ export class Admin implements OnInit {
 
   carregarAgendamentos() {
     this.carregando = true;
-    this.agendamentoService.listar().subscribe({
+    const barbeiroId = this.authService.getBarbeiroId();
+
+    const obs = (this.authService.isAdmin() || !barbeiroId)
+      ? this.agendamentoService.listar()
+      : this.agendamentoService.listarPorBarbeiro(barbeiroId);
+
+    obs.subscribe({
       next: (dados) => {
         this.agendamentos = dados;
         this.filtrarPorData();
@@ -261,6 +267,10 @@ export class Admin implements OnInit {
 
   isMobile(): boolean {
     return window.innerWidth <= 768;
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   navegarPara(secao: string): void {

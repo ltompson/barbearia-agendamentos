@@ -1,77 +1,183 @@
-/* Container principal */
-.container {
+/* ═══════════════════════════════════════════════════════════════
+   ALQUIMISTA BARBEARIA — login.css
+   Tela de login — Dark luxury dourado
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+.login-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  background: #0f0f0f;
+  padding: 20px;
 }
 
-/* Card de login */
-.card {
-  background: white;
+/* Fundo com imagem */
+.login-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.85) 100%),
+    url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80') center/cover no-repeat;
+  z-index: 0;
+}
+
+/* ── CARD ───────────────────────────────────────────────────── */
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: #111111;
+  border: 1px solid rgba(201, 168, 76, 0.25);
   border-radius: 16px;
   padding: 40px 36px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(201, 168, 76, 0.1);
 }
 
-/* Cabeçalho */
-.header {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-/* Logo circular dourado */
-.logo {
-  width: 56px;
-  height: 56px;
-  background: #c9a84c;
+/* ── LOGO ───────────────────────────────────────────────────── */
+.login-logo {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
+  background: linear-gradient(135deg, #a07830, #C9A84C, #e8c97a);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 auto 16px;
+  font-size: 1.6rem;
+  color: #1a1100;
+  margin: 0 auto 24px;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
 }
 
-.header h1 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 6px;
+/* ── TÍTULO ─────────────────────────────────────────────────── */
+.login-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.header .subtitle {
-  font-size: 0.85rem;
-  color: #999;
+.login-titulo h1 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #C9A84C;
   margin: 0;
+  white-space: nowrap;
+  letter-spacing: 4px;
+  font-family: 'Georgia', serif;
 }
 
-/* Campos do formulário */
+.linha-dec {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #C9A84C, transparent);
+  opacity: 0.4;
+}
+
+.login-subtitle {
+  text-align: center;
+  font-size: 0.72rem;
+  color: #888;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 28px;
+}
+
+/* ── CAMPOS ─────────────────────────────────────────────────── */
 .full-width {
   width: 100%;
   margin-bottom: 4px;
 }
 
-/* Mensagem de erro */
-.erro-msg {
-  color: #c62828;
-  font-size: 0.85rem;
-  margin: 0 0 12px;
-  text-align: center;
+.full-width ::ng-deep .mdc-notched-outline__leading,
+.full-width ::ng-deep .mdc-notched-outline__notch,
+.full-width ::ng-deep .mdc-notched-outline__trailing {
+  border-color: rgba(201, 168, 76, 0.25) !important;
 }
 
-/* Botão de entrar */
-button.full-width {
+.full-width ::ng-deep .mat-mdc-form-field-flex {
+  background: #1a1a1a;
+}
+
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.full-width ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #C9A84C !important;
+}
+
+.full-width ::ng-deep .mat-mdc-floating-label,
+.full-width ::ng-deep .mdc-floating-label {
+  color: #C9A84C !important;
+}
+
+.full-width ::ng-deep input {
+  color: #e0e0e0 !important;
+}
+
+/* ── ERRO ───────────────────────────────────────────────────── */
+.erro-msg {
+  color: #ef9a9a;
+  font-size: 0.8rem;
+  text-align: center;
+  margin: 0 0 12px;
+  padding: 10px;
+  background: rgba(229, 57, 53, 0.1);
+  border: 1px solid rgba(229, 57, 53, 0.2);
+  border-radius: 6px;
+}
+
+/* ── BOTÃO ──────────────────────────────────────────────────── */
+.btn-entrar {
   width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 600;
+  height: 50px;
+  background: linear-gradient(135deg, #a07830, #C9A84C, #e8c97a);
+  color: #1a1100;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 3px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
   margin-top: 8px;
-  border-radius: 8px;
+}
+
+.btn-entrar:hover:not(:disabled) {
+  box-shadow: 0 6px 30px rgba(201, 168, 76, 0.5);
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn-entrar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── RODAPÉ ─────────────────────────────────────────────────── */
+.login-rodape {
+  text-align: center;
+  font-size: 0.6rem;
+  color: #555;
+  letter-spacing: 2px;
+  margin: 24px 0 0;
+}
+
+/* ── MOBILE ─────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 20px;
+    border-radius: 12px;
+  }
+
+  .login-titulo h1 {
+    font-size: 0.95rem;
+    letter-spacing: 3px;
+  }
 }

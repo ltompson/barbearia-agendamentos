@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,15 +9,13 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(usuario: string, senha: string): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { usuario, senha })
-      .pipe(
-        tap(res => localStorage.setItem('jwt', res.token))
-      );
+  login(usuario: string, senha: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, { usuario, senha });
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('role');
   }
 
   getToken(): string | null {
@@ -25,17 +23,9 @@ export class AuthService {
   }
 
   isLogado(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
-
-    // Verifica se o token está expirado
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.exp * 1000 > Date.now();
-    } catch {
-      return false;
-    }
+    return !!this.getToken();
   }
+
   getUsuario(): string {
     const token = this.getToken();
     if (!token) return '';
@@ -46,4 +36,29 @@ export class AuthService {
       return '';
     }
   }
+
+  getRole(): string {
+    return localStorage.getItem('role') || 'FUNCIONARIO';
+  }
+
+  getBarbeiroId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.barbeiroId || null;
+    } catch {
+      return null;
+    }
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'ADMIN';
+  }
 }
+
+
+
+
+
+

@@ -39,23 +39,28 @@
           <span class="menu-icon">📅</span>
           <span>Agendamentos</span>
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'servicos'" (click)="navegarPara('servicos')">
+        <li class="menu-item" [class.active]="secaoAtiva === 'servicos'" (click)="navegarPara('servicos')"
+          *ngIf="isAdmin()">
           <span class="menu-icon">✂</span>
           <span>Serviços</span>
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'profissionais'" (click)="navegarPara('profissionais')">
+        <li class="menu-item" [class.active]="secaoAtiva === 'profissionais'" (click)="navegarPara('profissionais')"
+          *ngIf="isAdmin()">
           <span class="menu-icon">👥</span>
           <span>Profissionais</span>
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'horarios'" (click)="navegarPara('horarios')">
+        <li class="menu-item" [class.active]="secaoAtiva === 'horarios'" (click)="navegarPara('horarios')"
+          *ngIf="isAdmin()">
           <span class="menu-icon">⏰</span>
           <span>Funcionamento</span>
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'bloqueios'" (click)="navegarPara('bloqueios')">
+        <li class="menu-item" [class.active]="secaoAtiva === 'bloqueios'" (click)="navegarPara('bloqueios')"
+          *ngIf="isAdmin()">
           <span class="menu-icon">🚫</span>
           <span>Bloquear</span>
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'liberacao'" (click)="navegarPara('liberacao')">
+        <li class="menu-item" [class.active]="secaoAtiva === 'liberacao'" (click)="navegarPara('liberacao')"
+          *ngIf="isAdmin()">
           <span class="menu-icon">✅</span>
           <span>Liberar</span>
         </li>

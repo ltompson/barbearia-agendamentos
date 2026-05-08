@@ -39,11 +39,13 @@ export class Login {
     const { usuario, senha } = this.form.value;
 
     this.authService.login(usuario, senha).subscribe({
-      next: () => {
+      next: (res: any) => {
+        localStorage.setItem('jwt', res.token);
+        localStorage.setItem('role', res.role);
         this.router.navigate(['/admin/painel']);
       },
-      error: () => {
-        this.erro = 'Usuário ou senha incorretos.';
+      error: (err) => {
+        this.erro = err.error || 'Usuário ou senha incorretos.';
         this.carregando = false;
       }
     });
