@@ -369,3 +369,58 @@ body:not(.dark-theme) app-admin .empty-msg {
 body:not(.dark-theme) app-admin .data-selecionada-label {
   color: #a07830 !important;
 }
+
+body:not(.dark-theme) app-admin .ag-status:not(.cancelado) {
+  background: rgba(46, 125, 50, 0.12) !important;
+  color: #2e7d32 !important;
+  border: 1px solid rgba(46, 125, 50, 0.3) !important;
+}
+
+body:not(.dark-theme) app-admin .ag-horario-badge.verde-badge {
+  color: #a07830 !important;
+  background: rgba(201, 168, 76, 0.12) !important;
+  border-color: rgba(201, 168, 76, 0.3) !important;
+}
+
+body:not(.dark-theme) app-admin .btn-editar {
+  background: rgba(201, 168, 76, 0.15) !important;
+  color: #a07830 !important;
+  border: 1px solid rgba(201, 168, 76, 0.4) !important;
+}
+
+body:not(.dark-theme) app-admin .btn-editar:hover {
+  background: rgba(201, 168, 76, 0.3) !important;
+}
+
+body:not(.dark-theme) app-admin .btn-desativar {
+  background: rgba(229, 57, 53, 0.1) !important;
+  color: #c62828 !important;
+  border: 1px solid rgba(229, 57, 53, 0.3) !important;
+}
+
+body:not(.dark-theme) app-admin .btn-desativar:hover {
+  background: #e53935 !important;
+  color: white !important;
+}
+
+body:not(.dark-theme) app-admin .btn-cancelar-ag {
+  background: rgba(229, 57, 53, 0.1) !important;
+  color: #c62828 !important;
+  border: 1px solid rgba(229, 57, 53, 0.3) !important;
+}
+
+body:not(.dark-theme) app-admin .btn-cancelar-ag:hover {
+  background: #e53935 !important;
+  color: white !important;
+}
+
+body:not(.dark-theme) app-admin .btn-reagendar {
+  background: rgba(201, 168, 76, 0.15) !important;
+  color: #a07830 !important;
+  border: 1px solid rgba(201, 168, 76, 0.4) !important;
+}
+
+body:not(.dark-theme) app-admin .btn-reagendar:hover {
+  background: #a07830 !important;
+  color: white !important;
+}

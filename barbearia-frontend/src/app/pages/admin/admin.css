@@ -346,9 +346,9 @@ body.dark-theme {
 }
 
 .ag-horario-badge.verde-badge {
-  color: #a5d6a7;
-  background: rgba(46, 125, 50, 0.08);
-  border-color: rgba(46, 125, 50, 0.2);
+  color: var(--dourado);
+  background: rgba(201, 168, 76, 0.08);
+  border-color: rgba(201, 168, 76, 0.25);
 }
 
 .ag-info {
@@ -395,9 +395,10 @@ body.dark-theme {
 }
 
 .ag-status.cancelado {
-  background: rgba(229, 57, 53, 0.12);
-  color: #ef9a9a;
-  border-color: rgba(229, 57, 53, 0.3);
+  background: rgba(46, 125, 50, 0.08);
+  color: #a5c8a5;
+  border: 1px solid rgba(46, 125, 50, 0.15);
+  font-size: 0.62rem;
 }
 
 /* ── 10. BOTÕES DE AÇÃO ─────────────────────────────────────── */
@@ -975,7 +976,8 @@ section {
     align-items: center;
   }
 }
-  .secao-titulo {
+
+.secao-titulo {
   margin-bottom: 12px;
   margin-top: 4px;
 }
@@ -1106,4 +1108,11 @@ section {
   background: var(--dourado);
   color: #1a1100;
   border-color: var(--dourado);
+}
+
+.prof-avatar-badge {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dourado);
+  font-family: 'Georgia', serif;
 }

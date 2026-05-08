@@ -146,21 +146,71 @@
         <h2>PROFISSIONAIS</h2>
         <div class="linha-dec"></div>
       </div>
-      <div class="em-breve-card">
-        <div class="em-breve-icon">👥</div>
-        <h3>Em breve</h3>
-        <p>Gerenciamento de profissionais estará disponível em breve.</p>
-        <div class="profissionais-preview">
-          <div class="profissional-badge">
-            <span class="prof-avatar">F</span>
-            <span>Francisco</span>
+
+      <div class="notificacao-toast" *ngIf="notificacaoFuncionario">
+        {{ notificacaoFuncionario }}
+      </div>
+
+      <!-- Formulário -->
+      <div class="form-card">
+        <h3 class="form-titulo">{{ funcionarioEditando ? 'Editar Funcionário' : 'Novo Funcionário' }}</h3>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome completo</mat-label>
+          <input matInput [(ngModel)]="funcionarioForm.nome" placeholder="Ex: Francisco Silva">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usuário (login)</mat-label>
+          <input matInput [(ngModel)]="funcionarioForm.usuario" placeholder="Ex: francisco"
+            [disabled]="!!funcionarioEditando">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ funcionarioEditando ? 'Nova senha (deixe em branco para manter)' : 'Senha' }}</mat-label>
+          <input matInput type="password" [(ngModel)]="funcionarioForm.senha" placeholder="Mínimo 6 caracteres">
+        </mat-form-field>
+
+        <div class="form-acoes">
+          <button class="btn-admin btn-liberar" (click)="salvarFuncionario()">
+            {{ funcionarioEditando ? '✏️ SALVAR ALTERAÇÕES' : '✅ CADASTRAR FUNCIONÁRIO' }}
+          </button>
+          <button *ngIf="funcionarioEditando" class="btn-admin btn-cancelar-form" (click)="cancelarEdicaoFuncionario()">
+            CANCELAR
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista -->
+      <div class="lista-resultado" *ngIf="funcionarios.length > 0">
+        <h3 class="lista-titulo" style="color: var(--dourado)">👤 Funcionários cadastrados</h3>
+        <div *ngFor="let f of funcionarios" class="agendamento-card" [class.servico-inativo]="!f.ativo">
+          <div class="ag-horario-badge" [class.vermelho-badge]="!f.ativo" [class.verde-badge]="f.ativo">
+            <span class="prof-avatar-badge">{{ f.nome.charAt(0).toUpperCase() }}</span>
           </div>
-          <div class="profissional-badge">
-            <span class="prof-avatar">R</span>
-            <span>Raniel Dias</span>
+          <div class="ag-info">
+            <p class="ag-cliente">{{ f.nome }}</p>
+            <p class="ag-detalhe">🔑 {{ f.usuario }}</p>
+          </div>
+          <div class="ag-acoes">
+            <span class="ag-status" [class.cancelado]="!f.ativo">
+              {{ f.ativo ? 'ATIVO' : 'PAUSADO' }}
+            </span>
+            <div class="servico-botoes">
+              <button class="btn-acao btn-editar" (click)="editarFuncionario(f)">Editar</button>
+              <button class="btn-acao btn-toggle" [class.btn-ativar]="!f.ativo" [class.btn-desativar]="f.ativo"
+                (click)="toggleFuncionario(f)">
+                {{ f.ativo ? 'Pausar' : 'Reativar' }}
+              </button>
+              <button class="btn-acao btn-remover" (click)="deletarFuncionario(f)">Remover</button>
+            </div>
           </div>
         </div>
       </div>
+
+      <p *ngIf="funcionarios.length === 0" class="empty-msg">
+        Nenhum funcionário cadastrado.
+      </p>
     </section>
 
     <!-- ══ SEÇÃO: HORÁRIOS DE FUNCIONAMENTO ══ -->

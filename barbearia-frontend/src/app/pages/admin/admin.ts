@@ -15,6 +15,8 @@ import { AuthService } from '../../services/auth.service';
 import { DiaDisponivelService } from '../../services/dia-disponivel.service';
 import { MatIconModule } from '@angular/material/icon';
 import { ServicoService, Servico } from '../../services/servico.service';
+import { BarbeiroService, Barbeiro } from '../../services/barbeiro.service';
+import { FuncionarioService, Funcionario } from '../../services/funcionario.service';
 
 registerLocaleData(localePt);
 
@@ -54,7 +56,9 @@ export class Admin implements OnInit {
     private cdr: ChangeDetectorRef,
     private diaDisponivelService: DiaDisponivelService,
     private router: Router,
-    private servicoService: ServicoService
+    private servicoService: ServicoService,
+    private barbeiroService: BarbeiroService,
+    private funcionarioService: FuncionarioService
   ) { }
 
   get temaEscuro(): boolean {
@@ -127,6 +131,8 @@ export class Admin implements OnInit {
     this.carregarAgendamentos();
     this.gerarCalendario();
     this.carregarServicos();
+    this.carregarBarbeiros();
+    this.carregarFuncionarios();
   }
 
   carregarAgendamentos() {
@@ -410,6 +416,151 @@ export class Admin implements OnInit {
 
     const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, '_blank');
+  }
+
+  // Profissionais
+  barbeiros: Barbeiro[] = [];
+  barbeiroEditando: Barbeiro | null = null;
+  barbeiroForm = { nome: '', telefone: '' };
+  notificacaoBarbeiro: string = '';
+
+  carregarBarbeiros() {
+    this.barbeiroService.listarTodos().subscribe({
+      next: (dados) => { this.barbeiros = dados; this.cdr.detectChanges(); },
+      error: (err) => console.error(err)
+    });
+  }
+
+  salvarBarbeiro() {
+    if (!this.barbeiroForm.nome || !this.barbeiroForm.telefone) {
+      alert('Preencha nome e telefone.');
+      return;
+    }
+    const barbeiro: Barbeiro = {
+      nome: this.barbeiroForm.nome,
+      telefone: this.barbeiroForm.telefone,
+      ativo: true
+    };
+    if (this.barbeiroEditando?.id) {
+      this.barbeiroService.atualizar(this.barbeiroEditando.id, barbeiro).subscribe({
+        next: () => {
+          this.cancelarEdicaoBarbeiro();
+          this.carregarBarbeiros();
+          this.notificacaoBarbeiro = '✅ Profissional atualizado com sucesso!';
+          setTimeout(() => { this.notificacaoBarbeiro = ''; this.cdr.detectChanges(); }, 3000);
+        },
+        error: (err) => console.error(err)
+      });
+    } else {
+      this.barbeiroService.criar(barbeiro).subscribe({
+        next: () => {
+          this.cancelarEdicaoBarbeiro();
+          this.carregarBarbeiros();
+          this.notificacaoBarbeiro = '✅ Profissional adicionado com sucesso!';
+          setTimeout(() => { this.notificacaoBarbeiro = ''; this.cdr.detectChanges(); }, 3000);
+        },
+        error: (err) => console.error(err)
+      });
+    }
+  }
+
+  editarBarbeiro(b: Barbeiro) {
+    this.barbeiroEditando = b;
+    this.barbeiroForm = { nome: b.nome, telefone: b.telefone };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelarEdicaoBarbeiro() {
+    this.barbeiroEditando = null;
+    this.barbeiroForm = { nome: '', telefone: '' };
+  }
+
+  toggleBarbeiro(b: Barbeiro) {
+    const acao = b.ativo ? 'desativar' : 'ativar';
+    if (!confirm(`Deseja ${acao} o profissional "${b.nome}"?`)) return;
+    this.barbeiroService.toggleAtivo(b.id!).subscribe({
+      next: () => this.carregarBarbeiros(),
+      error: (err) => console.error(err)
+    });
+  }
+
+  // Funcionários (acesso ao painel)
+  funcionarios: Funcionario[] = [];
+  funcionarioEditando: Funcionario | null = null;
+  funcionarioForm = { nome: '', usuario: '', senha: '' };
+  notificacaoFuncionario: string = '';
+
+  carregarFuncionarios() {
+    this.funcionarioService.listarTodos().subscribe({
+      next: (dados) => { this.funcionarios = dados; this.cdr.detectChanges(); },
+      error: (err) => console.error(err)
+    });
+  }
+
+  salvarFuncionario() {
+    if (!this.funcionarioForm.nome || !this.funcionarioForm.usuario) {
+      alert('Preencha nome e usuário.');
+      return;
+    }
+    if (!this.funcionarioEditando && !this.funcionarioForm.senha) {
+      alert('Preencha a senha.');
+      return;
+    }
+    const funcionario: Funcionario = {
+      nome: this.funcionarioForm.nome,
+      usuario: this.funcionarioForm.usuario,
+      senha: this.funcionarioForm.senha || undefined,
+      ativo: true
+    };
+    if (this.funcionarioEditando?.id) {
+      this.funcionarioService.atualizar(this.funcionarioEditando.id, funcionario).subscribe({
+        next: () => {
+          this.cancelarEdicaoFuncionario();
+          this.carregarFuncionarios();
+          this.notificacaoFuncionario = '✅ Funcionário atualizado com sucesso!';
+          setTimeout(() => { this.notificacaoFuncionario = ''; this.cdr.detectChanges(); }, 3000);
+        },
+        error: (err) => console.error(err)
+      });
+    } else {
+      this.funcionarioService.criar(funcionario).subscribe({
+        next: () => {
+          this.cancelarEdicaoFuncionario();
+          this.carregarFuncionarios();
+          this.notificacaoFuncionario = '✅ Funcionário cadastrado com sucesso!';
+          setTimeout(() => { this.notificacaoFuncionario = ''; this.cdr.detectChanges(); }, 3000);
+        },
+        error: (err) => console.error(err)
+      });
+    }
+  }
+
+  editarFuncionario(f: Funcionario) {
+    this.funcionarioEditando = f;
+    this.funcionarioForm = { nome: f.nome, usuario: f.usuario, senha: '' };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelarEdicaoFuncionario() {
+    this.funcionarioEditando = null;
+    this.funcionarioForm = { nome: '', usuario: '', senha: '' };
+  }
+
+  toggleFuncionario(f: Funcionario) {
+    const acao = f.ativo ? 'pausar' : 'reativar';
+    if (!confirm(`Deseja ${acao} o acesso de "${f.nome}"?`)) return;
+    this.funcionarioService.toggleAtivo(f.id!).subscribe({
+      next: () => this.carregarFuncionarios(),
+      error: (err) => console.error(err)
+    });
+  }
+
+  deletarFuncionario(f: Funcionario) {
+    if (!confirm(`Deseja remover permanentemente "${f.nome}"?`)) return;
+    this.funcionarioService.deletar(f.id!).subscribe({
+      next: () => this.carregarFuncionarios(),
+      error: (err) => console.error(err)
+    });
   }
   // Encerra a sessao e redireciona para o login
   logout() {
