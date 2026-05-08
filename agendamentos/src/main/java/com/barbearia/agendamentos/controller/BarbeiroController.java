@@ -15,9 +15,16 @@ public class BarbeiroController {
 
     private final BarbeiroService barbeiroService;
 
+    // Apenas ativos — tela de agendamento
     @GetMapping
     public ResponseEntity<List<Barbeiro>> listar() {
         return ResponseEntity.ok(barbeiroService.listarAtivos());
+    }
+
+    // Todos — painel admin
+    @GetMapping("/todos")
+    public ResponseEntity<List<Barbeiro>> listarTodos() {
+        return ResponseEntity.ok(barbeiroService.listarTodos());
     }
 
     @GetMapping("/{id}")
@@ -35,5 +42,16 @@ public class BarbeiroController {
             @PathVariable Long id,
             @RequestBody Barbeiro barbeiro) {
         return ResponseEntity.ok(barbeiroService.atualizar(id, barbeiro));
+    }
+
+    @PatchMapping("/{id}/toggle")
+    public ResponseEntity<Barbeiro> toggle(@PathVariable Long id) {
+        return ResponseEntity.ok(barbeiroService.toggleAtivo(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        barbeiroService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

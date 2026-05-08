@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AdminService {
@@ -15,11 +17,38 @@ public class AdminService {
 
     public Admin salvar(Admin admin) {
         admin.setSenha(passwordEncoder.encode(admin.getSenha()));
+        admin.setAtivo(true);
         return adminRepository.save(admin);
     }
 
     public Admin buscarPorUsuario(String usuario) {
         return adminRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new RuntimeException("Admin não encontrado"));
+    }
+
+    public List<Admin> listarTodos() {
+        return adminRepository.findAll();
+    }
+
+    public Admin toggleAtivo(Long id) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Admin não encontrado"));
+        admin.setAtivo(!admin.getAtivo());
+        return adminRepository.save(admin);
+    }
+
+    public void deletar(Long id) {
+        adminRepository.deleteById(id);
+    }
+
+    public Admin atualizar(Long id, Admin dados) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Admin não encontrado"));
+        admin.setNome(dados.getNome());
+        admin.setUsuario(dados.getUsuario());
+        if (dados.getSenha() != null && !dados.getSenha().isBlank()) {
+            admin.setSenha(passwordEncoder.encode(dados.getSenha()));
+        }
+        return adminRepository.save(admin);
     }
 }

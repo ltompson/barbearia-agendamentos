@@ -22,6 +22,9 @@ public class Admin {
     @Column(nullable = false, length = 255)
     private String senha;
 
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 

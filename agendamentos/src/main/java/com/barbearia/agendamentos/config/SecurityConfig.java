@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos/*/reagendar").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/servicos").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/servicos/todos").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/barbeiros").permitAll()
                         .anyRequest().authenticated()
                 )
 

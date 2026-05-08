@@ -28,6 +28,11 @@ public class AuthController {
         try {
             Admin admin = adminService.buscarPorUsuario(usuario);
 
+            // Verifica se o acesso está pausado
+            if (!admin.getAtivo()) {
+                return ResponseEntity.status(403).body("Acesso suspenso. Entre em contato com o administrador.");
+            }
+
             if (!passwordEncoder.matches(senha, admin.getSenha())) {
                 return ResponseEntity.status(401).body("Senha incorreta");
             }

@@ -19,6 +19,10 @@ public class BarbeiroService {
                 .toList();
     }
 
+    public List<Barbeiro> listarTodos() {
+        return barbeiroRepository.findAll();
+    }
+
     public Barbeiro buscarPorId(Long id) {
         return barbeiroRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
@@ -34,5 +38,15 @@ public class BarbeiroService {
         existing.setTelefone(barbeiro.getTelefone());
         existing.setAtivo(barbeiro.getAtivo());
         return barbeiroRepository.save(existing);
+    }
+
+    public Barbeiro toggleAtivo(Long id) {
+        Barbeiro barbeiro = buscarPorId(id);
+        barbeiro.setAtivo(!barbeiro.getAtivo());
+        return barbeiroRepository.save(barbeiro);
+    }
+
+    public void deletar(Long id) {
+        barbeiroRepository.deleteById(id);
     }
 }
