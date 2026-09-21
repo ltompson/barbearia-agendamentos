@@ -195,12 +195,14 @@ export class Agendamento {
     this.agendamentoService.criar(payload).subscribe({
       next: () => {
         this.snackBar.open('Agendamento realizado com sucesso! ✅', 'Fechar', { duration: 4000 });
+        this.buscarHorarios(data, barbeiroId);
         this.form.reset();
-        this.horariosDisponiveis = [];
       },
       error: (err) => {
         console.error(err);
-        this.snackBar.open('Erro ao agendar. Tente novamente.', 'Fechar', { duration: 4000 });
+        const mensagem = err.error?.erro ?? 'Erro ao agendar. Tente novamente.';
+        this.snackBar.open(mensagem, 'Fechar', { duration: 4000 });
+        this.buscarHorarios(data, barbeiroId);
       }
     });
   }
