@@ -27,6 +27,11 @@ public class BloqueioController {
         return service.listarPorData(LocalDate.parse(data));
     }
 
+    @GetMapping("/todos")
+    public List<Bloqueio> listarTodos() {
+        return service.listarTodos();
+    }
+
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
         service.deletar(id);

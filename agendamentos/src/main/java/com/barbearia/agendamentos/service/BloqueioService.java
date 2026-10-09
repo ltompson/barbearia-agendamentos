@@ -26,4 +26,8 @@ public class BloqueioService {
     public void deletar(Long id) {
         repository.deleteById(id);
     }
+
+    public List<Bloqueio> listarTodos() {
+        return repository.findAllByOrderByDataDescHorarioAsc();
+    }
 }

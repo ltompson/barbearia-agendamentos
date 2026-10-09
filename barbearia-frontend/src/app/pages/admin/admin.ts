@@ -133,6 +133,7 @@ export class Admin implements OnInit {
     this.carregarServicos();
     this.carregarBarbeiros();
     this.carregarFuncionarios();
+    this.carregarHistoricoBloqueios();
   }
 
   carregarAgendamentos() {
@@ -178,6 +179,7 @@ export class Admin implements OnInit {
 
   // Bloqueios
   bloqueios: any[] = [];
+  historicoBloqueios: any[] = [];
   bloqueioForm = {
     barbeiroId: null as number | null,
     data: null as Date | null,
@@ -200,12 +202,29 @@ export class Admin implements OnInit {
   }
 
   carregarBloqueios() {
-    if (!this.bloqueioForm.data) return;
+    if (!this.bloqueioForm.data) {
+      this.bloqueios = [];
+      this.carregarHistoricoBloqueios();
+      return;
+    }
     const data = this.formatarData(this.bloqueioForm.data);
     this.bloqueioService.listarPorData(data).subscribe({
       next: (dados) => { this.bloqueios = dados; this.cdr.detectChanges(); },
       error: (err) => console.error(err)
     });
+  }
+
+  carregarHistoricoBloqueios() {
+    this.bloqueioService.listarTodos().subscribe({
+      next: (dados) => { this.historicoBloqueios = dados; this.cdr.detectChanges(); },
+      error: (err) => console.error(err)
+    });
+  }
+
+  verHistorico() {
+    this.bloqueioForm.data = null;
+    this.bloqueios = [];
+    this.carregarHistoricoBloqueios();
   }
 
   criarBloqueio() {
@@ -226,6 +245,7 @@ export class Admin implements OnInit {
         this.bloqueioForm.horario = '';
         this.bloqueioForm.motivo = '';
         this.carregarBloqueios();
+        this.carregarHistoricoBloqueios();
       },
       error: (err) => console.error(err)
     });
@@ -234,7 +254,10 @@ export class Admin implements OnInit {
   deletarBloqueio(id: number) {
     if (!confirm('Remover este bloqueio?')) return;
     this.bloqueioService.deletar(id).subscribe({
-      next: () => this.carregarBloqueios(),
+      next: () => {
+        this.carregarBloqueios();
+        this.carregarHistoricoBloqueios();
+      },
       error: (err) => console.error(err)
     });
   }

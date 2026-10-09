@@ -15,7 +15,7 @@ export class BloqueioService {
 
   private apiUrl = 'http://localhost:8080/api/bloqueios';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   criar(bloqueio: Bloqueio): Observable<any> {
     return this.http.post(this.apiUrl, bloqueio);
@@ -23,6 +23,10 @@ export class BloqueioService {
 
   listarPorData(data: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}?data=${data}`);
+  }
+
+  listarTodos(): Observable<Bloqueio[]> {
+    return this.http.get<Bloqueio[]>(`${this.apiUrl}/todos`);
   }
 
   deletar(id: number): Observable<any> {

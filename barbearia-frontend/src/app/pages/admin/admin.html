@@ -277,6 +277,9 @@
           🚫 BLOQUEAR HORÁRIO
         </button>
       </div>
+      <button *ngIf="bloqueioForm.data" class="btn-acao btn-editar" (click)="verHistorico()">
+        Ver histórico completo
+      </button>
 
       <div *ngIf="bloqueios.length > 0" class="lista-resultado">
         <h3 class="lista-titulo vermelho">🚫 Horários bloqueados nesta data</h3>
@@ -293,6 +296,25 @@
       </div>
       <p *ngIf="bloqueios.length === 0 && bloqueioForm.data" class="empty-msg">
         Nenhum bloqueio para esta data.
+      </p>
+
+      <div *ngIf="!bloqueioForm.data && historicoBloqueios.length > 0" class="lista-resultado">
+        <h3 class="lista-titulo vermelho">🚫 Histórico de bloqueios</h3>
+        <div *ngFor="let b of historicoBloqueios" class="agendamento-card">
+          <div class="ag-horario-badge vermelho-badge">{{ b.data | date:'dd/MM/yyyy' }}</div>
+          <div class="ag-info">
+            <p class="ag-cliente">{{ b.barbeiroId === 1 ? 'Francisco' : 'Raniel Dias' }}</p>
+            <p class="ag-detalhe">
+              {{ b.horario ? b.horario.substring(0, 5) : 'Dia inteiro' }} · {{ b.motivo || 'Sem motivo' }}
+            </p>
+          </div>
+          <div class="ag-acoes">
+            <button class="btn-acao btn-remover" (click)="deletarBloqueio(b.id)">Remover</button>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="!bloqueioForm.data && historicoBloqueios.length === 0" class="empty-msg">
+        Nenhum bloqueio registrado.
       </p>
     </section>
 
