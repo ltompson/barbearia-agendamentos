@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 export interface Bloqueio {
   id?: number;
   data: string;
-  horario: string;
+  horario?: string;
   barbeiroId: number;
   motivo?: string;
 }

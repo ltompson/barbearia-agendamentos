@@ -244,7 +244,7 @@
     <!-- ══ SEÇÃO: BLOQUEAR ══ -->
     <section *ngIf="secaoAtiva === 'bloqueios'">
       <div class="secao-titulo">
-        <h2>BLOQUEAR HORÁRIOS</h2>
+        <h2>BLOQUEAR HORÁRIOS E DIAS</h2>
         <div class="linha-dec"></div>
       </div>
       <div class="form-card">
@@ -265,6 +265,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Horário</mat-label>
           <mat-select [(ngModel)]="bloqueioForm.horario">
+            <mat-option value="DIA_INTEIRO">Dia inteiro</mat-option>
             <mat-option *ngFor="let h of horariosBloqueio" [value]="h">{{ h }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -280,9 +281,9 @@
       <div *ngIf="bloqueios.length > 0" class="lista-resultado">
         <h3 class="lista-titulo vermelho">🚫 Horários bloqueados nesta data</h3>
         <div *ngFor="let b of bloqueios" class="agendamento-card">
-          <div class="ag-horario-badge vermelho-badge">{{ b.horario.substring(0, 5) }}</div>
+          <div class="ag-horario-badge vermelho-badge">{{ b.horario ? b.horario.substring(0, 5) : 'DIA INTEIRO' }}</div>
           <div class="ag-info">
-            <p class="ag-cliente">{{ b.barbeiro?.nome }}</p>
+            <p class="ag-cliente">{{ b.barbeiroId === 1 ? 'Francisco' : 'Raniel Dias' }}</p>
             <p class="ag-detalhe">{{ b.motivo || 'Sem motivo' }}</p>
           </div>
           <div class="ag-acoes">
@@ -298,7 +299,7 @@
     <!-- ══ SEÇÃO: LIBERAR ══ -->
     <section *ngIf="secaoAtiva === 'liberacao'">
       <div class="secao-titulo">
-        <h2>LIBERAR DIAS</h2>
+        <h2>LIBERAR DIAS E HORÁRIOS</h2>
         <div class="linha-dec"></div>
       </div>
       <div class="form-card">

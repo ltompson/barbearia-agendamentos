@@ -48,4 +48,8 @@ export class AgendamentoService {
     });
   }
 
+  getDiasBloqueados(barbeiroId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/dias-bloqueados`, { params: { barbeiroId } });
+  }
+
 }

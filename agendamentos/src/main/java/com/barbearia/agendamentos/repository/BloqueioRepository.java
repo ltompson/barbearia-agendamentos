@@ -9,4 +9,5 @@ public interface BloqueioRepository extends JpaRepository<Bloqueio, Long> {
 
     List<Bloqueio> findByData(LocalDate data);
     List<Bloqueio> findByDataAndBarbeiroId(LocalDate data, Long barbeiroId);
+    List<Bloqueio> findByBarbeiroIdAndHorarioIsNullAndDataGreaterThanEqual(Long barbeiroId, LocalDate data);
 }

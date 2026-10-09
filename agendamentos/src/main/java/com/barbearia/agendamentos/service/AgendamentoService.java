@@ -4,11 +4,11 @@ import com.barbearia.agendamentos.entity.Agendamento;
 import com.barbearia.agendamentos.entity.Barbeiro;
 import com.barbearia.agendamentos.entity.Cliente;
 import com.barbearia.agendamentos.entity.Servico;
+import com.barbearia.agendamentos.entity.Bloqueio;
 import com.barbearia.agendamentos.repository.AgendamentoRepository;
 import com.barbearia.agendamentos.repository.BloqueioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -45,17 +45,30 @@ public class AgendamentoService {
                 .map(a -> a.getDataHora().toLocalTime())
                 .collect(Collectors.toSet());
 
-        // Horários bloqueados pelo admin
-        Set<LocalTime> bloqueados = bloqueioRepository
-                .findByDataAndBarbeiroId(data, barbeiroId)
-                .stream()
-                .map(b -> b.getHorario())
+        // Bloqueios do admin (horário vazio = dia inteiro)
+        List<Bloqueio> bloqueiosDoDia = bloqueioRepository
+                .findByDataAndBarbeiroId(data, barbeiroId);
+
+        if (bloqueiosDoDia.stream().anyMatch(b -> b.getHorario() == null)) {
+            return List.of();
+        }
+
+        Set<LocalTime> bloqueados = bloqueiosDoDia.stream()
+                .map(Bloqueio::getHorario)
                 .collect(Collectors.toSet());
 
         // Gera todos os slots e filtra os ocupados
         return gerarSlots().stream()
                 .filter(slot -> !agendados.contains(slot))
                 .filter(slot -> !bloqueados.contains(slot))
+                .toList();
+    }
+    // ─── Dias bloqueados (dia inteiro) ───────────────────────────────────────────
+    public List<LocalDate> getDiasBloqueados(Long barbeiroId) {
+        return bloqueioRepository
+                .findByBarbeiroIdAndHorarioIsNullAndDataGreaterThanEqual(barbeiroId, LocalDate.now())
+                .stream()
+                .map(Bloqueio::getData)
                 .toList();
     }
 
@@ -89,11 +102,12 @@ public class AgendamentoService {
             throw new RuntimeException("Horário indisponível para este barbeiro");
         }
 
-        // Verifica se o horário está bloqueado
+        // Verifica se o horário (ou o dia inteiro) está bloqueado
         boolean horarioBloqueado = bloqueioRepository
                 .findByDataAndBarbeiroId(dataHora.toLocalDate(), barbeiroId)
                 .stream()
-                .anyMatch(b -> b.getHorario().equals(dataHora.toLocalTime()));
+                .anyMatch(b -> b.getHorario() == null
+                        || b.getHorario().equals(dataHora.toLocalTime()));
 
         if (horarioBloqueado) {
             throw new RuntimeException("Este horário está bloqueado pelo administrador");

@@ -60,6 +60,11 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoService.buscarPorId(id));
     }
 
+    @GetMapping("/dias-bloqueados")
+    public ResponseEntity<List<LocalDate>> getDiasBloqueados(@RequestParam Long barbeiroId) {
+        return ResponseEntity.ok(agendamentoService.getDiasBloqueados(barbeiroId));
+    }
+
     // Reagenda — cancela o antigo e cria novo
     @PostMapping("/{id}/reagendar")
     public ResponseEntity<Agendamento> reagendar(

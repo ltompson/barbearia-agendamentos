@@ -43,6 +43,7 @@ export class Agendamento {
   form: FormGroup;
   horariosDisponiveis: string[] = [];
   diasExcecao: Set<string> = new Set();
+  diasBloqueados: Set<string> = new Set();
   filtroDataFn: (data: Date | null) => boolean = () => true;
   servicos: Servico[] = [];
   activeTab: number = 0;
@@ -97,13 +98,20 @@ export class Agendamento {
       horario: ['', Validators.required]
     });
 
-    this.form.get('data')?.valueChanges.subscribe(() => this.onDataOuBarbeiroChange());
     this.form.get('barbeiroId')?.valueChanges.subscribe((barbeiroId) => {
       if (barbeiroId) {
         this.diasExcecao.clear();
+        this.diasBloqueados.clear();
         this.diaDisponivelService.listarPorBarbeiro(barbeiroId).subscribe({
           next: (dias) => {
             dias.forEach(d => this.diasExcecao.add(d.data));
+            this.atualizarFiltroData();
+            this.cdr.detectChanges();
+          }
+        });
+        this.agendamentoService.getDiasBloqueados(barbeiroId).subscribe({
+          next: (dias) => {
+            dias.forEach(d => this.diasBloqueados.add(d));
             this.atualizarFiltroData();
             this.cdr.detectChanges();
           }
@@ -126,6 +134,7 @@ export class Agendamento {
       if (!data) return false;
       const dia = data.getDay();
       const dataISO = this.formatarData(data);
+      if (this.diasBloqueados.has(dataISO)) return false;
       if (dia === 0 || dia === 6) {
         return this.diasExcecao.has(dataISO);
       }
