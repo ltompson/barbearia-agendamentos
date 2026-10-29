@@ -18,14 +18,12 @@ spring:
       mode: never
 
 server:
-  port: 8080
-  server:
-    error:
-      include-message: always
-      include-binding-errors: always
-      include-stacktrace: always
+  port: ${PORT:8080}
+
+app:
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
 
 jwt:
-  secret: alquimista-barbearia-secret-key-2026-super-segura
-  expiration: 86400000 # 24 horas em ms
-
+  secret: ${JWT_SECRET}
+  expiration: 86400000
