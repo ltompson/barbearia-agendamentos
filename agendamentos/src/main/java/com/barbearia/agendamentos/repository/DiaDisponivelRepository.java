@@ -9,4 +9,10 @@ public interface DiaDisponivelRepository extends JpaRepository<DiaDisponivel, Lo
     List<DiaDisponivel> findByData(LocalDate data);
     boolean existsByDataAndBarbeiroId(LocalDate data, Long barbeiroId);
     List<DiaDisponivel> findByBarbeiroId(Long barbeiroId);
+
+    boolean existsByDataAndHorarioAndBarbeiroId(
+            LocalDate data,
+            java.time.LocalTime horario,
+            Long barbeiroId
+    );
 }

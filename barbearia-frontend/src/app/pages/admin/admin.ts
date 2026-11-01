@@ -521,7 +521,12 @@ export class Admin implements OnInit {
   // Funcionários (acesso ao painel)
   funcionarios: Funcionario[] = [];
   funcionarioEditando: Funcionario | null = null;
-  funcionarioForm = { nome: '', usuario: '', senha: '' };
+  funcionarioForm = {
+    nome: '',
+    usuario: '',
+    senha: '',
+    barbeiroId: null as number | null
+  };
   notificacaoFuncionario: string = '';
 
   carregarFuncionarios() {
@@ -536,6 +541,11 @@ export class Admin implements OnInit {
       alert('Preencha nome e usuário.');
       return;
     }
+
+    if (!this.funcionarioForm.barbeiroId) {
+      alert('Selecione o barbeiro associado ao funcionário.');
+      return;
+    }
     if (!this.funcionarioEditando && !this.funcionarioForm.senha) {
       alert('Preencha a senha.');
       return;
@@ -544,7 +554,8 @@ export class Admin implements OnInit {
       nome: this.funcionarioForm.nome,
       usuario: this.funcionarioForm.usuario,
       senha: this.funcionarioForm.senha || undefined,
-      ativo: true
+      ativo: true,
+      barbeiroId: this.funcionarioForm.barbeiroId
     };
     if (this.funcionarioEditando?.id) {
       this.funcionarioService.atualizar(this.funcionarioEditando.id, funcionario).subscribe({
@@ -571,13 +582,25 @@ export class Admin implements OnInit {
 
   editarFuncionario(f: Funcionario) {
     this.funcionarioEditando = f;
-    this.funcionarioForm = { nome: f.nome, usuario: f.usuario, senha: '' };
+
+    this.funcionarioForm = {
+      nome: f.nome,
+      usuario: f.usuario,
+      senha: '',
+      barbeiroId: f.barbeiroId ?? null
+    };
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
   cancelarEdicaoFuncionario() {
     this.funcionarioEditando = null;
-    this.funcionarioForm = { nome: '', usuario: '', senha: '' };
+
+    this.funcionarioForm = {
+      nome: '',
+      usuario: '',
+      senha: '',
+      barbeiroId: null
+    };
   }
 
   toggleFuncionario(f: Funcionario) {

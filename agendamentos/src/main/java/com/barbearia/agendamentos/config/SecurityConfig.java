@@ -1,8 +1,11 @@
+
 package com.barbearia.agendamentos.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -40,22 +42,68 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/agendamentos/dia-disponivel").permitAll()
-                        .requestMatchers("/api/agendamentos/disponiveis").permitAll()
-                        .requestMatchers("/api/dias-disponiveis/**").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/agendamentos/*").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/agendamentos/*/reagendar").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/servicos").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/servicos/todos").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/barbeiros").permitAll()
+
+                        // Autenticacao publica
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+
+                        // Consultas publicas para o agendamento
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/agendamentos/disponiveis",
+                                "/api/agendamentos/dia-disponivel",
+                                "/api/agendamentos/dias-bloqueados"
+                        ).permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/api/agendamentos").permitAll()
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/dias-disponiveis",
+                                "/api/dias-disponiveis/barbeiro/**",
+                                "/api/barbeiros",
+                                "/api/servicos"
+                        ).permitAll()
+
+                        // Operacoes exclusivas do ADMIN
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/servicos/todos")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/api/servicos/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/barbeiros/todos")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/barbeiros").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/barbeiros/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/barbeiros/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/barbeiros/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/dias-disponiveis")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/dias-disponiveis/**")
+                        .hasRole("ADMIN")
+
+                        // Bloqueios: ADMIN por enquanto
+                        .requestMatchers("/api/bloqueios/**").hasRole("ADMIN")
+
+                        // Dados de clientes: usuarios autenticados
+                        .requestMatchers("/api/clientes/**")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+
+                        // Agendamentos internos
+                        .requestMatchers(HttpMethod.GET, "/api/agendamentos")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+                        .requestMatchers(HttpMethod.GET, "/api/agendamentos/barbeiro/**")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+                        .requestMatchers(HttpMethod.GET, "/api/agendamentos/*")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+                        .requestMatchers(HttpMethod.PATCH, "/api/agendamentos/*/cancelar")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+                        .requestMatchers(HttpMethod.POST, "/api/agendamentos/*/reagendar")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+
+                        // Qualquer outra rota exige autenticacao
                         .anyRequest().authenticated()
                 )
-
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }
@@ -64,11 +112,16 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(allowedOrigins));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
+        ));
         configuration.setAllowedHeaders(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 }
-

@@ -8,6 +8,9 @@ export interface Funcionario {
   usuario: string;
   senha?: string;
   ativo: boolean;
+  barbeiroId?: number | null;
+  role?: string;
+  criadoEm?: string;
 }
 
 @Injectable({ providedIn: 'root' })

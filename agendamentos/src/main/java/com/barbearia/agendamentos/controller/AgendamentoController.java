@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.barbearia.agendamentos.service.DiaDisponivelService;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/agendamentos")
@@ -25,15 +26,29 @@ public class AgendamentoController {
 
     // Retorna todos os agendamentos (painel admin)
     @GetMapping
-    public ResponseEntity<List<Agendamento>> listarTodos() {
-        return ResponseEntity.ok(agendamentoService.listarTodos());
+    public ResponseEntity<List<Agendamento>> listarTodos(
+            Authentication authentication) {
+
+        String usuario = authentication.getName();
+
+        return ResponseEntity.ok(
+                agendamentoService.listarPermitidos(usuario)
+        );
     }
 
     // Retorna agendamentos de um barbeiro específico
     @GetMapping("/barbeiro/{barbeiroId}")
     public ResponseEntity<List<Agendamento>> listarPorBarbeiro(
-            @PathVariable Long barbeiroId) {
-        return ResponseEntity.ok(agendamentoService.listarPorBarbeiro(barbeiroId));
+            @PathVariable Long barbeiroId,
+            Authentication authentication) {
+
+        String usuario = authentication.getName();
+
+        agendamentoService.validarAcessoAoBarbeiro(usuario, barbeiroId);
+
+        return ResponseEntity.ok(
+                agendamentoService.listarPorBarbeiro(barbeiroId)
+        );
     }
 
     @GetMapping("/disponiveis")
@@ -56,8 +71,18 @@ public class AgendamentoController {
 
     // Busca agendamento por ID (usado no reagendamento)
     @GetMapping("/{id}")
-    public ResponseEntity<Agendamento> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(agendamentoService.buscarPorId(id));
+    public ResponseEntity<Agendamento> buscarPorId(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        Agendamento agendamento = agendamentoService.buscarPorId(id);
+
+        agendamentoService.validarAcessoAoBarbeiro(
+                authentication.getName(),
+                agendamento.getBarbeiro().getId()
+        );
+
+        return ResponseEntity.ok(agendamento);
     }
 
     @GetMapping("/dias-bloqueados")
@@ -66,10 +91,28 @@ public class AgendamentoController {
     }
 
     // Reagenda — cancela o antigo e cria novo
+    // Reagenda — cancela o antigo e cria novo
     @PostMapping("/{id}/reagendar")
     public ResponseEntity<Agendamento> reagendar(
             @PathVariable Long id,
-            @RequestBody AgendamentoRequest request) {
+            @RequestBody AgendamentoRequest request,
+            Authentication authentication) {
+
+        String usuario = authentication.getName();
+
+        // Verifica o barbeiro do agendamento original.
+        Agendamento antigo = agendamentoService.buscarPorId(id);
+
+        agendamentoService.validarAcessoAoBarbeiro(
+                usuario,
+                antigo.getBarbeiro().getId()
+        );
+
+        // Verifica também o barbeiro escolhido para o novo horário.
+        agendamentoService.validarAcessoAoBarbeiro(
+                usuario,
+                request.barbeiroId()
+        );
 
         return ResponseEntity.ok(
                 agendamentoService.reagendar(
@@ -103,7 +146,17 @@ public class AgendamentoController {
 
     // Cancela um agendamento pelo ID
     @PatchMapping("/{id}/cancelar")
-    public ResponseEntity<Agendamento> cancelar(@PathVariable Long id) {
+    public ResponseEntity<Agendamento> cancelar(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        Agendamento agendamento = agendamentoService.buscarPorId(id);
+
+        agendamentoService.validarAcessoAoBarbeiro(
+                authentication.getName(),
+                agendamento.getBarbeiro().getId()
+        );
+
         return ResponseEntity.ok(agendamentoService.cancelar(id));
     }
 

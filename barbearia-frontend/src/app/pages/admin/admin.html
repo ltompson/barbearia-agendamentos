@@ -166,6 +166,15 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Barbeiro associado</mat-label>
+          <mat-select [(ngModel)]="funcionarioForm.barbeiroId">
+            <mat-option *ngFor="let barbeiro of barbeiros" [value]="barbeiro.id">
+              {{ barbeiro.nome }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Usuário (login)</mat-label>
           <input matInput [(ngModel)]="funcionarioForm.usuario" placeholder="Ex: francisco"
             [disabled]="!!funcionarioEditando">

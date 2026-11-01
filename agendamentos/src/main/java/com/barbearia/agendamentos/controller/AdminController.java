@@ -1,5 +1,8 @@
 package com.barbearia.agendamentos.controller;
 
+import com.barbearia.agendamentos.dto.AdminAtualizacaoDTO;
+import com.barbearia.agendamentos.dto.AdminCadastroDTO;
+import com.barbearia.agendamentos.dto.AdminResponseDTO;
 import com.barbearia.agendamentos.entity.Admin;
 import com.barbearia.agendamentos.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -11,47 +14,74 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class AdminController {
 
     private final AdminService adminService;
 
-    // Cadastrar novo funcionário (protegido — só admin logado)
     @PostMapping("/cadastrar")
-    public ResponseEntity<Admin> cadastrar(@RequestBody Admin admin) {
-        return ResponseEntity.ok(adminService.salvar(admin));
+    public ResponseEntity<AdminResponseDTO> cadastrar(
+            @RequestBody AdminCadastroDTO dados) {
+
+        Admin admin = new Admin();
+        admin.setNome(dados.nome());
+        admin.setBarbeiroId(dados.barbeiroId());
+        admin.setUsuario(dados.usuario());
+        admin.setSenha(dados.senha());
+
+        Admin salvo = adminService.salvar(admin);
+
+        return ResponseEntity.ok(AdminResponseDTO.fromEntity(salvo));
     }
 
-    // Listar todos os funcionários (protegido)
     @GetMapping
-    public ResponseEntity<List<Admin>> listarTodos() {
-        return ResponseEntity.ok(adminService.listarTodos());
+    public ResponseEntity<List<AdminResponseDTO>> listarTodos() {
+
+        List<AdminResponseDTO> resposta = adminService.listarTodos()
+                .stream()
+                .map(AdminResponseDTO::fromEntity)
+                .toList();
+
+        return ResponseEntity.ok(resposta);
     }
 
-    // Buscar por usuário
     @GetMapping("/{usuario}")
-    public ResponseEntity<Admin> buscar(@PathVariable String usuario) {
-        return ResponseEntity.ok(adminService.buscarPorUsuario(usuario));
+    public ResponseEntity<AdminResponseDTO> buscar(
+            @PathVariable String usuario) {
+
+        Admin admin = adminService.buscarPorUsuario(usuario);
+
+        return ResponseEntity.ok(AdminResponseDTO.fromEntity(admin));
     }
 
-    // Atualizar nome/usuario/senha
     @PutMapping("/{id}")
-    public ResponseEntity<Admin> atualizar(
+    public ResponseEntity<AdminResponseDTO> atualizar(
             @PathVariable Long id,
-            @RequestBody Admin admin) {
-        return ResponseEntity.ok(adminService.atualizar(id, admin));
+            @RequestBody AdminAtualizacaoDTO dados) {
+
+        Admin admin = new Admin();
+        admin.setNome(dados.nome());
+        admin.setBarbeiroId(dados.barbeiroId());
+        admin.setUsuario(dados.usuario());
+        admin.setSenha(dados.senha());
+
+        Admin atualizado = adminService.atualizar(id, admin);
+
+        return ResponseEntity.ok(AdminResponseDTO.fromEntity(atualizado));
     }
 
-    // Pausar/reativar acesso
     @PatchMapping("/{id}/toggle")
-    public ResponseEntity<Admin> toggle(@PathVariable Long id) {
-        return ResponseEntity.ok(adminService.toggleAtivo(id));
+    public ResponseEntity<AdminResponseDTO> toggle(@PathVariable Long id) {
+
+        Admin admin = adminService.toggleAtivo(id);
+
+        return ResponseEntity.ok(AdminResponseDTO.fromEntity(admin));
     }
 
-    // Remover funcionário
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
+
         adminService.deletar(id);
+
         return ResponseEntity.noContent().build();
     }
 }

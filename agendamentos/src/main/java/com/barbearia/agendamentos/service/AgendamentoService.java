@@ -1,13 +1,18 @@
 package com.barbearia.agendamentos.service;
 
+import com.barbearia.agendamentos.entity.Admin;
+import com.barbearia.agendamentos.service.AdminService;
+import org.springframework.security.access.AccessDeniedException;
 import com.barbearia.agendamentos.entity.Agendamento;
 import com.barbearia.agendamentos.entity.Barbeiro;
 import com.barbearia.agendamentos.entity.Cliente;
 import com.barbearia.agendamentos.entity.Servico;
 import com.barbearia.agendamentos.entity.Bloqueio;
+import com.barbearia.agendamentos.service.AdminService;
 import com.barbearia.agendamentos.repository.AgendamentoRepository;
 import com.barbearia.agendamentos.repository.BloqueioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +20,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class AgendamentoService {
     private final BarbeiroService barbeiroService;
     private final ServicoService servicoService;
     private final ClienteService clienteService;
+    private final AdminService adminService;
 
     // ─── Configuração dos slots do dia ──────────────────────────────────────────
     private static final LocalTime INICIO_EXPEDIENTE = LocalTime.of(8, 0);
@@ -137,6 +144,32 @@ public class AgendamentoService {
         return agendamentoRepository.findAll();
     }
 
+    public List<Agendamento> listarPermitidos(String usuario) {
+
+        Admin admin = adminService.buscarPorUsuario(usuario);
+
+        if (!Boolean.TRUE.equals(admin.getAtivo())) {
+            throw new AccessDeniedException("Conta inativa.");
+        }
+
+        if ("ADMIN".equalsIgnoreCase(admin.getRole())) {
+            return listarTodos();
+        }
+
+        if ("FUNCIONARIO".equalsIgnoreCase(admin.getRole())) {
+
+            if (admin.getBarbeiroId() == null) {
+                throw new AccessDeniedException(
+                        "Funcionario sem barbeiro associado."
+                );
+            }
+
+            return listarPorBarbeiro(admin.getBarbeiroId());
+        }
+
+        throw new AccessDeniedException("Perfil sem permissao.");
+    }
+
     // ─── Buscar por ID ───────────────────────────────────────────────────────────
     public Agendamento buscarPorId(Long id) {
         return agendamentoRepository.findById(id)
@@ -144,27 +177,64 @@ public class AgendamentoService {
     }
 
     // ─── Reagendar ───────────────────────────────────────────────────────────────
+    @Transactional
     public Agendamento reagendar(Long idAntigo, Long barbeiroId,
                                  Long servicoId, LocalDateTime novaDataHora) {
+
         Agendamento antigo = buscarPorId(idAntigo);
 
-        // Cancela o antigo
-        antigo.setStatus("CANCELADO");
-        agendamentoRepository.save(antigo);
-
-        // Cria o novo com os mesmos dados do cliente
-        return agendar(
+        // Cria o novo agendamento primeiro.
+        Agendamento novo = agendar(
                 antigo.getCliente().getId(),
                 barbeiroId,
                 servicoId,
                 novaDataHora
         );
+
+        // Cancela o antigo somente depois da criação bem-sucedida.
+        antigo.setStatus("CANCELADO");
+        agendamentoRepository.save(antigo);
+
+        return novo;
     }
 
     public Agendamento cancelar(Long id) {
         Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+
+        if ("CANCELADO".equalsIgnoreCase(agendamento.getStatus())) {
+            throw new IllegalStateException("Este agendamento já está cancelado.");
+        }
+
         agendamento.setStatus("CANCELADO");
+
         return agendamentoRepository.save(agendamento);
+    }
+
+    public void validarAcessoAoBarbeiro(String usuario, Long barbeiroId) {
+
+        Admin admin = adminService.buscarPorUsuario(usuario);
+
+        if (!Boolean.TRUE.equals(admin.getAtivo())) {
+            throw new AccessDeniedException("Conta inativa.");
+        }
+
+        if ("ADMIN".equalsIgnoreCase(admin.getRole())) {
+            return;
+        }
+
+        if ("FUNCIONARIO".equalsIgnoreCase(admin.getRole())) {
+
+            if (admin.getBarbeiroId() == null
+                    || !admin.getBarbeiroId().equals(barbeiroId)) {
+                throw new AccessDeniedException(
+                        "Voce nao tem permissao para acessar os agendamentos deste barbeiro."
+                );
+            }
+
+            return;
+        }
+
+        throw new AccessDeniedException("Perfil sem permissao.");
     }
 }
