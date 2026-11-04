@@ -1,3 +1,4 @@
+
 import { BloqueioService, Bloqueio } from '../../services/bloqueio';
 import { MatSelectModule } from '@angular/material/select';
 import { Component, OnInit, ChangeDetectorRef, LOCALE_ID, inject } from '@angular/core';
@@ -72,8 +73,12 @@ export class Admin implements OnInit {
   mesAtual: number = new Date().getMonth();
   anoAtual: number = new Date().getFullYear();
   diasCalendario: (number | null)[] = [];
-  nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  nomesMeses = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril',
+    'Maio', 'Junho', 'Julho', 'Agosto',
+    'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
 
   get nomeMes(): string {
     return this.nomesMeses[this.mesAtual];
@@ -82,38 +87,65 @@ export class Admin implements OnInit {
   gerarCalendario() {
     const primeiroDia = new Date(this.anoAtual, this.mesAtual, 1).getDay();
     const totalDias = new Date(this.anoAtual, this.mesAtual + 1, 0).getDate();
+
     this.diasCalendario = [];
-    for (let i = 0; i < primeiroDia; i++) this.diasCalendario.push(null);
-    for (let i = 1; i <= totalDias; i++) this.diasCalendario.push(i);
+
+    for (let i = 0; i < primeiroDia; i++) {
+      this.diasCalendario.push(null);
+    }
+
+    for (let i = 1; i <= totalDias; i++) {
+      this.diasCalendario.push(i);
+    }
   }
 
   mesAnterior() {
-    if (this.mesAtual === 0) { this.mesAtual = 11; this.anoAtual--; }
-    else this.mesAtual--;
+    if (this.mesAtual === 0) {
+      this.mesAtual = 11;
+      this.anoAtual--;
+    } else {
+      this.mesAtual--;
+    }
+
     this.gerarCalendario();
   }
 
   proximoMes() {
-    if (this.mesAtual === 11) { this.mesAtual = 0; this.anoAtual++; }
-    else this.mesAtual++;
+    if (this.mesAtual === 11) {
+      this.mesAtual = 0;
+      this.anoAtual++;
+    } else {
+      this.mesAtual++;
+    }
+
     this.gerarCalendario();
   }
 
   isHoje(dia: number): boolean {
     const hoje = new Date();
-    return dia === hoje.getDate() && this.mesAtual === hoje.getMonth() && this.anoAtual === hoje.getFullYear();
+
+    return dia === hoje.getDate()
+      && this.mesAtual === hoje.getMonth()
+      && this.anoAtual === hoje.getFullYear();
   }
 
   isSelecionado(dia: number): boolean {
     if (!this.dataSelecionada) return false;
+
     const d = new Date(this.dataSelecionada);
-    return dia === d.getDate() && this.mesAtual === d.getMonth() && this.anoAtual === d.getFullYear();
+
+    return dia === d.getDate()
+      && this.mesAtual === d.getMonth()
+      && this.anoAtual === d.getFullYear();
   }
 
   temAgendamento(dia: number): boolean {
     return this.agendamentos.some(ag => {
       const d = new Date(ag.dataHora);
-      return d.getDate() === dia && d.getMonth() === this.mesAtual && d.getFullYear() === this.anoAtual
+
+      return d.getDate() === dia
+        && d.getMonth() === this.mesAtual
+        && d.getFullYear() === this.anoAtual
         && ag.status !== 'CANCELADO';
     });
   }
@@ -130,14 +162,18 @@ export class Admin implements OnInit {
   ngOnInit() {
     this.carregarAgendamentos();
     this.gerarCalendario();
-    this.carregarServicos();
     this.carregarBarbeiros();
-    this.carregarFuncionarios();
-    this.carregarHistoricoBloqueios();
-  }
+    this.carregarDiasDisponiveis();
 
+    if (this.isAdmin()) {
+      this.carregarServicos();
+      this.carregarFuncionarios();
+      this.carregarHistoricoBloqueios();
+    }
+  }
   carregarAgendamentos() {
     this.carregando = true;
+
     const barbeiroId = this.authService.getBarbeiroId();
 
     const obs = (this.authService.isAdmin() || !barbeiroId)
@@ -169,9 +205,10 @@ export class Admin implements OnInit {
 
     this.agendamentosFiltrados = this.agendamentos.filter(ag => {
       const dataAg = new Date(ag.dataHora);
-      return dataAg.getFullYear() === dataSel.getFullYear() &&
-        dataAg.getMonth() === dataSel.getMonth() &&
-        dataAg.getDate() === dataSel.getDate();
+
+      return dataAg.getFullYear() === dataSel.getFullYear()
+        && dataAg.getMonth() === dataSel.getMonth()
+        && dataAg.getDate() === dataSel.getDate();
     });
 
     this.cdr.detectChanges();
@@ -180,21 +217,26 @@ export class Admin implements OnInit {
   // Bloqueios
   bloqueios: any[] = [];
   historicoBloqueios: any[] = [];
+
   bloqueioForm = {
     barbeiroId: null as number | null,
     data: null as Date | null,
     horario: '',
     motivo: ''
   };
+
   horariosBloqueio = [
-    '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
-    '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
-    '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30', '18:00', '18:30'
+    '08:00', '08:30', '09:00', '09:30',
+    '10:00', '10:30', '11:00', '11:30',
+    '12:00', '12:30', '13:00', '13:30',
+    '14:00', '14:30', '15:00', '15:30',
+    '16:00', '16:30', '17:00', '17:30',
+    '18:00', '18:30'
   ];
 
   cancelar(id: number) {
     if (!confirm('Deseja cancelar este agendamento?')) return;
+
     this.agendamentoService.cancelar(id).subscribe({
       next: () => this.carregarAgendamentos(),
       error: (err) => console.error(err)
@@ -207,16 +249,24 @@ export class Admin implements OnInit {
       this.carregarHistoricoBloqueios();
       return;
     }
+
     const data = this.formatarData(this.bloqueioForm.data);
+
     this.bloqueioService.listarPorData(data).subscribe({
-      next: (dados) => { this.bloqueios = dados; this.cdr.detectChanges(); },
+      next: (dados) => {
+        this.bloqueios = dados;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error(err)
     });
   }
 
   carregarHistoricoBloqueios() {
     this.bloqueioService.listarTodos().subscribe({
-      next: (dados) => { this.historicoBloqueios = dados; this.cdr.detectChanges(); },
+      next: (dados) => {
+        this.historicoBloqueios = dados;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error(err)
     });
   }
@@ -229,17 +279,21 @@ export class Admin implements OnInit {
 
   criarBloqueio() {
     const { barbeiroId, data, horario, motivo } = this.bloqueioForm;
+
     if (!barbeiroId || !data || !horario) {
       alert('Preencha barbeiro, data e horário.');
       return;
     }
+
     const diaInteiro = horario === 'DIA_INTEIRO';
+
     const bloqueio: Bloqueio = {
       barbeiroId,
       data: this.formatarData(data),
       horario: diaInteiro ? undefined : horario + ':00',
       motivo
     };
+
     this.bloqueioService.criar(bloqueio).subscribe({
       next: () => {
         this.bloqueioForm.horario = '';
@@ -253,6 +307,7 @@ export class Admin implements OnInit {
 
   deletarBloqueio(id: number) {
     if (!confirm('Remover este bloqueio?')) return;
+
     this.bloqueioService.deletar(id).subscribe({
       next: () => {
         this.carregarBloqueios();
@@ -264,21 +319,23 @@ export class Admin implements OnInit {
 
   private formatarData(data: Date): string {
     const d = new Date(data);
+
     const ano = d.getFullYear();
     const mes = String(d.getMonth() + 1).padStart(2, '0');
     const dia = String(d.getDate()).padStart(2, '0');
+
     return `${ano}-${mes}-${dia}`;
   }
 
   menuAberto = false;
   menuFechando = false;
 
-
   toggleMenu() {
     if (this.menuAberto) {
       this.menuFechando = true;
       this.menuAberto = false;
       this.cdr.detectChanges();
+
       setTimeout(() => {
         this.menuFechando = false;
         this.cdr.detectChanges();
@@ -297,24 +354,55 @@ export class Admin implements OnInit {
     return this.authService.isAdmin();
   }
 
+  // Identifica o barbeiro vinculado ao funcionário
+  get barbeiroDoFuncionario(): Barbeiro | undefined {
+    const id = this.authService.getBarbeiroId();
+
+    return this.barbeiros.find(b => b.id === id);
+  }
+
+  // Retorna o nome do barbeiro pelo ID
+  nomeBarbeiro(id: number): string {
+    return this.barbeiros.find(b => b.id === id)?.nome ?? 'Barbeiro';
+  }
+
   navegarPara(secao: string): void {
     this.secaoAtiva = secao;
+
     if (this.isMobile()) {
       this.toggleMenu();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
+  // Dias e horários disponíveis
+
   carregarDiasDisponiveis() {
-    if (!this.diaDisponivelForm.data) return;
-    const data = this.formatarData(this.diaDisponivelForm.data);
-    this.diaDisponivelService.listarPorData(data).subscribe({
-      next: (dados) => { this.diasDisponiveis = dados; this.cdr.detectChanges(); },
-      error: (err) => console.error(err)
+    const barbeiroId = this.isAdmin()
+      ? this.diaDisponivelForm.barbeiroId
+      : this.authService.getBarbeiroId();
+
+    if (!barbeiroId) {
+      this.diasDisponiveis = [];
+      return;
+    }
+
+    this.diaDisponivelService.listarParaGerenciamento(barbeiroId).subscribe({
+      next: (dados) => {
+        this.diasDisponiveis = dados;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar dias disponíveis:', err);
+        this.diasDisponiveis = [];
+        this.cdr.detectChanges();
+      }
     });
   }
 
+
   diasDisponiveis: any[] = [];
+
   diaDisponivelForm = {
     barbeiroId: null as number | null,
     data: null as Date | null,
@@ -324,16 +412,24 @@ export class Admin implements OnInit {
 
   filtroFimDeSemana = (data: Date | null): boolean => {
     if (!data) return false;
+
     const dia = data.getDay();
+
     return dia === 0 || dia === 6;
   };
 
   criarDiaDisponivel() {
-    const { barbeiroId, data, motivo, horario } = this.diaDisponivelForm;
+    const { data, motivo, horario } = this.diaDisponivelForm;
+
+    const barbeiroId = this.isAdmin()
+      ? this.diaDisponivelForm.barbeiroId
+      : this.authService.getBarbeiroId();
+
     if (!barbeiroId || !data) {
-      alert('Preencha barbeiro e data.');
+      alert('Selecione o barbeiro e preencha a data.');
       return;
     }
+
     this.diaDisponivelService.criar({
       barbeiroId,
       data: this.formatarData(data),
@@ -345,12 +441,16 @@ export class Admin implements OnInit {
         this.diaDisponivelForm.horario = null;
         this.carregarDiasDisponiveis();
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        alert('Não foi possível cadastrar a disponibilidade.');
+      }
     });
   }
 
   deletarDiaDisponivel(id: number) {
     if (!confirm('Remover este dia liberado?')) return;
+
     this.diaDisponivelService.deletar(id).subscribe({
       next: () => this.carregarDiasDisponiveis(),
       error: (err) => console.error(err)
@@ -360,12 +460,20 @@ export class Admin implements OnInit {
   // Serviços
   servicos: Servico[] = [];
   servicoEditando: Servico | null = null;
-  servicoForm = { nome: '', preco: 0, duracaoMinutos: 30 };
+  servicoForm = {
+    nome: '',
+    preco: 0,
+    duracaoMinutos: 30
+  };
+
   notificacao: string = '';
 
   carregarServicos() {
     this.servicoService.listarTodos().subscribe({
-      next: (dados) => { this.servicos = dados; this.cdr.detectChanges(); },
+      next: (dados) => {
+        this.servicos = dados;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error(err)
     });
   }
@@ -375,12 +483,14 @@ export class Admin implements OnInit {
       alert('Preencha nome e preço.');
       return;
     }
+
     const servico: Servico = {
       nome: this.servicoForm.nome,
       preco: this.servicoForm.preco,
       duracaoMinutos: this.servicoForm.duracaoMinutos,
       ativo: true
     };
+
     if (this.servicoEditando?.id) {
       this.servicoService.atualizar(this.servicoEditando.id, servico).subscribe({
         next: () => {
@@ -405,6 +515,7 @@ export class Admin implements OnInit {
   mostrarNotificacao(msg: string) {
     this.notificacao = msg;
     this.cdr.detectChanges();
+
     setTimeout(() => {
       this.notificacao = '';
       this.cdr.detectChanges();
@@ -413,18 +524,31 @@ export class Admin implements OnInit {
 
   editarServico(s: Servico) {
     this.servicoEditando = s;
-    this.servicoForm = { nome: s.nome, preco: s.preco, duracaoMinutos: s.duracaoMinutos };
+
+    this.servicoForm = {
+      nome: s.nome,
+      preco: s.preco,
+      duracaoMinutos: s.duracaoMinutos
+    };
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   cancelarEdicao() {
     this.servicoEditando = null;
-    this.servicoForm = { nome: '', preco: 0, duracaoMinutos: 30 };
+
+    this.servicoForm = {
+      nome: '',
+      preco: 0,
+      duracaoMinutos: 30
+    };
   }
 
   toggleServico(s: Servico) {
     const acao = s.ativo ? 'desativar' : 'ativar';
+
     if (!confirm(`Deseja ${acao} o serviço "${s.nome}"?`)) return;
+
     this.servicoService.toggleAtivo(s.id!).subscribe({
       next: () => this.carregarServicos(),
       error: (err) => console.error(err)
@@ -435,8 +559,14 @@ export class Admin implements OnInit {
     const telefone = ag.cliente?.telefone?.replace(/\D/g, '');
     const nome = ag.cliente?.nome;
     const servico = ag.servico?.nome;
+
     const data = new Date(ag.dataHora).toLocaleDateString('pt-BR');
-    const hora = new Date(ag.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    const hora = new Date(ag.dataHora).toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
     const linkAgendamento = 'http://localhost:4200';
 
     const mensagem =
@@ -449,18 +579,26 @@ export class Admin implements OnInit {
       `Alquimista Barbearia`;
 
     const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`;
+
     window.open(url, '_blank');
   }
 
   // Profissionais
   barbeiros: Barbeiro[] = [];
   barbeiroEditando: Barbeiro | null = null;
-  barbeiroForm = { nome: '', telefone: '' };
+  barbeiroForm = {
+    nome: '',
+    telefone: ''
+  };
+
   notificacaoBarbeiro: string = '';
 
   carregarBarbeiros() {
     this.barbeiroService.listarTodos().subscribe({
-      next: (dados) => { this.barbeiros = dados; this.cdr.detectChanges(); },
+      next: (dados) => {
+        this.barbeiros = dados;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error(err)
     });
   }
@@ -470,18 +608,24 @@ export class Admin implements OnInit {
       alert('Preencha nome e telefone.');
       return;
     }
+
     const barbeiro: Barbeiro = {
       nome: this.barbeiroForm.nome,
       telefone: this.barbeiroForm.telefone,
       ativo: true
     };
+
     if (this.barbeiroEditando?.id) {
       this.barbeiroService.atualizar(this.barbeiroEditando.id, barbeiro).subscribe({
         next: () => {
           this.cancelarEdicaoBarbeiro();
           this.carregarBarbeiros();
           this.notificacaoBarbeiro = '✅ Profissional atualizado com sucesso!';
-          setTimeout(() => { this.notificacaoBarbeiro = ''; this.cdr.detectChanges(); }, 3000);
+
+          setTimeout(() => {
+            this.notificacaoBarbeiro = '';
+            this.cdr.detectChanges();
+          }, 3000);
         },
         error: (err) => console.error(err)
       });
@@ -491,7 +635,11 @@ export class Admin implements OnInit {
           this.cancelarEdicaoBarbeiro();
           this.carregarBarbeiros();
           this.notificacaoBarbeiro = '✅ Profissional adicionado com sucesso!';
-          setTimeout(() => { this.notificacaoBarbeiro = ''; this.cdr.detectChanges(); }, 3000);
+
+          setTimeout(() => {
+            this.notificacaoBarbeiro = '';
+            this.cdr.detectChanges();
+          }, 3000);
         },
         error: (err) => console.error(err)
       });
@@ -500,18 +648,29 @@ export class Admin implements OnInit {
 
   editarBarbeiro(b: Barbeiro) {
     this.barbeiroEditando = b;
-    this.barbeiroForm = { nome: b.nome, telefone: b.telefone };
+
+    this.barbeiroForm = {
+      nome: b.nome,
+      telefone: b.telefone
+    };
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   cancelarEdicaoBarbeiro() {
     this.barbeiroEditando = null;
-    this.barbeiroForm = { nome: '', telefone: '' };
+
+    this.barbeiroForm = {
+      nome: '',
+      telefone: ''
+    };
   }
 
   toggleBarbeiro(b: Barbeiro) {
     const acao = b.ativo ? 'desativar' : 'ativar';
+
     if (!confirm(`Deseja ${acao} o profissional "${b.nome}"?`)) return;
+
     this.barbeiroService.toggleAtivo(b.id!).subscribe({
       next: () => this.carregarBarbeiros(),
       error: (err) => console.error(err)
@@ -521,17 +680,22 @@ export class Admin implements OnInit {
   // Funcionários (acesso ao painel)
   funcionarios: Funcionario[] = [];
   funcionarioEditando: Funcionario | null = null;
+
   funcionarioForm = {
     nome: '',
     usuario: '',
     senha: '',
     barbeiroId: null as number | null
   };
+
   notificacaoFuncionario: string = '';
 
   carregarFuncionarios() {
     this.funcionarioService.listarTodos().subscribe({
-      next: (dados) => { this.funcionarios = dados; this.cdr.detectChanges(); },
+      next: (dados) => {
+        this.funcionarios = dados;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error(err)
     });
   }
@@ -546,10 +710,12 @@ export class Admin implements OnInit {
       alert('Selecione o barbeiro associado ao funcionário.');
       return;
     }
+
     if (!this.funcionarioEditando && !this.funcionarioForm.senha) {
       alert('Preencha a senha.');
       return;
     }
+
     const funcionario: Funcionario = {
       nome: this.funcionarioForm.nome,
       usuario: this.funcionarioForm.usuario,
@@ -557,13 +723,18 @@ export class Admin implements OnInit {
       ativo: true,
       barbeiroId: this.funcionarioForm.barbeiroId
     };
+
     if (this.funcionarioEditando?.id) {
       this.funcionarioService.atualizar(this.funcionarioEditando.id, funcionario).subscribe({
         next: () => {
           this.cancelarEdicaoFuncionario();
           this.carregarFuncionarios();
           this.notificacaoFuncionario = '✅ Funcionário atualizado com sucesso!';
-          setTimeout(() => { this.notificacaoFuncionario = ''; this.cdr.detectChanges(); }, 3000);
+
+          setTimeout(() => {
+            this.notificacaoFuncionario = '';
+            this.cdr.detectChanges();
+          }, 3000);
         },
         error: (err) => console.error(err)
       });
@@ -573,7 +744,11 @@ export class Admin implements OnInit {
           this.cancelarEdicaoFuncionario();
           this.carregarFuncionarios();
           this.notificacaoFuncionario = '✅ Funcionário cadastrado com sucesso!';
-          setTimeout(() => { this.notificacaoFuncionario = ''; this.cdr.detectChanges(); }, 3000);
+
+          setTimeout(() => {
+            this.notificacaoFuncionario = '';
+            this.cdr.detectChanges();
+          }, 3000);
         },
         error: (err) => console.error(err)
       });
@@ -592,6 +767,7 @@ export class Admin implements OnInit {
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
   cancelarEdicaoFuncionario() {
     this.funcionarioEditando = null;
 
@@ -605,7 +781,9 @@ export class Admin implements OnInit {
 
   toggleFuncionario(f: Funcionario) {
     const acao = f.ativo ? 'pausar' : 'reativar';
+
     if (!confirm(`Deseja ${acao} o acesso de "${f.nome}"?`)) return;
+
     this.funcionarioService.toggleAtivo(f.id!).subscribe({
       next: () => this.carregarFuncionarios(),
       error: (err) => console.error(err)
@@ -614,12 +792,14 @@ export class Admin implements OnInit {
 
   deletarFuncionario(f: Funcionario) {
     if (!confirm(`Deseja remover permanentemente "${f.nome}"?`)) return;
+
     this.funcionarioService.deletar(f.id!).subscribe({
       next: () => this.carregarFuncionarios(),
       error: (err) => console.error(err)
     });
   }
-  // Encerra a sessao e redireciona para o login
+
+  // Encerra a sessão e redireciona para o login
   logout() {
     this.authService.logout();
     this.router.navigate(['/admin/login']);

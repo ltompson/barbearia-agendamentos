@@ -41,7 +41,7 @@ export class AgendamentoService {
     return this.http.patch(`${this.apiUrl}/${id}/cancelar`, {});
   }
 
-  getHorariosDisponiveis(data: Date, barbeiroId: number): Observable<string[]> {
+  getHorariosDisponiveis(data: Date, barbeiroId: number, servicoId: number): Observable<string[]> {
     const dataISO = data.toISOString().split('T')[0]; // converte para YYYY-MM-DD
     return this.http.get<string[]>(`${this.apiUrl}/disponiveis`, {
       params: { data: dataISO, barbeiroId: barbeiroId.toString() }

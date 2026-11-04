@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -37,7 +38,17 @@ export class DiaDisponivelService {
     );
   }
 
+  // Consulta publica utilizada pelo agendamento dos clientes
   listarPorBarbeiro(barbeiroId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/barbeiro/${barbeiroId}`);
+    return this.http.get<any[]>(
+      `${this.apiUrl}/barbeiro/${barbeiroId}`
+    );
+  }
+
+  // Consulta autenticada utilizada no painel administrativo
+  listarParaGerenciamento(barbeiroId: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.apiUrl}/gerenciar/barbeiro/${barbeiroId}`
+    );
   }
 }

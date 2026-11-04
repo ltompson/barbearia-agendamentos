@@ -55,6 +55,12 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/api/agendamentos").permitAll()
 
+                        // Consulta autenticada para gerenciamento de disponibilidades
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/dias-disponiveis/gerenciar/**"
+                        ).hasAnyRole("ADMIN", "FUNCIONARIO")
+
+                        // Consultas publicas para clientes
                         .requestMatchers(HttpMethod.GET,
                                 "/api/dias-disponiveis",
                                 "/api/dias-disponiveis/barbeiro/**",
@@ -76,10 +82,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/barbeiros/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/barbeiros/**").hasRole("ADMIN")
 
+                        // Disponibilidades: ADMIN e FUNCIONARIO autenticados
                         .requestMatchers(HttpMethod.POST, "/api/dias-disponiveis")
-                        .hasRole("ADMIN")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
                         .requestMatchers(HttpMethod.DELETE, "/api/dias-disponiveis/**")
-                        .hasRole("ADMIN")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
 
                         // Bloqueios: ADMIN por enquanto
                         .requestMatchers("/api/bloqueios/**").hasRole("ADMIN")

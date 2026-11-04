@@ -1,3 +1,4 @@
+
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -84,9 +85,13 @@ export class Agendamento {
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {
-    this.servicoService.listarAtivos().subscribe({  // ← ADICIONE
-      next: (dados) => { this.servicos = dados; this.cdr.detectChanges(); }
+    this.servicoService.listarAtivos().subscribe({
+      next: (dados) => {
+        this.servicos = dados;
+        this.cdr.detectChanges();
+      }
     });
+
     this.atualizarFiltroData();
 
     this.form = this.fb.group({
@@ -102,6 +107,7 @@ export class Agendamento {
       if (barbeiroId) {
         this.diasExcecao.clear();
         this.diasBloqueados.clear();
+
         this.diaDisponivelService.listarPorBarbeiro(barbeiroId).subscribe({
           next: (dias) => {
             dias.forEach(d => this.diasExcecao.add(d.data));
@@ -109,6 +115,7 @@ export class Agendamento {
             this.cdr.detectChanges();
           }
         });
+
         this.agendamentoService.getDiasBloqueados(barbeiroId).subscribe({
           next: (dias) => {
             dias.forEach(d => this.diasBloqueados.add(d));
@@ -117,6 +124,11 @@ export class Agendamento {
           }
         });
       }
+
+      this.onDataOuBarbeiroChange();
+    });
+
+    this.form.get('servicoId')?.valueChanges.subscribe(() => {
       this.onDataOuBarbeiroChange();
     });
   }
@@ -132,19 +144,27 @@ export class Agendamento {
   private atualizarFiltroData() {
     this.filtroDataFn = (data: Date | null): boolean => {
       if (!data) return false;
+
       const dia = data.getDay();
       const dataISO = this.formatarData(data);
+
       if (this.diasBloqueados.has(dataISO)) return false;
+
       if (dia === 0 || dia === 6) {
         return this.diasExcecao.has(dataISO);
       }
+
       return true;
     };
   }
 
   onDataOuBarbeiroChange() {
-    const { data, barbeiroId } = this.form.value;
-    if (!barbeiroId || !data) return;
+    const { data, barbeiroId, servicoId } = this.form.value;
+
+    if (!barbeiroId || !data || !servicoId) {
+      this.horariosDisponiveis = [];
+      return;
+    }
 
     const dataISO = this.formatarData(data);
     const diaDaSemana = new Date(data).getDay();
@@ -153,31 +173,43 @@ export class Agendamento {
       this.diaDisponivelService.isDiaDisponivel(dataISO, barbeiroId).subscribe({
         next: (disponivel) => {
           if (disponivel) {
-            this.buscarHorarios(data, barbeiroId);
+            this.buscarHorarios(data, barbeiroId, servicoId);
           } else {
             this.horariosDisponiveis = [];
           }
         }
       });
     } else {
-      this.buscarHorarios(data, barbeiroId);
+      this.buscarHorarios(data, barbeiroId, servicoId);
     }
   }
 
-  private buscarHorarios(data: Date, barbeiroId: number) {
-    this.agendamentoService.getHorariosDisponiveis(data, barbeiroId).subscribe({
+  private buscarHorarios(
+    data: Date,
+    barbeiroId: number,
+    servicoId: number
+  ) {
+    this.agendamentoService.getHorariosDisponiveis(
+      data,
+      barbeiroId,
+      servicoId
+    ).subscribe({
       next: (horarios) => {
         this.horariosDisponiveis = horarios;
         this.form.patchValue({ horario: '' });
       },
       error: () => {
-        this.snackBar.open('Erro ao buscar horários.', 'Fechar', { duration: 3000 });
+        this.snackBar.open('Erro ao buscar horários.', 'Fechar', {
+          duration: 3000
+        });
       }
     });
   }
 
   horariosManha(): string[] {
-    return this.horariosDisponiveis.filter(h => parseInt(h.split(':')[0]) < 12);
+    return this.horariosDisponiveis.filter(
+      h => parseInt(h.split(':')[0]) < 12
+    );
   }
 
   horariosTarde(): string[] {
@@ -188,30 +220,57 @@ export class Agendamento {
   }
 
   horariosNoite(): string[] {
-    return this.horariosDisponiveis.filter(h => parseInt(h.split(':')[0]) >= 18);
+    return this.horariosDisponiveis.filter(
+      h => parseInt(h.split(':')[0]) >= 18
+    );
   }
 
   confirmar() {
     if (this.form.invalid) {
-      this.snackBar.open('Preencha todos os campos!', 'Fechar', { duration: 3000 });
+      this.snackBar.open('Preencha todos os campos!', 'Fechar', {
+        duration: 3000
+      });
       return;
     }
 
-    const { nomeCliente, telefoneCliente, barbeiroId, servicoId, data, horario } = this.form.value;
+    const {
+      nomeCliente,
+      telefoneCliente,
+      barbeiroId,
+      servicoId,
+      data,
+      horario
+    } = this.form.value;
+
     const dataHora = `${this.formatarData(data)}T${horario.substring(0, 5)}:00`;
-    const payload = { nomeCliente, telefoneCliente, barbeiroId, servicoId, dataHora };
+
+    const payload = {
+      nomeCliente,
+      telefoneCliente,
+      barbeiroId,
+      servicoId,
+      dataHora
+    };
 
     this.agendamentoService.criar(payload).subscribe({
       next: () => {
-        this.snackBar.open('Agendamento realizado com sucesso! ✅', 'Fechar', { duration: 4000 });
-        this.buscarHorarios(data, barbeiroId);
+        this.snackBar.open('Agendamento realizado com sucesso! ✅', 'Fechar', {
+          duration: 4000
+        });
+
+        this.buscarHorarios(data, barbeiroId, servicoId);
         this.form.reset();
       },
       error: (err) => {
         console.error(err);
+
         const mensagem = err.error?.erro ?? 'Erro ao agendar. Tente novamente.';
-        this.snackBar.open(mensagem, 'Fechar', { duration: 4000 });
-        this.buscarHorarios(data, barbeiroId);
+
+        this.snackBar.open(mensagem, 'Fechar', {
+          duration: 4000
+        });
+
+        this.buscarHorarios(data, barbeiroId, servicoId);
       }
     });
   }
@@ -221,6 +280,7 @@ export class Agendamento {
     const ano = d.getFullYear();
     const mes = String(d.getMonth() + 1).padStart(2, '0');
     const dia = String(d.getDate()).padStart(2, '0');
+
     return `${ano}-${mes}-${dia}`;
   }
 }

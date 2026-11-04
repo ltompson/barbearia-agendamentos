@@ -59,8 +59,7 @@
           <span class="menu-icon">🚫</span>
           <span>Bloquear</span>
         </li>
-        <li class="menu-item" [class.active]="secaoAtiva === 'liberacao'" (click)="navegarPara('liberacao')"
-          *ngIf="isAdmin()">
+        <li class="menu-item" [class.active]="secaoAtiva === 'liberacao'" (click)="navegarPara('liberacao')">
           <span class="menu-icon">✅</span>
           <span>Liberar</span>
         </li>
@@ -333,55 +332,89 @@
         <h2>LIBERAR DIAS E HORÁRIOS</h2>
         <div class="linha-dec"></div>
       </div>
+
       <div class="form-card">
-        <mat-form-field appearance="outline" class="full-width">
+
+        <!-- ADMIN pode escolher qualquer barbeiro -->
+        <mat-form-field appearance="outline" class="full-width" *ngIf="isAdmin()">
           <mat-label>Barbeiro</mat-label>
-          <mat-select [(ngModel)]="diaDisponivelForm.barbeiroId">
-            <mat-option [value]="1">Francisco</mat-option>
-            <mat-option [value]="2">Raniel Dias</mat-option>
+          <mat-select [(ngModel)]="diaDisponivelForm.barbeiroId" (selectionChange)="carregarDiasDisponiveis()">
+
+            <mat-option *ngFor="let barbeiro of barbeiros" [value]="barbeiro.id">
+              {{ barbeiro.nome }}
+            </mat-option>
+
           </mat-select>
         </mat-form-field>
+
+        <!-- FUNCIONÁRIO visualiza apenas seu barbeiro vinculado -->
+        <div *ngIf="!isAdmin()" class="full-width">
+          <p>
+            <strong>Barbeiro:</strong>
+            {{ barbeiroDoFuncionario?.nome || 'Carregando...' }}
+          </p>
+        </div>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data</mat-label>
           <input matInput [matDatepicker]="pickerDiaDisponivel" [(ngModel)]="diaDisponivelForm.data"
             (dateChange)="carregarDiasDisponiveis()">
-          <mat-datepicker-toggle matIconSuffix [for]="pickerDiaDisponivel"></mat-datepicker-toggle>
+
+          <mat-datepicker-toggle matIconSuffix [for]="pickerDiaDisponivel">
+          </mat-datepicker-toggle>
+
           <mat-datepicker #pickerDiaDisponivel></mat-datepicker>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Horário</mat-label>
           <mat-select [(ngModel)]="diaDisponivelForm.horario">
             <mat-option [value]="null">Dia inteiro</mat-option>
-            <mat-option *ngFor="let h of horariosBloqueio" [value]="h">{{ h }}</mat-option>
+
+            <mat-option *ngFor="let h of horariosBloqueio" [value]="h">
+              {{ h }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Motivo (opcional)</mat-label>
           <input matInput [(ngModel)]="diaDisponivelForm.motivo" placeholder="Ex: Plantão, Evento...">
         </mat-form-field>
+
         <button class="btn-admin btn-liberar" (click)="criarDiaDisponivel()">
           ✅ LIBERAR DIA
         </button>
+
       </div>
 
       <div *ngIf="diasDisponiveis.length > 0" class="lista-resultado">
         <h3 class="lista-titulo verde">✅ Dias liberados</h3>
+
         <div *ngFor="let d of diasDisponiveis" class="agendamento-card">
+
           <div class="ag-horario-badge verde-badge">
             {{ d.data | date:'dd/MM' }}{{ d.horario ? ' · ' + d.horario.substring(0,5) : '' }}
           </div>
+
           <div class="ag-info">
-            <p class="ag-cliente">{{ d.barbeiroId === 1 ? 'Francisco' : 'Raniel Dias' }}</p>
+            <p class="ag-cliente">{{ nomeBarbeiro(d.barbeiroId) }}</p>
             <p class="ag-detalhe">{{ d.motivo || 'Sem motivo' }}</p>
           </div>
+
           <div class="ag-acoes">
-            <button class="btn-acao btn-remover" (click)="deletarDiaDisponivel(d.id)">Remover</button>
+            <button class="btn-acao btn-remover" (click)="deletarDiaDisponivel(d.id)">
+              Remover
+            </button>
           </div>
+
         </div>
       </div>
+
       <p *ngIf="diasDisponiveis.length === 0 && diaDisponivelForm.data" class="empty-msg">
         Nenhum dia liberado para esta data.
       </p>
+
     </section>
 
     <!-- ══ SEÇÃO: SERVIÇOS ══ -->

@@ -15,4 +15,14 @@ public interface DiaDisponivelRepository extends JpaRepository<DiaDisponivel, Lo
             java.time.LocalTime horario,
             Long barbeiroId
     );
+
+    List<DiaDisponivel> findByDataAndBarbeiroId(
+            LocalDate data,
+            Long barbeiroId
+    );
+
+    boolean existsByDataAndBarbeiroIdAndHorarioIsNull(
+            LocalDate data,
+            Long barbeiroId
+    );
 }
